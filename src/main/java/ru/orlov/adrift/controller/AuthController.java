@@ -17,16 +17,22 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping(value = "/api/auth/login", produces = "application/json")
-    public AuthResponseDto login(
-            @Valid @RequestBody AuthRequestDto request
+    public LoginResponseDto login(
+            @Valid @RequestBody LoginRequestDto request
     ) throws AppAuthException {
-        AuthResponseDto response = new AuthResponseDto();
-        response.setUsername(request.getUsername());
+        AuthService.AuthDetails details = authService
+                .authenticate(request.getUsername(), request.getPassword());
+        String token = authService.generateToken(details);
+
+        LoginResponseDto response = new LoginResponseDto();
+        response.setId(details.getId());
+        response.setUsername(details.getUsername());
+        response.setToken(token);
         return response;
     }
 
     @Data
-    public static class AuthRequestDto {
+    public static class LoginRequestDto {
 
         @NotBlank
         private String username;
@@ -36,7 +42,7 @@ public class AuthController {
     }
 
     @Data
-    public static class AuthResponseDto {
+    public static class LoginResponseDto {
         private Long id;
         private String username;
         private String token;
