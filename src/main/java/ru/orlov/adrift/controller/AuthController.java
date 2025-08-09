@@ -16,7 +16,7 @@ public class AuthController {
 
     private final AuthService authService;
 
-    @PostMapping(value = "/api/auth/login")
+    @PostMapping(value = "/api/auth/login", produces = "application/json")
     public AuthResponseDto login(
             @Valid @RequestBody AuthRequestDto request
     ) throws AppAuthException {
