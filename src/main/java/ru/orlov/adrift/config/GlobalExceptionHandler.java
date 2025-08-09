@@ -23,15 +23,16 @@ public class GlobalExceptionHandler {
                 .map(e -> e.getField() + ": " + e.getDefaultMessage())
                 .collect(Collectors.toSet());
 
-        return ResponseEntity.badRequest().body(ErrorResponseDto.of(messages));
+        return ResponseEntity.badRequest()
+                .body(ErrorResponseDto.of(messages));
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     protected ResponseEntity<ErrorResponseDto> handleJsonExceptions(
             HttpMessageNotReadableException ignore
     ) {
-        String message = "Invalid JSON request";
-        return ResponseEntity.badRequest().body(ErrorResponseDto.of(message));
+        return ResponseEntity.badRequest()
+                .body(ErrorResponseDto.of("Invalid JSON request"));
     }
 
     @Data
