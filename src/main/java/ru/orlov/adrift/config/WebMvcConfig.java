@@ -4,7 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.lang.NonNull;
-import org.springframework.web.servlet.config.annotation.*;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.nio.file.Path;
 
@@ -16,17 +19,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
     private final Environment env;
 
     @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
-                .allowedOrigins("*")
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "HEAD");
-    }
-
-    @Override
     public void addResourceHandlers(@NonNull ResourceHandlerRegistry registry) {
         String appPath = env.getProperty("APP_PATH", ".");
         appPath = appPath.replace('\\', '/').trim();
-        String webappDist = Path.of(appPath, "webapp") + "/";
+        String webappDist = Path.of(appPath, "webapp/dist") + "/";
         webappDist = webappDist.replace("//", "/");
 
         if (!webappDist.startsWith("file:/")) {

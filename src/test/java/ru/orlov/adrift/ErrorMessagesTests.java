@@ -32,6 +32,16 @@ public class ErrorMessagesTests {
     }
 
     @Test
+    void emptyRequestBodyReturnsArrayOfMessages() {
+        ResponseEntity<String> response = restTemplate
+                .postForEntity(url("/api/auth/login"), null, String.class);
+
+        assert response.getStatusCode() == HttpStatus.BAD_REQUEST;
+        assert response.getBody() != null;
+        assert response.getBody().contains("\"messages\":[");
+    }
+
+    @Test
     void invalidRequestBodyReturns400() {
         Map<String, String> req = Map.of("username", "");
 
@@ -48,11 +58,9 @@ public class ErrorMessagesTests {
         ResponseEntity<String> response = restTemplate
                 .postForEntity(url("/api/auth/login"), req, String.class);
 
-        String body = response.getBody();
-
-        assert body != null;
-        assert body.contains("\"messages\":[");
-        assert body.contains("password");
+        assert response.getBody() != null;
+        assert response.getBody().contains("\"messages\":[");
+        assert response.getBody().contains("password");
     }
 
 }

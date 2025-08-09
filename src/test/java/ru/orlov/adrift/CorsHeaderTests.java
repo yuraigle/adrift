@@ -7,6 +7,8 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.ResponseEntity;
 
+import java.util.Map;
+
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class CorsHeaderTests {
 
@@ -24,6 +26,16 @@ public class CorsHeaderTests {
     void apiPageContainsCorsHeaders() {
         ResponseEntity<String> response = restTemplate
                 .getForEntity(url("/api/version"), String.class);
+
+        assert response.getHeaders().containsKey("Access-Control-Allow-Origin");
+    }
+
+    @Test
+    void errorPageContainsCorsHeaders() {
+        Map<String, String> req = Map.of("password", "");
+
+        ResponseEntity<String> response = restTemplate
+                .postForEntity(url("/api/auth/login"), req, String.class);
 
         assert response.getHeaders().containsKey("Access-Control-Allow-Origin");
     }
