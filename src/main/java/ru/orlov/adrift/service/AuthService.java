@@ -15,9 +15,11 @@ import ru.orlov.adrift.domain.ex.AppAuthException;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import static org.apache.commons.lang3.StringUtils.trimToNull;
+import static ru.orlov.adrift.domain.User.hashPassword;
 import static ru.orlov.adrift.domain.User.verifyPassword;
 
 @Service
@@ -47,6 +49,37 @@ public class AuthService {
         AuthDetails details = new AuthDetails();
         details.setId(user.getId());
         details.setUsername(user.getUsername());
+        return details;
+    }
+
+    public AuthDetails register(
+            String email,
+            String username,
+            String password
+    ) throws AppAuthException {
+        if (userRepository.findByUsername(username).isPresent()) {
+            throw new AppAuthException("Username already taken");
+        }
+        if (userRepository.findByEmail(email).isPresent()) {
+            throw new AppAuthException("Email already taken");
+        }
+
+        User user = new User();
+        user.setEmail(email);
+        user.setUsername(username);
+        user.setPassword(hashPassword(password));
+        user.setCreated(LocalDateTime.now());
+
+        User savedUser;
+        try {
+            savedUser = userRepository.save(user);
+        } catch (Exception e) {
+            throw new AppAuthException(e.getMessage());
+        }
+
+        AuthDetails details = new AuthDetails();
+        details.setId(savedUser.getId());
+        details.setUsername(savedUser.getUsername());
         return details;
     }
 

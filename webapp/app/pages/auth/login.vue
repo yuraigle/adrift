@@ -50,3 +50,28 @@ const onSubmit = () => {
   </div>
 </template>
 
+<style scoped>
+form {
+  width: 400px;
+}
+
+form > div {
+  display: flex;
+  margin-bottom: 8px;
+}
+
+form > div label {
+  width: 100px;
+  padding: 4px 0;
+}
+
+form > div input {
+  flex-grow: 1;
+  padding: 4px 8px;
+}
+
+button {
+  width: 100%;
+  padding: 4px 8px;
+}
+</style>

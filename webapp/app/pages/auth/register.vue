@@ -26,9 +26,14 @@ const onSubmit = () => {
 
 <template>
   <div>
-    <h1>Login</h1>
+    <h1>Register</h1>
 
     <form @submit.prevent="onSubmit">
+      <div>
+        <label for="login-username">Username:</label>
+        <input id="login-username" v-model="form.username" type="text">
+      </div>
+
       <div>
         <label for="login-email">Email:</label>
         <input id="login-email" v-model="form.email" type="email">
@@ -40,11 +45,8 @@ const onSubmit = () => {
       </div>
 
       <div>
-        <label for="login-username">Username:</label>
-        <input id="login-username" v-model="form.username" type="text">
+        <button type="submit">Create Account</button>
       </div>
-
-      <button type="submit">Create Account</button>
 
       <p>
         Already have an account?
@@ -55,3 +57,29 @@ const onSubmit = () => {
     <p v-if="message" :class="message_type">{{ message }}</p>
   </div>
 </template>
+
+<style scoped>
+form {
+  width: 400px;
+}
+
+form > div {
+  display: flex;
+  margin-bottom: 8px;
+}
+
+form > div label {
+  width: 100px;
+  padding: 4px 0;
+}
+
+form > div input {
+  flex-grow: 1;
+  padding: 4px 8px;
+}
+
+button {
+  width: 100%;
+  padding: 4px 8px;
+}
+</style>

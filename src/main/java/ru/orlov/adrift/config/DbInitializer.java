@@ -21,6 +21,7 @@ public class DbInitializer {
 
     private void initUsersTable() {
         User user = new User();
+        user.setEmail("admin@admin");
         user.setUsername("admin");
         user.setPassword(User.hashPassword("admin"));
         user.setCreated(LocalDateTime.now());

@@ -20,14 +20,29 @@ public class AuthController {
     public LoginResponseDto login(
             @Valid @RequestBody LoginRequestDto request
     ) throws AppAuthException {
-        AuthService.AuthDetails details = authService
-                .authenticate(request.getUsername(), request.getPassword());
-        String token = authService.generateToken(details);
+        AuthService.AuthDetails details = authService.authenticate(
+                request.getUsername(), request.getPassword()
+        );
 
         LoginResponseDto response = new LoginResponseDto();
         response.setId(details.getId());
         response.setUsername(details.getUsername());
-        response.setToken(token);
+        response.setToken(authService.generateToken(details));
+        return response;
+    }
+
+    @PostMapping(value = "/api/auth/register", produces = "application/json")
+    public LoginResponseDto register(
+            @Valid @RequestBody RegisterRequestDto request
+    ) throws AppAuthException {
+        AuthService.AuthDetails details = authService.register(
+                request.getEmail(), request.getUsername(), request.getPassword()
+        );
+
+        LoginResponseDto response = new LoginResponseDto();
+        response.setId(details.getId());
+        response.setUsername(details.getUsername());
+        response.setToken(authService.generateToken(details));
         return response;
     }
 
@@ -46,5 +61,18 @@ public class AuthController {
         private Long id;
         private String username;
         private String token;
+    }
+
+    @Data
+    public static class RegisterRequestDto {
+
+        @NotBlank
+        private String email;
+
+        @NotBlank
+        private String username;
+
+        @NotBlank
+        private String password;
     }
 }
