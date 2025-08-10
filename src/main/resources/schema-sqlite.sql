@@ -27,7 +27,7 @@ create table ads
 (
     id          integer,
     title       varchar(255) not null,
-    description varchar(255) null,
+    description text null,
 
     price       decimal(10, 2) null,
     www         varchar(255) null,
