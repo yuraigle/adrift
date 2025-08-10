@@ -18,9 +18,3 @@
     <NuxtPage />
   </main>
 </template>
-
-<style lang="css" scoped>
-.router-link-active {
-  font-weight: bold;
-}
-</style>

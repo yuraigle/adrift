@@ -7,6 +7,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.web.servlet.config.annotation.*;
 
 import java.nio.file.Path;
+import java.util.List;
 
 @EnableWebMvc
 @Configuration
@@ -16,7 +17,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     private final Environment env;
 
     @Override
-    public void addCorsMappings(CorsRegistry registry) {
+    public void addCorsMappings(@NonNull CorsRegistry registry) {
         registry.addMapping("/**")
                 .allowedOrigins("*")
                 .allowedMethods("GET", "POST", "PUT", "DELETE");
@@ -38,7 +39,15 @@ public class WebMvcConfig implements WebMvcConfigurer {
     }
 
     @Override
-    public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/").setViewName("forward:/index.html");
+    public void addViewControllers(@NonNull ViewControllerRegistry registry) {
+        List<String> ssrRoutes = List.of(
+                "/", "/about",
+                "/auth/login", "/auth/register"
+        );
+
+        ssrRoutes.forEach(route ->
+                registry.addViewController(route)
+                        .setViewName("forward:" + route + "/index.html")
+        );
     }
 }

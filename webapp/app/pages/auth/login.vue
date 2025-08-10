@@ -8,14 +8,17 @@ const form = reactive({
 })
 
 const message = ref('')
+const message_type = ref('')
 
 const onSubmit = () => {
   callApi('/auth/login', 'POST', JSON.stringify(form))
     .then(() => {
       message.value = 'Login successful'
+      message_type.value = 'success'
     })
     .catch((error) => {
-      message.value = 'Login failed: ' + error
+      message.value = error
+      message_type.value = 'error'
     })
 }
 </script>
@@ -26,18 +29,24 @@ const onSubmit = () => {
 
     <form @submit.prevent="onSubmit">
       <div>
-        <label for="login-username">Email:</label>
-        <input id="login-username" v-model="form.username" type="text" placeholder="Email">
+        <label for="login-username">Username:</label>
+        <input id="login-username" v-model="form.username" type="text">
       </div>
 
       <div>
         <label for="login-password">Password:</label>
-        <input id="login-password" v-model="form.password" type="password" placeholder="Password">
+        <input id="login-password" v-model="form.password" type="password">
       </div>
 
       <button type="submit">Login</button>
+
+      <p>
+        Don't have an account?
+        <NuxtLink to="/auth/register">Register</NuxtLink>
+      </p>
     </form>
 
-    <div v-if="message">{{ message }}</div>
+    <p v-if="message" :class="message_type">{{ message }}</p>
   </div>
 </template>
+
