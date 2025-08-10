@@ -1,0 +1,13 @@
+categories:
+  - id: 1
+    name: Houses for sale
+    slug: houses-for-sale
+  - id: 2
+    name: Houses for rent
+    slug: houses-for-rent
+  - id: 3
+    name: Apartments for sale
+    slug: apartments-for-sale
+  - id: 4
+    name: Apartments for rent
+    slug: apartments-for-rent
