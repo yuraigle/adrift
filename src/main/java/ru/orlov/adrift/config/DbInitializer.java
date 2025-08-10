@@ -5,8 +5,7 @@ import com.github.javafaker.Faker;
 import lombok.Data;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.asm.TypeReference;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Configuration;
 import ru.orlov.adrift.domain.*;
 
 import java.io.IOException;
@@ -18,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Log4j2
-@Component
+@Configuration
 public class DbInitializer {
 
     private final UserRepository userRepository;
@@ -57,6 +56,7 @@ public class DbInitializer {
         user.setPassword(User.hashPassword("admin"));
         user.setCreated(LocalDateTime.now());
         this.userRepository.save(user);
+        log.info("Admin user created");
     }
 
     private void initCategoriesTable() {
@@ -68,39 +68,54 @@ public class DbInitializer {
                     .readValue(is, CategoriesResource.class);
 
             categoryRepository.saveAll(yaml.categories);
+            log.info("{} categories created", yaml.categories.size());
         } catch (IOException e) {
             log.error(e.getMessage());
         }
     }
 
     private void initAdsTable() {
-        Faker faker = new Faker();
-
-        List<Category> categories = categoryRepository.findAll();
-        User user1 = userRepository.findAll(Pageable.ofSize(5))
-                .getContent().getFirst();
-
-        List<Ad> ads = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
-            Ad ad = new Ad();
-            ad.setUser(user1);
-            ad.setCategory(categories.get(faker.random().nextInt(categories.size())));
-            ad.setTitle(faker.address().fullAddress());
-            ad.setDescription(String.join("\n", faker.lorem().sentences(5)));
-
-            double price = faker.number().randomDouble(2, 40_000, 1000_000);
-            if (ad.getCategory().getSlug().contains("rent")) {
-                price = price / 150;
-            }
-            ad.setPrice(BigDecimal.valueOf(price).setScale(2, RoundingMode.HALF_UP));
-
-            ad.setWww(faker.internet().url());
-            ad.setContact(faker.phoneNumber().cellPhone());
-            ad.setCreated(LocalDateTime.now());
-            ads.add(ad);
+        User user = userRepository.findByUsername("admin").orElse(null);
+        if (user == null) {
+            log.info("Admin user not found: won't generate ads");
+            return;
         }
 
-        adRepository.saveAll(ads);
+        Faker faker = new Faker();
+        List<Ad> generatedAds = new ArrayList<>();
+        for (Category cat : categoryRepository.findAll()) {
+            for (int i = 0; i < 5; i++) {
+                Ad ad = new Ad();
+                ad.setUser(user);
+                ad.setCategory(cat);
+                ad.setTitle(faker.address().fullAddress());
+                ad.setDescription(faker.lorem().paragraph());
+
+                BigDecimal price = ad.getCategory().getSlug().contains("rent") ?
+                        randomHousingRentPrice() : randomHousingSellPrice();
+                ad.setPrice(price);
+
+                ad.setWww(faker.internet().url());
+                ad.setContact(faker.phoneNumber().cellPhone());
+                ad.setCreated(LocalDateTime.now());
+                generatedAds.add(ad);
+            }
+        }
+
+        adRepository.saveAll(generatedAds);
+        log.info("{} ads created", generatedAds.size());
+    }
+
+    private BigDecimal randomHousingSellPrice() {
+        int min = 40_000;
+        int max = 300_000;
+        double price = (new Faker()).number().randomDouble(2, min, max);
+        return BigDecimal.valueOf(price).setScale(2, RoundingMode.HALF_UP);
+    }
+
+    private BigDecimal randomHousingRentPrice() {
+        BigDecimal price = randomHousingSellPrice();
+        return price.divide(BigDecimal.valueOf(150), 2, RoundingMode.HALF_UP);
     }
 
     @Data
