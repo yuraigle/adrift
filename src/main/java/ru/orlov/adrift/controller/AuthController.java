@@ -1,12 +1,13 @@
 package ru.orlov.adrift.controller;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import ru.orlov.adrift.controller.dto.LoginRequestDto;
+import ru.orlov.adrift.controller.dto.LoginResponseDto;
+import ru.orlov.adrift.controller.dto.RegisterRequestDto;
 import ru.orlov.adrift.domain.ex.AppAuthException;
 import ru.orlov.adrift.service.AuthService;
 
@@ -46,33 +47,4 @@ public class AuthController {
         return response;
     }
 
-    @Data
-    public static class LoginRequestDto {
-
-        @NotBlank
-        private String username;
-
-        @NotBlank
-        private String password;
-    }
-
-    @Data
-    public static class LoginResponseDto {
-        private Long id;
-        private String username;
-        private String token;
-    }
-
-    @Data
-    public static class RegisterRequestDto {
-
-        @NotBlank
-        private String email;
-
-        @NotBlank
-        private String username;
-
-        @NotBlank
-        private String password;
-    }
 }

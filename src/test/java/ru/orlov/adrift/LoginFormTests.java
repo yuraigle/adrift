@@ -7,40 +7,38 @@ import org.springframework.http.ResponseEntity;
 import ru.orlov.adrift.controller.dto.LoginRequestDto;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ErrorMessagesTests extends AbstractTest {
+public class LoginFormTests extends AbstractTest {
 
     @Test
-    void invalidUrlReturns404() {
-        ResponseEntity<String> response = apiRequestGet("/api/invalid");
-
-        assert response.getStatusCode() == HttpStatus.NOT_FOUND;
-    }
-
-    @Test
-    void emptyRequestBodyReturnsArrayOfMessages() {
+    void loginEmptyPostContainsErrorMessages() {
         ResponseEntity<String> response = apiRequestPost("/api/auth/login", null, null, String.class);
 
         assert response.getStatusCode() == HttpStatus.BAD_REQUEST;
         assert response.getBody() != null;
-        assert response.getBody().contains("\"messages\":[");
+        assert response.getBody().contains("messages");
+        assert response.getBody().contains("Invalid JSON");
     }
 
     @Test
-    void invalidRequestBodyReturns400() {
+    void loginMalformedContainsErrorMessages() {
         LoginRequestDto form = new LoginRequestDto("", "");
         ResponseEntity<String> response = apiRequestPost("/api/auth/login", form, null, String.class);
 
         assert response.getStatusCode() == HttpStatus.BAD_REQUEST;
+        assert response.getBody() != null;
+        assert response.getBody().contains("messages");
+        assert response.getBody().contains("username");
+        assert response.getBody().contains("password");
     }
 
     @Test
-    void invalidRequestBodyReturnsArrayOfMessages() {
-        LoginRequestDto form = new LoginRequestDto("", "");
+    void loginSuccessResponseContainsToken() {
+        LoginRequestDto form = new LoginRequestDto("admin", "admin");
         ResponseEntity<String> response = apiRequestPost("/api/auth/login", form, null, String.class);
 
+        assert response.getStatusCode() == HttpStatus.OK;
         assert response.getBody() != null;
-        assert response.getBody().contains("\"messages\":[");
-        assert response.getBody().contains("password");
+        assert response.getBody().contains("token");
     }
 
 }

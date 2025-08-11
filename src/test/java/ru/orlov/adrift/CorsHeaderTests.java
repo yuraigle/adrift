@@ -3,9 +3,9 @@ package ru.orlov.adrift;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
+import ru.orlov.adrift.controller.dto.LoginRequestDto;
 
 import java.util.List;
-import java.util.Map;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class CorsHeaderTests extends AbstractTest {
@@ -21,22 +21,22 @@ public class CorsHeaderTests extends AbstractTest {
 
     @Test
     void apiPageContainsCorsHeaders() {
-        ResponseEntity<String> response = testRequestGet("/api/version");
+        ResponseEntity<String> response = apiRequestGet("/api/version");
 
         assert hasCorsHeaders(response);
     }
 
     @Test
-    void error1PageContainsCorsHeaders() {
-        Map<String, String> req = Map.of("password", "");
-        ResponseEntity<String> response = testRequestPost("/api/auth/register", req);
+    void malformedPostRequestContainsCorsHeaders() {
+        LoginRequestDto form = new LoginRequestDto("", null);
+        ResponseEntity<String> response = apiRequestPost("/api/auth/register", form, null, String.class);
 
         assert hasCorsHeaders(response);
     }
 
     @Test
-    void error2PageContainsCorsHeaders() {
-        ResponseEntity<String> response = testRequestPost("/api/auth/login", null);
+    void emptyPostRequestContainsCorsHeaders() {
+        ResponseEntity<String> response = apiRequestPost("/api/auth/login", null, null, String.class);
 
         assert hasCorsHeaders(response);
     }
