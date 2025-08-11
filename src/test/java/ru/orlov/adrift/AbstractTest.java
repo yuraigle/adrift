@@ -67,10 +67,10 @@ public abstract class AbstractTest {
         );
     }
 
-    String retrieveToken(String username, String password) {
+    String retrieveToken() {
         LoginRequestDto request = new LoginRequestDto();
-        request.setUsername(username);
-        request.setPassword(password);
+        request.setUsername("admin");
+        request.setPassword("admin");
 
         ResponseEntity<LoginResponseDto> response = apiRequestPost(
                 "/api/auth/login", request, null, LoginResponseDto.class

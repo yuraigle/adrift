@@ -1,13 +1,21 @@
 package ru.orlov.adrift;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import ru.orlov.adrift.controller.dto.AdRequestDto;
+import ru.orlov.adrift.domain.Ad;
+import ru.orlov.adrift.domain.AdRepository;
+
+import java.util.List;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class AdCreatingTests extends AbstractTest {
+
+    @Autowired
+    AdRepository adRepository;
 
     @Test
     void createAdUnauthorized() {
@@ -25,7 +33,7 @@ public class AdCreatingTests extends AbstractTest {
         form.setTitle(null);
         form.setCategory(0L);
 
-        String token = retrieveToken("admin", "admin");
+        String token = retrieveToken();
         ResponseEntity<String> response = apiRequestPost("/api/ads", form, token, String.class);
 
         assert response.getStatusCode() == HttpStatus.BAD_REQUEST;
@@ -42,12 +50,17 @@ public class AdCreatingTests extends AbstractTest {
         form.setDescription("Test description");
         form.setCategory(1L);
 
-        String token = retrieveToken("admin", "admin");
+        String token = retrieveToken();
         ResponseEntity<String> response = apiRequestPost("/api/ads", form, token, String.class);
 
         assert response.getStatusCode() == HttpStatus.CREATED;
         assert response.getBody() != null;
         assert response.getBody().contains("\"id\":");
+
+        // cleanup
+        List<Ad> testAds = adRepository.findAllTestAds();
+        assert !testAds.isEmpty();
+        adRepository.deleteAll(testAds);
     }
 
 }
