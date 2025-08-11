@@ -8,6 +8,9 @@
         <li>
           <NuxtLink to="/about">About</NuxtLink>
         </li>
+        <li>
+          <NuxtLink to="/a/1">Ad</NuxtLink>
+        </li>
         <li class="ms-auto">
           <NuxtLink to="/auth/login">Login</NuxtLink>
         </li>

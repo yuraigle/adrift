@@ -1,6 +1,7 @@
 package ru.orlov.adrift.config;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.lang.NonNull;
@@ -9,6 +10,7 @@ import org.springframework.web.servlet.config.annotation.*;
 import java.nio.file.Path;
 import java.util.List;
 
+@Log4j2
 @EnableWebMvc
 @Configuration
 @RequiredArgsConstructor
@@ -18,7 +20,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(@NonNull CorsRegistry registry) {
-        registry.addMapping("/**")
+        registry.addMapping("/api/**")
                 .allowedOrigins("*")
                 .allowedMethods("GET", "POST", "PUT", "DELETE");
     }

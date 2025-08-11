@@ -5,7 +5,7 @@ const getTokenFromLocalStorage = (): string => {
   return user ? JSON.parse(user).token : ''
 }
 
-export const callApi = async (url: string, method: string, body: string | null): Promise<any> => {
+export const callApi = async (url: string, method: string, body: string | null): Promise<unknown> => {
   return new Promise((resolve, reject) => {
     fetch(API_URL + url, {
       method: method,
@@ -22,7 +22,9 @@ export const callApi = async (url: string, method: string, body: string | null):
               if (resp.ok) {
                 resolve(data)
               } else if (data?.messages && data.messages.length > 0) {
-                reject(data.messages[0]); // 400/500 with errors object
+                reject(data.messages[0]); // 400/500 response with error dto
+              } else if (data?.message) {
+                reject(data.message); // default spring boot error
               } else {
                 reject('Error ' + resp.status); // some other error
               }

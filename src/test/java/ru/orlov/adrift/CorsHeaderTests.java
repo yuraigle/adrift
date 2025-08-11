@@ -1,43 +1,44 @@
 package ru.orlov.adrift;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.ResponseEntity;
 
+import java.util.List;
 import java.util.Map;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class CorsHeaderTests {
+public class CorsHeaderTests extends AbstractTest {
 
-    @LocalServerPort
-    private int port;
+    private boolean hasCorsHeaders(ResponseEntity<String> response) {
+        if (response.getHeaders().containsKey("Access-Control-Allow-Origin")) {
+            return true;
+        }
 
-    @Autowired
-    private TestRestTemplate restTemplate;
-
-    private String url(String path) {
-        return "http://localhost:" + port + path;
+        List<String> vary = response.getHeaders().get("Vary");
+        return vary != null && vary.contains("Origin");
     }
 
     @Test
     void apiPageContainsCorsHeaders() {
-        ResponseEntity<String> response = restTemplate
-                .getForEntity(url("/api/version"), String.class);
+        ResponseEntity<String> response = testRequestGet("/api/version");
 
-        assert response.getHeaders().containsKey("Access-Control-Allow-Origin");
+        assert hasCorsHeaders(response);
     }
 
     @Test
-    void errorPageContainsCorsHeaders() {
+    void error1PageContainsCorsHeaders() {
         Map<String, String> req = Map.of("password", "");
+        ResponseEntity<String> response = testRequestPost("/api/auth/register", req);
 
-        ResponseEntity<String> response = restTemplate
-                .postForEntity(url("/api/auth/login"), req, String.class);
+        assert hasCorsHeaders(response);
+    }
 
-        assert response.getHeaders().containsKey("Access-Control-Allow-Origin");
+    @Test
+    void error2PageContainsCorsHeaders() {
+        ResponseEntity<String> response = testRequestPost("/api/auth/login", null);
+
+        assert hasCorsHeaders(response);
     }
 
 }
