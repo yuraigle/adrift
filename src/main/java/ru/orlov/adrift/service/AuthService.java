@@ -7,10 +7,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import ru.orlov.adrift.domain.User;
 import ru.orlov.adrift.domain.UserRepository;
 import ru.orlov.adrift.domain.ex.AppAuthException;
+import ru.orlov.adrift.domain.ex.AppException;
 
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
@@ -95,24 +97,28 @@ public class AuthService {
                 .compact();
     }
 
-    public AuthDetails parseToken(String token) throws AppAuthException {
-        if (token == null) {
-            throw new AppAuthException("Auth token not found");
+    public AuthDetails parseToken(String token) throws AppException {
+        if (token == null || token.isEmpty()) {
+            throw new AppException("Authorization is missing in request", HttpStatus.UNAUTHORIZED);
         }
 
         JwtParser parser = Jwts.parser().verifyWith(getSecretKey()).build();
 
         try {
+            if (token.startsWith("Bearer ")) {
+                token = token.trim().substring(7);
+            }
+
             Jwt<?, ?> jwt = parser.parse(token);
             DefaultClaims payload = (DefaultClaims) jwt.getPayload();
 
             AuthDetails details = new AuthDetails();
             details.setUsername(trimToNull(payload.getSubject()));
-            details.setId((Long) payload.get("id"));
+            details.setId(Long.valueOf(payload.get("id").toString()));
 
             return details;
         } catch (MalformedJwtException e) {
-            throw new AppAuthException("Invalid auth token");
+            throw new AppException("Invalid auth token", HttpStatus.BAD_REQUEST);
         } catch (ExpiredJwtException e) {
             throw new AppAuthException("Auth token expired");
         } catch (Exception e) {

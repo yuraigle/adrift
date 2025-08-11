@@ -1,9 +1,9 @@
 <script setup lang="ts">
-const API_URL = 'http://localhost:8080/api';
+import { API_BASE } from '~/utils/api';
 
 const route = useRoute()
 const id = computed(() => route.params.id)
-const { data: ad } = await useFetch<AdSummary>(`${API_URL}/ads/${id.value}`)
+const { data: ad } = await useFetch<AdSummary>(`${API_BASE}/ads/${id.value}`)
 
 </script>
 
@@ -18,9 +18,7 @@ const { data: ad } = await useFetch<AdSummary>(`${API_URL}/ads/${id.value}`)
       <li v-if="ad.id > 1">
         <NuxtLink :to="`/a/${ad.id - 1}`">&laquo;</NuxtLink>
       </li>
-      <li>
-        {{ ad.id }}
-      </li>
+      <li>{{ ad.id }}</li>
       <li>
         <NuxtLink :to="`/a/${ad.id + 1}`">&raquo;</NuxtLink>
       </li>

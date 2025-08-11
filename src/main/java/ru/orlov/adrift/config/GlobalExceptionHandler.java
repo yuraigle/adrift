@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import ru.orlov.adrift.controller.dto.ErrorResponseDto;
@@ -22,8 +23,19 @@ public class GlobalExceptionHandler {
                 .body(ErrorResponseDto.of(ex.getMessage()));
     }
 
+    @ExceptionHandler(MissingRequestHeaderException.class)
+    public ResponseEntity<ErrorResponseDto> handleAuthExceptions(MissingRequestHeaderException ex) {
+        if (ex.getHeaderName().equals("Authorization")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(ErrorResponseDto.of("Authorization is missing in request"));
+        }
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(ErrorResponseDto.of(ex.getMessage()));
+    }
+
     @ExceptionHandler(AppException.class)
-    public ResponseEntity<ErrorResponseDto> handleAppExceptions(AppException ex) {
+    public ResponseEntity<ErrorResponseDto> handleOtherAppExceptions(AppException ex) {
         HttpStatus status = ex.getHttpStatus() != null
                 ? HttpStatus.valueOf(ex.getHttpStatus())
                 : HttpStatus.INTERNAL_SERVER_ERROR;

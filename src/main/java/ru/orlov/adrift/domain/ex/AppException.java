@@ -2,6 +2,7 @@ package ru.orlov.adrift.domain.ex;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.http.HttpStatus;
 
 @Getter
 @Setter
@@ -18,4 +19,8 @@ public class AppException extends Exception {
         this.httpStatus = httpStatus;
     }
 
+    public AppException(String message, HttpStatus httpStatus) {
+        super(message);
+        this.httpStatus = httpStatus.value();
+    }
 }
