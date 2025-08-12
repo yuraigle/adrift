@@ -47,9 +47,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 "/auth/login", "/auth/register"
         );
 
-        ssrRoutes.forEach(route ->
-                registry.addViewController(route)
-                        .setViewName("forward:" + route + "/index.html")
-        );
+        for (String route : ssrRoutes) {
+            String html = route.replace("/", "") + "/index.html";
+            registry.addViewController(route)
+                    .setViewName("forward:" + html);
+        }
     }
 }

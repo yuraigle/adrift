@@ -1,5 +1,7 @@
 package ru.orlov.adrift.controller.dto;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Builder;
 import lombok.Data;
 
@@ -19,5 +21,13 @@ public class ErrorResponseDto {
 
     public static ErrorResponseDto of(Set<String> messages) {
         return ErrorResponseDto.builder().messages(messages).build();
+    }
+
+    public String toJson() {
+        try {
+            return (new ObjectMapper()).writeValueAsString(this);
+        } catch (JsonProcessingException e) {
+            return "{}";
+        }
     }
 }

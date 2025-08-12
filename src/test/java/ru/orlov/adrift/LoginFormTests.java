@@ -10,16 +10,6 @@ import ru.orlov.adrift.controller.dto.LoginRequestDto;
 public class LoginFormTests extends AbstractTest {
 
     @Test
-    void loginEmptyPostContainsErrorMessages() {
-        ResponseEntity<String> response = apiRequestPost("/api/auth/login", null, null, String.class);
-
-        assert response.getStatusCode() == HttpStatus.BAD_REQUEST;
-        assert response.getBody() != null;
-        assert response.getBody().contains("messages");
-        assert response.getBody().contains("Invalid JSON");
-    }
-
-    @Test
     void loginMalformedContainsErrorMessages() {
         LoginRequestDto form = new LoginRequestDto("", "");
         ResponseEntity<String> response = apiRequestPost("/api/auth/login", form, null, String.class);

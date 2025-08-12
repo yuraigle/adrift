@@ -1,5 +1,6 @@
 package ru.orlov.adrift.config;
 
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -7,15 +8,35 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 import ru.orlov.adrift.controller.dto.ErrorResponseDto;
 import ru.orlov.adrift.domain.ex.AppAuthException;
 import ru.orlov.adrift.domain.ex.AppException;
 
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.nio.file.Path;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
+
+    private String html404 = "404 - Not found";
+
+    public GlobalExceptionHandler(Environment env) {
+        String appPath = env.getProperty("APP_PATH", ".");
+        appPath = appPath.replace('\\', '/').trim();
+        String webappDist = Path.of(appPath, "webapp/dist") + "/";
+        webappDist = webappDist.replace("//", "/");
+
+        try (
+                InputStream is = new FileInputStream(webappDist + "404.html")
+        ) {
+            html404 = new String(is.readAllBytes());
+        } catch (Exception ignore) {
+        }
+    }
 
     @ExceptionHandler(AppAuthException.class)
     public ResponseEntity<ErrorResponseDto> handleAuthExceptions(AppAuthException ex) {
@@ -64,4 +85,15 @@ public class GlobalExceptionHandler {
                 .body(ErrorResponseDto.of("Invalid JSON request"));
     }
 
+    @ExceptionHandler(NoResourceFoundException.class)
+    protected ResponseEntity<String> handleNoResourceExceptions(
+            NoResourceFoundException ex
+    ) {
+        if (ex.getResourcePath().startsWith("api/")) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(ErrorResponseDto.of("API path not found").toJson());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(html404);
+        }
+    }
 }
