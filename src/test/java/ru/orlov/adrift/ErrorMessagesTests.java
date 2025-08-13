@@ -28,11 +28,11 @@ public class ErrorMessagesTests extends AbstractTest {
 
     @Test
     void emptyPostBodyReturnsArrayOfMessages() {
-        ResponseEntity<String> response = apiRequestPost("/api/auth/login", null, null, String.class);
+        ResponseEntity<String> resp = apiRequestPost("/api/auth/login", null, null, String.class);
 
-        assert response.getStatusCode() == HttpStatus.BAD_REQUEST;
-        assert response.getBody() != null;
-        assert response.getBody().contains("\"messages\":[");
+        assert resp.getStatusCode() == HttpStatus.BAD_REQUEST;
+        assert resp.getBody() != null;
+        assert resp.getBody().contains("\"messages\":[");
     }
 
 }

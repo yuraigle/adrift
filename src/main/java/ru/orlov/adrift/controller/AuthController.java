@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import ru.orlov.adrift.controller.dto.AuthDetails;
 import ru.orlov.adrift.controller.dto.LoginRequestDto;
 import ru.orlov.adrift.controller.dto.LoginResponseDto;
 import ru.orlov.adrift.controller.dto.RegisterRequestDto;
@@ -21,7 +22,7 @@ public class AuthController {
     public LoginResponseDto login(
             @Valid @RequestBody LoginRequestDto request
     ) throws AppAuthException {
-        AuthService.AuthDetails details = authService.authenticate(
+        AuthDetails details = authService.authenticate(
                 request.getUsername(), request.getPassword()
         );
 
@@ -36,7 +37,7 @@ public class AuthController {
     public LoginResponseDto register(
             @Valid @RequestBody RegisterRequestDto request
     ) throws AppAuthException {
-        AuthService.AuthDetails details = authService.register(
+        AuthDetails details = authService.register(
                 request.getEmail(), request.getUsername(), request.getPassword()
         );
 

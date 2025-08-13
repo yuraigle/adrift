@@ -45,7 +45,12 @@ public abstract class AbstractTest {
         );
     }
 
-    <T> ResponseEntity<T> apiRequestPost(String path, Object form, String token, Class<T> responseType) {
+    <T> ResponseEntity<T> apiRequestPost(
+            String path,
+            Object form,
+            String token,
+            Class<T> responseType
+    ) {
         String formBody;
         try {
             formBody = (new ObjectMapper()).writeValueAsString(form);

@@ -3,17 +3,15 @@ package ru.orlov.adrift.service;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.impl.DefaultClaims;
 import io.jsonwebtoken.security.Keys;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import ru.orlov.adrift.controller.dto.AuthDetails;
 import ru.orlov.adrift.domain.User;
 import ru.orlov.adrift.domain.UserRepository;
 import ru.orlov.adrift.domain.ex.AppAuthException;
-import ru.orlov.adrift.domain.ex.AppException;
 
+import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
@@ -25,16 +23,27 @@ import static ru.orlov.adrift.domain.User.hashPassword;
 import static ru.orlov.adrift.domain.User.verifyPassword;
 
 @Service
-@RequiredArgsConstructor
 public class AuthService {
 
-    @Value("${app.jwt-salt}")
-    private String jwtSalt;
-
-    @Value("${app.jwt-duration-hours:12}")
-    private Long jwtDurationHours;
-
     private final UserRepository userRepository;
+    private final JwtParser jwtParser;
+    private final Long jwtDurationHours;
+    private final Key signingKey;
+
+    public AuthService(
+            UserRepository userRepository,
+            @Value("${app.jwt-salt}") String jwtSalt,
+            @Value("${app.jwt-duration-hours}") Long jwtDurationHours
+    ) {
+        this.userRepository = userRepository;
+        this.jwtDurationHours = jwtDurationHours;
+
+        byte[] keyBytes = jwtSalt.getBytes(StandardCharsets.UTF_8);
+        signingKey = Keys.hmacShaKeyFor(keyBytes);
+
+        SecretKey secretKey = new SecretKeySpec(keyBytes, signingKey.getAlgorithm());
+        this.jwtParser = Jwts.parser().verifyWith(secretKey).build();
+    }
 
     public AuthDetails authenticate(
             String username,
@@ -93,23 +102,21 @@ public class AuthService {
                 .expiration(new Date((new Date()).getTime() + expirationMs))
                 .subject(details.getUsername())
                 .claim("id", details.getId())
-                .signWith(getSigningKey())
+                .signWith(this.signingKey)
                 .compact();
     }
 
-    public AuthDetails parseToken(String token) throws AppException {
+    public AuthDetails parseToken(String token) throws AppAuthException {
         if (token == null || token.isEmpty()) {
-            throw new AppException("Authorization is missing in request", HttpStatus.UNAUTHORIZED);
+            throw new AppAuthException("Authorization token required", HttpStatus.UNAUTHORIZED);
         }
 
-        JwtParser parser = Jwts.parser().verifyWith(getSecretKey()).build();
+        if (token.startsWith("Bearer ")) {
+            token = token.trim().substring(7);
+        }
 
         try {
-            if (token.startsWith("Bearer ")) {
-                token = token.trim().substring(7);
-            }
-
-            Jwt<?, ?> jwt = parser.parse(token);
+            Jwt<?, ?> jwt = jwtParser.parse(token);
             DefaultClaims payload = (DefaultClaims) jwt.getPayload();
 
             AuthDetails details = new AuthDetails();
@@ -118,30 +125,11 @@ public class AuthService {
 
             return details;
         } catch (MalformedJwtException e) {
-            throw new AppException("Invalid auth token", HttpStatus.BAD_REQUEST);
+            throw new AppAuthException("Authorization token invalid", HttpStatus.BAD_REQUEST);
         } catch (ExpiredJwtException e) {
-            throw new AppAuthException("Auth token expired");
+            throw new AppAuthException("Authorization token expired", HttpStatus.UNAUTHORIZED);
         } catch (Exception e) {
             throw new AppAuthException(e.getMessage());
         }
-    }
-
-    private SecretKeySpec getSecretKey() {
-        return new SecretKeySpec(
-                this.jwtSalt.getBytes(StandardCharsets.UTF_8),
-                getSigningKey().getAlgorithm()
-        );
-    }
-
-    private Key getSigningKey() {
-        byte[] keyBytes = this.jwtSalt.getBytes(StandardCharsets.UTF_8);
-        return Keys.hmacShaKeyFor(keyBytes);
-    }
-
-    @Data
-    @NoArgsConstructor
-    public static class AuthDetails {
-        public Long id;
-        public String username;
     }
 }
