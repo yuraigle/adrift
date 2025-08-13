@@ -2,6 +2,7 @@ package ru.orlov.adrift.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
@@ -9,6 +10,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "templates")
 public class Template {
@@ -20,7 +22,7 @@ public class Template {
 
     @ManyToMany
     @JoinTable(
-            name = "template_questions",
+            name = "templates_questions",
             joinColumns = @JoinColumn(name = "template_id"),
             inverseJoinColumns = @JoinColumn(name = "question_id")
     )

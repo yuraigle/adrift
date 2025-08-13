@@ -1,13 +1,12 @@
 package ru.orlov.adrift.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@ToString
 @Entity
 @Table(name = "questions")
 public class Question {
@@ -16,6 +15,37 @@ public class Question {
     private Long id;
 
     private String name;
-    private String type;
 
+    @Column(name = "type")
+    @Convert(converter = QuestionTypeConverter.class)
+    private Type type;
+
+    private Boolean required;
+
+    @Getter
+    @RequiredArgsConstructor
+    public enum Type {
+        TEXT("TEXT"),
+        NUMBER("NUMBER"),
+        DECIMAL("DECIMAL");
+
+        private final String value;
+    }
+
+    @Converter
+    public static class QuestionTypeConverter implements AttributeConverter<Type, String> {
+
+        @Override
+        public String convertToDatabaseColumn(Type type) {
+            return type != null ? type.getValue() : null;
+        }
+
+        @Override
+        public Type convertToEntityAttribute(String dbData) {
+            for (Type type : Type.values()) {
+                if (type.getValue().equals(dbData)) return type;
+            }
+            throw new IllegalArgumentException("Unknown type: " + dbData);
+        }
+    }
 }

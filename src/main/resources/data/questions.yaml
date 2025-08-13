@@ -1,16 +1,17 @@
 questions:
   - id: 1
     name: Area
-    type: decimal
+    type: DECIMAL
   - id: 2
     name: Period
-    type: text
+    type: TEXT
+    required: true
   - id: 3
     name: Construction Year
-    type: number
+    type: NUMBER
   - id: 4
     name: WWW
-    type: text
+    type: TEXT
   - id: 5
     name: YouTube link
-    type: text
+    type: TEXT

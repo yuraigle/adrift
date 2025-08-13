@@ -159,6 +159,20 @@ public class DbInitializer {
                         randomHousingRentPrice() : randomHousingSellPrice();
                 ad.setPrice(price);
 
+                ad.getFields().clear();
+
+                Question qArea = questionRepository.findById(1L).orElse(null);
+                if (qArea == null) {
+                    log.error("Question 1 not found");
+                    continue;
+                }
+
+                AdField field = new AdField();
+                field.setAd(ad);
+                field.setQuestion(qArea);
+                field.setValDecimal(BigDecimal.valueOf(67.5));
+                ad.getFields().add(field);
+
                 ad.setCreated(LocalDateTime.now());
                 generatedAds.add(ad);
             }

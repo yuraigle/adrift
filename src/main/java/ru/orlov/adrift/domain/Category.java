@@ -2,10 +2,12 @@ package ru.orlov.adrift.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "categories")
 public class Category {
@@ -16,7 +18,7 @@ public class Category {
     private String name;
     private String slug;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "template_id")
     private Template template;
 

@@ -3,12 +3,14 @@ package ru.orlov.adrift.domain;
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "users")
 public class User {

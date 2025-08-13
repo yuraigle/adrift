@@ -1,5 +1,6 @@
 package ru.orlov.adrift;
 
+import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,6 +12,7 @@ import ru.orlov.adrift.domain.AdRepository;
 
 import java.util.List;
 
+@Log4j2
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class AdCreatingTests extends AbstractTest {
 
@@ -51,16 +53,45 @@ public class AdCreatingTests extends AbstractTest {
         form.setCategory(1L);
 
         String token = retrieveToken();
-        ResponseEntity<String> response = apiRequestPost("/api/ads", form, token, String.class);
+        ResponseEntity<String> resp = apiRequestPost("/api/ads", form, token, String.class);
 
-        assert response.getStatusCode() == HttpStatus.CREATED;
-        assert response.getBody() != null;
-        assert response.getBody().contains("\"id\":");
+        assert resp.getStatusCode() == HttpStatus.CREATED;
+        assert resp.getBody() != null;
+        assert resp.getBody().contains("\"id\":");
 
-        // cleanup
-        List<Ad> testAds = adRepository.findAllTestAds();
-        assert !testAds.isEmpty();
-        adRepository.deleteAll(testAds);
+        adRepository.deleteAll(adRepository.findAllByTitleLike("Test AD %"));
+    }
+
+    @Test
+    void createAdWithCustomFields() {
+        adRepository.deleteAll(adRepository.findAllByTitleLike("Test AD %"));
+
+        AdRequestDto form = new AdRequestDto();
+        form.setTitle("Test AD #1");
+        form.setDescription("Test description");
+        form.setCategory(1L); // Houses for sale
+        form.setFields(List.of(
+                new AdRequestDto.AdFieldDto(1L, "67.60"), // area
+                new AdRequestDto.AdFieldDto(3L, "1985"), // construction year
+                new AdRequestDto.AdFieldDto(4L, "https://example.com") // www
+        ));
+
+        String token = retrieveToken();
+        ResponseEntity<String> resp = apiRequestPost(
+                "/api/ads", form, token, String.class
+        );
+
+        assert resp.getStatusCode() == HttpStatus.CREATED;
+        assert resp.getBody() != null;
+
+        List<Ad> ads = adRepository.findByTitle("Test AD #1");
+        assert !ads.isEmpty();
+
+        Ad ad = ads.getLast();
+        assert ad != null;
+        assert !ad.getFields().isEmpty();
+
+        adRepository.deleteAll(adRepository.findAllByTitleLike("Test AD %"));
     }
 
 }
