@@ -15,8 +15,6 @@ public class AdRequestDto {
 
     private String description;
     private BigDecimal price;
-    private String www;
-    private String contact;
 
     @NotNull
     @Min(1)

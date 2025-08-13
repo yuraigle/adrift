@@ -26,8 +26,6 @@ public class AdService {
         ad.setTitle(request.getTitle());
         ad.setDescription(request.getDescription());
         ad.setPrice(request.getPrice());
-        ad.setWww(request.getWww());
-        ad.setContact(request.getContact());
         ad.setCreated(LocalDateTime.now());
 
         Ad savedAd = adRepository.save(ad);

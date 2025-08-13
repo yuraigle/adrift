@@ -2,12 +2,16 @@ categories:
   - id: 1
     name: Houses for sale
     slug: houses-for-sale
+    template: 1
   - id: 2
     name: Houses for rent
     slug: houses-for-rent
+    template: 2
   - id: 3
     name: Apartments for sale
     slug: apartments-for-sale
+    template: 1
   - id: 4
     name: Apartments for rent
     slug: apartments-for-rent
+    template: 2

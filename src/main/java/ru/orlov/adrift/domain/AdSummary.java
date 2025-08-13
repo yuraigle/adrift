@@ -11,8 +11,6 @@ public interface AdSummary {
     String getTitle();
     String getDescription();
     BigDecimal getPrice();
-    String getWww();
-    String getContact();
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     LocalDateTime getCreated();

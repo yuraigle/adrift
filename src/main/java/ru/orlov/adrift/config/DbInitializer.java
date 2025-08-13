@@ -22,30 +22,109 @@ public class DbInitializer {
 
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
+    private final QuestionRepository questionRepository;
+    private final TemplateRepository templateRepository;
     private final AdRepository adRepository;
     private final ObjectMapper objectMapper;
 
     public DbInitializer(
             UserRepository userRepository,
             CategoryRepository categoryRepository,
+            QuestionRepository questionRepository,
+            TemplateRepository templateRepository,
             AdRepository adRepository,
             ObjectMapper objectMapper
     ) {
         this.userRepository = userRepository;
         this.categoryRepository = categoryRepository;
+        this.questionRepository = questionRepository;
+        this.templateRepository = templateRepository;
         this.adRepository = adRepository;
         this.objectMapper = objectMapper;
+
+        this.categoryRepository.deleteAll();
+        this.questionRepository.deleteAll();
+        this.templateRepository.deleteAll();
+
+        if (this.categoryRepository.count() == 0) {
+            initQuestionsTable();
+            initTemplatesTable();
+            initCategoriesTable();
+        }
 
         if (this.userRepository.count() == 0) {
             initUsersTable();
         }
 
-        if (this.categoryRepository.count() == 0) {
-            initCategoriesTable();
-        }
-
         if (this.adRepository.count() == 0) {
             initAdsTable();
+        }
+    }
+
+    private void initQuestionsTable() {
+        try (
+                InputStream is = TypeReference.class
+                        .getResourceAsStream("/data/questions.yaml")
+        ) {
+            QuestionsResource yaml = objectMapper
+                    .readValue(is, QuestionsResource.class);
+
+            questionRepository.saveAll(yaml.questions);
+            log.info("{} questions created", yaml.questions.size());
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        }
+    }
+
+    private void initTemplatesTable() {
+        try (
+                InputStream is = TypeReference.class
+                        .getResourceAsStream("/data/templates.yaml")
+        ) {
+            TemplatesResource yaml = objectMapper
+                    .readValue(is, TemplatesResource.class);
+
+            for (TemplatesResource.TemplateYamlRef tpl : yaml.templates) {
+                Template template = new Template();
+                template.setId(tpl.getId());
+                template.setName(tpl.getName());
+
+                for (Long qId : tpl.getQuestions()) {
+                    questionRepository.findById(qId)
+                            .ifPresent(template.getQuestions()::add);
+                }
+
+                templateRepository.save(template);
+            }
+
+            log.info("Templates created");
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        }
+    }
+
+    private void initCategoriesTable() {
+        try (
+                InputStream is = TypeReference.class
+                        .getResourceAsStream("/data/categories.yaml")
+        ) {
+            CategoriesResource yaml = objectMapper
+                    .readValue(is, CategoriesResource.class);
+
+            for (CategoriesResource.CategoryYamlRef ref : yaml.categories) {
+                Category category = new Category();
+                category.setId(ref.getId());
+                category.setName(ref.getName());
+                category.setSlug(ref.getSlug());
+
+                templateRepository.findById(ref.getTemplate())
+                        .ifPresent(category::setTemplate);
+
+                categoryRepository.save(category);
+            }
+            log.info("Categories created");
+        } catch (IOException e) {
+            log.error(e.getMessage());
         }
     }
 
@@ -57,21 +136,6 @@ public class DbInitializer {
         user.setCreated(LocalDateTime.now());
         this.userRepository.save(user);
         log.info("Admin user created");
-    }
-
-    private void initCategoriesTable() {
-        try (
-                InputStream is = TypeReference.class
-                        .getResourceAsStream("/data/categories.yaml")
-        ) {
-            CategoriesResource yaml = objectMapper
-                    .readValue(is, CategoriesResource.class);
-
-            categoryRepository.saveAll(yaml.categories);
-            log.info("{} categories created", yaml.categories.size());
-        } catch (IOException e) {
-            log.error(e.getMessage());
-        }
     }
 
     private void initAdsTable() {
@@ -95,8 +159,6 @@ public class DbInitializer {
                         randomHousingRentPrice() : randomHousingSellPrice();
                 ad.setPrice(price);
 
-                ad.setWww(faker.internet().url());
-                ad.setContact(faker.phoneNumber().cellPhone());
                 ad.setCreated(LocalDateTime.now());
                 generatedAds.add(ad);
             }
@@ -120,6 +182,31 @@ public class DbInitializer {
 
     @Data
     private static class CategoriesResource {
-        public List<Category> categories;
+        public List<CategoryYamlRef> categories;
+
+        @Data
+        private static class CategoryYamlRef {
+            private Long id;
+            private String name;
+            private String slug;
+            private Long template;
+        }
+    }
+
+    @Data
+    private static class QuestionsResource {
+        private List<Question> questions;
+    }
+
+    @Data
+    private static class TemplatesResource {
+        private List<TemplateYamlRef> templates;
+
+        @Data
+        private static class TemplateYamlRef {
+            private Long id;
+            private String name;
+            private List<Long> questions;
+        }
     }
 }

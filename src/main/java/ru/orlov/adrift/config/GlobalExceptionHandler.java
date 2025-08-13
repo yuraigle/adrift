@@ -30,25 +30,27 @@ public class GlobalExceptionHandler {
         String webappDist = Path.of(appPath, "webapp/dist") + "/";
         webappDist = webappDist.replace("//", "/");
 
-        try (
-                InputStream is = new FileInputStream(webappDist + "404.html")
-        ) {
+        try (InputStream is = new FileInputStream(webappDist + "404.html")) {
             html404 = new String(is.readAllBytes());
         } catch (Exception ignore) {
         }
     }
 
     @ExceptionHandler(AppAuthException.class)
-    public ResponseEntity<ErrorResponseDto> handleAuthExceptions(AppAuthException ex) {
+    public ResponseEntity<ErrorResponseDto> handleAuthExceptions(
+            AppAuthException ex
+    ) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
                 .body(ErrorResponseDto.of(ex.getMessage()));
     }
 
     @ExceptionHandler(MissingRequestHeaderException.class)
-    public ResponseEntity<ErrorResponseDto> handleAuthExceptions(MissingRequestHeaderException ex) {
+    public ResponseEntity<ErrorResponseDto> handleAuthExceptions(
+            MissingRequestHeaderException ex
+    ) {
         if (ex.getHeaderName().equals("Authorization")) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(ErrorResponseDto.of("Authorization is missing in request"));
+                    .body(ErrorResponseDto.of("Authorization is missing"));
         }
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -56,7 +58,9 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(AppException.class)
-    public ResponseEntity<ErrorResponseDto> handleOtherAppExceptions(AppException ex) {
+    public ResponseEntity<ErrorResponseDto> handleOtherAppExceptions(
+            AppException ex
+    ) {
         HttpStatus status = ex.getHttpStatus() != null
                 ? HttpStatus.valueOf(ex.getHttpStatus())
                 : HttpStatus.INTERNAL_SERVER_ERROR;
@@ -91,7 +95,7 @@ public class GlobalExceptionHandler {
     ) {
         if (ex.getResourcePath().startsWith("api/")) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(ErrorResponseDto.of("API path not found").toJson());
+                    .body(ErrorResponseDto.of("Not Found").toJson());
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(html404);
         }

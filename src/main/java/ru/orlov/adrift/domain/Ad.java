@@ -21,8 +21,6 @@ public class Ad {
     private String title;
     private String description;
     private BigDecimal price;
-    private String www;
-    private String contact;
     private LocalDateTime created;
 
     @ManyToOne

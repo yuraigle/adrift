@@ -1,0 +1,16 @@
+questions:
+  - id: 1
+    name: Area
+    type: decimal
+  - id: 2
+    name: Period
+    type: text
+  - id: 3
+    name: Construction Year
+    type: number
+  - id: 4
+    name: WWW
+    type: text
+  - id: 5
+    name: YouTube link
+    type: text

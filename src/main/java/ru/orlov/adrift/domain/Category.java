@@ -1,8 +1,6 @@
 package ru.orlov.adrift.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,5 +15,9 @@ public class Category {
 
     private String name;
     private String slug;
+
+    @ManyToOne
+    @JoinColumn(name = "template_id")
+    private Template template;
 
 }
