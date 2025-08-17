@@ -6,11 +6,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import ru.orlov.adrift.controller.dto.AdRequestDto;
 import ru.orlov.adrift.domain.Ad;
+import ru.orlov.adrift.domain.AdField;
 import ru.orlov.adrift.domain.AdRepository;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 @Log4j2
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -18,6 +22,9 @@ public class AdCreatingTests extends AbstractTest {
 
     @Autowired
     AdRepository adRepository;
+
+    @Autowired
+    JdbcTemplate jdbc;
 
     @Test
     void createAdUnauthorized() {
@@ -66,6 +73,7 @@ public class AdCreatingTests extends AbstractTest {
     void createAdWithCustomFields() {
         adRepository.deleteAll(adRepository.findAllByTitleLike("Test AD %"));
 
+        // create an Ad using rest api
         AdRequestDto form = new AdRequestDto();
         form.setTitle("Test AD #1");
         form.setDescription("Test description");
@@ -81,6 +89,7 @@ public class AdCreatingTests extends AbstractTest {
                 "/api/ads", form, token, String.class
         );
 
+        // assert Ad is created
         assert resp.getStatusCode() == HttpStatus.CREATED;
         assert resp.getBody() != null;
 
@@ -89,9 +98,27 @@ public class AdCreatingTests extends AbstractTest {
 
         Ad ad = ads.getLast();
         assert ad != null;
+
+        // assert Ad Fields are created
         assert !ad.getFields().isEmpty();
 
+        Optional<AdField> f1 = ad.getFields().stream()
+                .filter(f -> f.getQuestion().getId() == 1L)
+                .findAny();
+
+        assert f1.isPresent();
+        assert f1.get().getValDecimal().equals(BigDecimal.valueOf(67.60));
+
+        // cleanup: delete test Ads
         adRepository.deleteAll(adRepository.findAllByTitleLike("Test AD %"));
+
+        // assert Ad Fields are deleted too
+        String sql1 = """
+                select count(*) as cnt from ads_fields
+                where ad_id is null or question_id is null
+                """;
+        int cnt = (Integer) jdbc.queryForMap(sql1).get("cnt");
+        assert cnt == 0;
     }
 
 }

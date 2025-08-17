@@ -6,14 +6,16 @@ import lombok.Data;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.asm.TypeReference;
 import org.springframework.context.annotation.Configuration;
+import ru.orlov.adrift.controller.dto.AdRequestDto;
 import ru.orlov.adrift.domain.*;
+import ru.orlov.adrift.domain.ex.AppException;
+import ru.orlov.adrift.service.AdService;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Log4j2
@@ -25,6 +27,7 @@ public class DbInitializer {
     private final QuestionRepository questionRepository;
     private final TemplateRepository templateRepository;
     private final AdRepository adRepository;
+    private final AdService adService;
     private final ObjectMapper objectMapper;
 
     public DbInitializer(
@@ -33,6 +36,7 @@ public class DbInitializer {
             QuestionRepository questionRepository,
             TemplateRepository templateRepository,
             AdRepository adRepository,
+            AdService adService,
             ObjectMapper objectMapper
     ) {
         this.userRepository = userRepository;
@@ -40,6 +44,7 @@ public class DbInitializer {
         this.questionRepository = questionRepository;
         this.templateRepository = templateRepository;
         this.adRepository = adRepository;
+        this.adService = adService;
         this.objectMapper = objectMapper;
 
         this.categoryRepository.deleteAll();
@@ -146,40 +151,28 @@ public class DbInitializer {
         }
 
         Faker faker = new Faker();
-        List<Ad> generatedAds = new ArrayList<>();
-        for (Category cat : categoryRepository.findAll()) {
-            for (int i = 0; i < 5; i++) {
-                Ad ad = new Ad();
-                ad.setUser(user);
-                ad.setCategory(cat);
-                ad.setTitle(faker.address().fullAddress());
-                ad.setDescription(faker.lorem().paragraph());
+        try {
+            for (Category cat : categoryRepository.findAll()) {
+                for (int i = 0; i < 5; i++) {
+                    AdRequestDto req = new AdRequestDto();
+                    req.setCategory(cat.getId());
+                    req.setTitle(faker.address().fullAddress());
+                    req.setDescription(faker.lorem().paragraph());
 
-                BigDecimal price = ad.getCategory().getSlug().contains("rent") ?
-                        randomHousingRentPrice() : randomHousingSellPrice();
-                ad.setPrice(price);
+                    BigDecimal price = cat.getSlug().contains("rent") ?
+                            randomHousingRentPrice() : randomHousingSellPrice();
+                    req.setPrice(price);
 
-                ad.getFields().clear();
+                    req.getFields().add(new AdRequestDto.AdFieldDto(1L, "67.5"));
 
-                Question qArea = questionRepository.findById(1L).orElse(null);
-                if (qArea == null) {
-                    log.error("Question 1 not found");
-                    continue;
+                    adService.createDraft(req, user);
                 }
-
-                AdField field = new AdField();
-                field.setAd(ad);
-                field.setQuestion(qArea);
-                field.setValDecimal(BigDecimal.valueOf(67.5));
-                ad.getFields().add(field);
-
-                ad.setCreated(LocalDateTime.now());
-                generatedAds.add(ad);
             }
+        } catch (AppException e) {
+            log.error(e.getMessage());
         }
 
-        adRepository.saveAll(generatedAds);
-        log.info("{} ads created", generatedAds.size());
+        log.info("Ads created");
     }
 
     private BigDecimal randomHousingSellPrice() {
