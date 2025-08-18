@@ -3,6 +3,9 @@ package ru.orlov.adrift.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -22,12 +25,22 @@ public class Question {
 
     private Boolean required;
 
+    @OneToMany(
+            mappedBy = "question",
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<Option> options = new ArrayList<>();
+
     @Getter
     @RequiredArgsConstructor
     public enum Type {
         TEXT("TEXT"),
         NUMBER("NUMBER"),
-        DECIMAL("DECIMAL");
+        DECIMAL("DECIMAL"),
+        CHECKBOX("CHECKBOX"),
+        OPTION("OPTION");
 
         private final String value;
     }

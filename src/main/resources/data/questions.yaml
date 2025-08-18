@@ -15,3 +15,23 @@ questions:
   - id: 5
     name: YouTube link
     type: TEXT
+  - id: 6
+    name: Pets Allowed
+    type: OPTION
+    options:
+      - id: 1
+        name: yes
+      - id: 2
+        name: no
+  - id: 7
+    name: Other Features
+    type: CHECKBOX
+    options:
+      - id: 3
+        name: Garage
+      - id: 4
+        name: High Ceilings
+      - id: 5
+        name: Electric Door Openers
+      - id: 6
+        name: Long Driveway

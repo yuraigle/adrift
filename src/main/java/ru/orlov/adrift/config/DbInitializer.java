@@ -16,6 +16,7 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Log4j2
@@ -75,7 +76,26 @@ public class DbInitializer {
             QuestionsResource yaml = objectMapper
                     .readValue(is, QuestionsResource.class);
 
-            questionRepository.saveAll(yaml.questions);
+            List<Question> questionList = new ArrayList<>();
+            for (QuestionsResource.QuestionYamlRef qq : yaml.questions) {
+                Question question = new Question();
+                question.setId(qq.getId());
+                question.setName(qq.getName());
+                question.setType(Question.Type.valueOf(qq.getType()));
+                question.setRequired(qq.getRequired() != null && qq.getRequired());
+
+                for (QuestionsResource.QuestionYamlRef.OptionYamlRef o1 : qq.getOptions()) {
+                    Option option = new Option();
+                    option.setId(o1.getId());
+                    option.setName(o1.getName());
+                    option.setQuestion(question);
+                    question.getOptions().add(option);
+                }
+
+                questionList.add(question);
+            }
+
+            questionRepository.saveAll(questionList);
             log.info("{} questions created", yaml.questions.size());
         } catch (IOException e) {
             log.error(e.getMessage());
@@ -197,7 +217,7 @@ public class DbInitializer {
 
     @Data
     private static class CategoriesResource {
-        public List<CategoryYamlRef> categories;
+        public List<CategoryYamlRef> categories = new ArrayList<>();
 
         @Data
         private static class CategoryYamlRef {
@@ -210,12 +230,27 @@ public class DbInitializer {
 
     @Data
     private static class QuestionsResource {
-        private List<Question> questions;
+        private List<QuestionYamlRef> questions = new ArrayList<>();
+
+        @Data
+        private static class QuestionYamlRef {
+            private Long id;
+            private String name;
+            private String type;
+            private Boolean required;
+            private List<OptionYamlRef> options = new ArrayList<>();
+
+            @Data
+            private static class OptionYamlRef {
+                private Long id;
+                private String name;
+            }
+        }
     }
 
     @Data
     private static class TemplatesResource {
-        private List<TemplateYamlRef> templates;
+        private List<TemplateYamlRef> templates = new ArrayList<>();
 
         @Data
         private static class TemplateYamlRef {
