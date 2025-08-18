@@ -47,6 +47,7 @@ public class DbInitializer {
         this.adService = adService;
         this.objectMapper = objectMapper;
 
+        this.adRepository.deleteAll();
         this.categoryRepository.deleteAll();
         this.questionRepository.deleteAll();
         this.templateRepository.deleteAll();
@@ -154,18 +155,25 @@ public class DbInitializer {
         try {
             for (Category cat : categoryRepository.findAll()) {
                 for (int i = 0; i < 5; i++) {
-                    AdRequestDto req = new AdRequestDto();
-                    req.setCategory(cat.getId());
-                    req.setTitle(faker.address().fullAddress());
-                    req.setDescription(faker.lorem().paragraph());
+                    AdRequestDto form = new AdRequestDto();
+                    form.setCategory(cat.getId());
+                    form.setTitle(faker.address().fullAddress());
+                    form.setDescription(faker.lorem().paragraph());
 
                     BigDecimal price = cat.getSlug().contains("rent") ?
                             randomHousingRentPrice() : randomHousingSellPrice();
-                    req.setPrice(price);
+                    form.setPrice(price);
 
-                    req.getFields().add(new AdRequestDto.AdFieldDto(1L, "67.5"));
+                    String www = faker.internet().url();
+                    Integer yr = faker.random().nextInt(1900, 2020);
+                    Double area = faker.number().randomDouble(2, 40, 120);
+                    form.setFields(List.of(
+                            new AdRequestDto.AdFieldDto(1L, String.valueOf(area)),
+                            new AdRequestDto.AdFieldDto(3L, yr.toString()),
+                            new AdRequestDto.AdFieldDto(4L, www)
+                    ));
 
-                    adService.createDraft(req, user);
+                    adService.createDraft(form, user);
                 }
             }
         } catch (AppException e) {
