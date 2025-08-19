@@ -66,7 +66,9 @@ public class AdService {
                     throw new AppException("Multiple answers for field #" + question.getId(), 400);
                 }
 
-                createAdField(ad, question, answers.getFirst().getValue());
+                String value = answers.getFirst().getValue();
+                validateFieldValue(question, value);
+                createAdField(ad, question, value);
             } else if (typesOption.contains(question.getType())) {
                 if (question.getType() == Question.Type.OPTION && answers.size() > 1) {
                     throw new AppException("Multiple answers for field #" + question.getId(), 400);
@@ -84,6 +86,46 @@ public class AdService {
 
         return adRepository.findAdSummaryById(savedAd.getId())
                 .orElseThrow(() -> new AppException("Ad not created"));
+    }
+
+    private void validateFieldValue(Question question, String value) throws AppException {
+        if (value == null) {
+            return;
+        }
+
+        String message = question.getMessage() == null
+                ? "Invalid value for field #" + question.getId()
+                : question.getMessage().trim();
+
+        if (question.getMin() != null) {
+            if (question.getType() == Question.Type.NUMBER
+                    && Integer.parseInt(value) < question.getMin()
+            ) {
+                throw new AppException(message, 400);
+            } else if (question.getType() == Question.Type.DECIMAL
+                    && new BigDecimal(value).compareTo(new BigDecimal(question.getMin())) < 0
+            ) {
+                throw new AppException(message, 400);
+            }
+        }
+
+        if (question.getMax() != null) {
+            if (question.getType() == Question.Type.NUMBER
+                    && Integer.parseInt(value) > question.getMax()
+            ) {
+                throw new AppException(message, 400);
+            } else if (question.getType() == Question.Type.DECIMAL
+                    && new BigDecimal(value).compareTo(new BigDecimal(question.getMax())) > 0
+            ) {
+                throw new AppException(message, 400);
+            }
+        }
+
+        if (question.getRegex() != null && !question.getRegex().isEmpty()) {
+            if (!value.matches(question.getRegex())) {
+                throw new AppException(message, 400);
+            }
+        }
     }
 
     private void createAdField(Ad ad, Question question, String value) throws AppException {

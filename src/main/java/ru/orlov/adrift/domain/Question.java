@@ -23,9 +23,9 @@ public class Question {
     private Type type;
 
     private Boolean required;
-
+    private Integer min;
+    private Integer max;
     private String regex;
-
     private String message;
 
     @OneToMany(

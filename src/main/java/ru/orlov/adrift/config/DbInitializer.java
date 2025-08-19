@@ -87,6 +87,8 @@ public class DbInitializer {
                 question.setName(qq.getName());
                 question.setType(Question.Type.valueOf(qq.getType()));
                 question.setRequired(qq.getRequired() != null && qq.getRequired());
+                question.setMin(qq.getMin());
+                question.setMax(qq.getMax());
                 question.setRegex(qq.getRegex());
                 question.setMessage(qq.getMessage());
 
@@ -197,13 +199,16 @@ public class DbInitializer {
                             randomHousingRentPrice() : randomHousingSellPrice();
                     form.setPrice(price);
 
-                    String www = faker.internet().url();
+                    String www = "https://" + faker.internet().url();
                     Integer yr = faker.random().nextInt(1900, 2020);
                     Double area = faker.number().randomDouble(2, 40, 120);
                     form.setFields(List.of(
                             new AdRequestDto.AdFieldDto(1L, String.valueOf(area)),
                             new AdRequestDto.AdFieldDto(3L, yr.toString()),
-                            new AdRequestDto.AdFieldDto(4L, www)
+                            new AdRequestDto.AdFieldDto(4L, www),
+                            new AdRequestDto.AdFieldDto(6L, "4"), // pets allowed
+                            new AdRequestDto.AdFieldDto(7L, "6"), // some features
+                            new AdRequestDto.AdFieldDto(7L, "7")
                     ));
 
                     adService.createDraft(form, user);
@@ -252,6 +257,8 @@ public class DbInitializer {
             private String name;
             private String type;
             private Boolean required;
+            private Integer min;
+            private Integer max;
             private String regex;
             private String message;
             private List<OptionYamlRef> options = new ArrayList<>();

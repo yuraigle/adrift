@@ -4,6 +4,8 @@ create table questions
     name     varchar(255) not null,
     type     varchar(10) not null,
     required boolean null,
+    min      integer null,
+    max      integer null,
     regex    varchar(255) null,
     message  varchar(255) null,
     constraint PK_QUESTIONS primary key (id)
