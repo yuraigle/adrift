@@ -15,3 +15,13 @@ categories:
     name: Apartments for rent
     slug: apartments-for-rent
     template: 2
+  - id: 5
+    name: Villas for sale
+    slug: villas-for-sale
+    template: 1
+    parent: 1
+  - id: 6
+    name: Land for sale
+    slug: land-for-sale
+    template: 1
+    parent: 1

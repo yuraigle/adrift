@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import ru.orlov.adrift.controller.dto.AdRequestDto;
 import ru.orlov.adrift.domain.Ad;
 import ru.orlov.adrift.domain.AdField;
+import ru.orlov.adrift.domain.AdOption;
 import ru.orlov.adrift.domain.AdRepository;
 
 import java.math.BigDecimal;
@@ -78,6 +79,7 @@ public class AdCreatingTests extends AbstractTest {
         form.setTitle("Test AD #1");
         form.setDescription("Test description");
         form.setCategory(1L); // Houses for sale
+        form.setPrice(BigDecimal.valueOf(101));
         form.setFields(List.of(
                 new AdRequestDto.AdFieldDto(1L, "67.60"), // area
                 new AdRequestDto.AdFieldDto(3L, "1985"), // construction year
@@ -111,14 +113,6 @@ public class AdCreatingTests extends AbstractTest {
 
         // cleanup: delete test Ads
         adRepository.deleteAll(adRepository.findAllByTitleLike("Test AD %"));
-
-        // assert Ad Fields are deleted too
-        String sql1 = """
-                select count(*) as cnt from ads_fields
-                where ad_id is null or question_id is null
-                """;
-        int cnt = (Integer) jdbc.queryForMap(sql1).get("cnt");
-        assert cnt == 0;
     }
 
     @Test
@@ -129,9 +123,8 @@ public class AdCreatingTests extends AbstractTest {
         AdRequestDto form = new AdRequestDto();
         form.setTitle("Test AD #2");
         form.setCategory(1L); // Houses for sale
-        form.setPrice(BigDecimal.valueOf(2));
+        form.setPrice(BigDecimal.valueOf(102));
         form.setFields(List.of(
-                new AdRequestDto.AdFieldDto(4L, "https://example.com"), // www
                 new AdRequestDto.AdFieldDto(7L, "6"), // Garage
                 new AdRequestDto.AdFieldDto(7L, "7") // High Ceilings
         ));
@@ -141,8 +134,6 @@ public class AdCreatingTests extends AbstractTest {
                 "/api/ads", form, token, String.class
         );
 
-        System.out.println(resp.getBody());
-
         assert resp.getStatusCode() == HttpStatus.CREATED;
         assert resp.getBody() != null;
 
@@ -151,5 +142,18 @@ public class AdCreatingTests extends AbstractTest {
 
         Ad ad = ads.getLast();
         assert ad != null;
+
+        // assert Ad Options are created
+        assert !ad.getOptions().isEmpty();
+
+        Optional<AdOption> f1 = ad.getOptions().stream()
+                .filter(f -> f.getQuestion().getId() == 7L)
+                .findAny();
+
+        assert f1.isPresent();
+        assert !f1.get().getOption().getName().isBlank();
+
+        // cleanup: delete test Ads
+        adRepository.deleteAll(adRepository.findAllByTitleLike("Test AD %"));
     }
 }

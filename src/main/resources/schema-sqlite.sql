@@ -1,14 +1,3 @@
-create table categories
-(
-    id          integer not null,
-    name        varchar(255) not null,
-    slug        varchar(255) not null,
-    template_id integer null,
-    constraint PK_CATEGORIES primary key (id)
-);
-
-create unique index UQ_CATEGORIES_SLUG on categories (slug);
-
 create table questions
 (
     id       integer not null,
@@ -50,6 +39,20 @@ CREATE TABLE templates_questions
 
 create index IX_TEMPLATES_QUESTIONS_TEMPLATE on templates_questions (template_id);
 
+create table categories
+(
+    id          integer not null,
+    name        varchar(255) not null,
+    slug        varchar(255) not null,
+    template_id integer null,
+    parent_id   integer null,
+    constraint PK_CATEGORIES primary key (id),
+    constraint FK_CATEGORIES_ON_PARENT foreign key (parent_id) references categories (id),
+    constraint FK_CATEGORIES_ON_TEMPLATE foreign key (template_id) references templates (id)
+);
+
+create unique index UQ_CATEGORIES_SLUG on categories (slug);
+
 create table users
 (
     id       integer not null,
@@ -69,9 +72,9 @@ create table ads
     title       varchar(255) not null,
     description text null,
     price       decimal(10, 2) null,
+    created     timestamp not null,
     user_id     integer not null,
     category_id integer not null,
-    created     timestamp not null,
     constraint PK_ADS primary key (id),
     constraint FK_ADS_ON_USER foreign key (user_id) references users (id) on delete set null,
     constraint FK_ADS_ON_CATEGORY foreign key (category_id) references categories (id) on delete set null

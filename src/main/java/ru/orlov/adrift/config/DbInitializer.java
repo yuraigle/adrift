@@ -149,6 +149,13 @@ public class DbInitializer {
                 category.setName(ref.getName());
                 category.setSlug(ref.getSlug());
 
+                if (ref.getParent() != null) {
+                    Category parent = categoryRepository
+                            .findById(ref.getParent())
+                            .orElseThrow();
+                    category.setParent(parent);
+                }
+
                 templateRepository.findById(ref.getTemplate())
                         .ifPresent(category::setTemplate);
 
@@ -231,6 +238,7 @@ public class DbInitializer {
             private String name;
             private String slug;
             private Long template;
+            private Long parent;
         }
     }
 

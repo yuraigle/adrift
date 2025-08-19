@@ -22,13 +22,13 @@ public class AdService {
     private final CategoryRepository categoryRepository;
     private final OptionRepository optionRepository;
 
-    private final List<Question.Type> typesField = List.of(
+    private static final List<Question.Type> typesField = List.of(
             Question.Type.NUMBER,
             Question.Type.DECIMAL,
             Question.Type.TEXT
     );
 
-    private final List<Question.Type> typesOption = List.of(
+    private static final List<Question.Type> typesOption = List.of(
             Question.Type.CHECKBOX,
             Question.Type.OPTION
     );

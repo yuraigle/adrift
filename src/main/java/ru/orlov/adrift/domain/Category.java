@@ -22,4 +22,8 @@ public class Category {
     @JoinColumn(name = "template_id")
     private Template template;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_id")
+    private Category parent;
+
 }
