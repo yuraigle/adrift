@@ -9,7 +9,6 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-@ToString
 @Entity
 @Table(name = "questions")
 public class Question {
@@ -24,6 +23,10 @@ public class Question {
     private Type type;
 
     private Boolean required;
+
+    private String regex;
+
+    private String message;
 
     @OneToMany(
             mappedBy = "question",

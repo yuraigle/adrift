@@ -13,8 +13,10 @@ create table questions
 (
     id       integer not null,
     name     varchar(255) not null,
-    type     varchar(255) not null,
+    type     varchar(10) not null,
     required boolean null,
+    regex    varchar(255) null,
+    message  varchar(255) null,
     constraint PK_QUESTIONS primary key (id)
 );
 
@@ -90,3 +92,17 @@ create table ads_fields
 );
 
 create index IX_ADS_FIELDS_ON_AD on ads_fields (ad_id);
+
+create table  ads_options
+(
+    ad_id       integer not null,
+    question_id integer not null,
+    option_id   integer not null,
+    constraint PK_ADS_OPTIONS primary key (ad_id, question_id, option_id),
+    constraint FK_ADS_OPTIONS_ON_AD foreign key (ad_id) references ads (id) on delete cascade,
+    constraint FK_ADS_OPTIONS_ON_OPTION foreign key (option_id) references options (id) on delete cascade,
+    constraint FK_ADS_OPTIONS_ON_QUESTION foreign key (question_id) references questions (id) on delete cascade
+);
+
+create index IX_ADS_OPTIONS_ON_AD on ads_options (ad_id);
+create index IX_ADS_OPTIONS_ON_OPTION on ads_options (option_id);

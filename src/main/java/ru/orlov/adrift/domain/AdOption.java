@@ -6,16 +6,15 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Objects;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "ads_fields")
-@IdClass(AdField.AdFieldId.class)
-public class AdField {
+@Table(name = "ads_options")
+@IdClass(AdOption.AdOptionId.class)
+public class AdOption {
 
     @Id
     @ManyToOne
@@ -27,32 +26,30 @@ public class AdField {
     @JoinColumn(name = "question_id")
     private Question question;
 
-    @Column(name = "val_number")
-    private Integer valNumber;
-
-    @Column(name = "val_decimal")
-    private BigDecimal valDecimal;
-
-    @Column(name = "val_text")
-    private String valText;
+    @Id
+    @ManyToOne
+    @JoinColumn(name = "option_id")
+    private Option option;
 
     @Getter
     @Setter
-    static class AdFieldId implements Serializable {
+    static class AdOptionId implements Serializable {
         private Ad ad;
         private Question question;
+        private Option option;
 
         @Override
         public boolean equals(Object o) {
             if (o == null || getClass() != o.getClass()) return false;
-            AdFieldId that = (AdFieldId) o;
+            AdOptionId that = (AdOptionId) o;
             return Objects.equals(ad.getId(), that.ad.getId())
-                    && Objects.equals(question.getId(), that.question.getId());
+                    && Objects.equals(question.getId(), that.question.getId())
+                    && Objects.equals(option.getId(), that.option.getId());
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(ad.getId(), question.getId());
+            return Objects.hash(ad.getId(), question.getId(), option.getId());
         }
     }
 }

@@ -6,8 +6,10 @@ templates:
       - 3
       - 4
       - 5
+      - 7
   - id: 2
     name: "Real Estate for Rent"
     questions:
       - 1
       - 2
+      - 6

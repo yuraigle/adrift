@@ -43,4 +43,12 @@ public class Ad {
     )
     private List<AdField> fields = new ArrayList<>();
 
+    @OneToMany(
+            mappedBy = "ad",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.EAGER
+    )
+    private List<AdOption> options = new ArrayList<>();
+
 }

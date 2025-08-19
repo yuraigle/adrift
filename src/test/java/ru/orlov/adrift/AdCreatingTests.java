@@ -121,4 +121,35 @@ public class AdCreatingTests extends AbstractTest {
         assert cnt == 0;
     }
 
+    @Test
+    void createAdWithCheckboxFields() {
+        adRepository.deleteAll(adRepository.findAllByTitleLike("Test AD %"));
+
+        // create an Ad using rest api
+        AdRequestDto form = new AdRequestDto();
+        form.setTitle("Test AD #2");
+        form.setCategory(1L); // Houses for sale
+        form.setPrice(BigDecimal.valueOf(2));
+        form.setFields(List.of(
+                new AdRequestDto.AdFieldDto(4L, "https://example.com"), // www
+                new AdRequestDto.AdFieldDto(7L, "6"), // Garage
+                new AdRequestDto.AdFieldDto(7L, "7") // High Ceilings
+        ));
+
+        String token = retrieveToken();
+        ResponseEntity<String> resp = apiRequestPost(
+                "/api/ads", form, token, String.class
+        );
+
+        System.out.println(resp.getBody());
+
+        assert resp.getStatusCode() == HttpStatus.CREATED;
+        assert resp.getBody() != null;
+
+        List<Ad> ads = adRepository.findByTitle("Test AD #2");
+        assert !ads.isEmpty();
+
+        Ad ad = ads.getLast();
+        assert ad != null;
+    }
 }

@@ -4,11 +4,20 @@ questions:
     type: DECIMAL
   - id: 2
     name: Period
-    type: TEXT
+    type: OPTION
     required: true
+    options:
+      - id: 1
+        name: Weekly
+      - id: 2
+        name: Monthly
+      - id: 3
+        name: Yearly
   - id: 3
     name: Construction Year
     type: NUMBER
+    regex: '^(18\d{2}|19\d{2}|20\d{2})$'
+    message: Construction Year is incorrect
   - id: 4
     name: WWW
     type: TEXT
@@ -19,19 +28,19 @@ questions:
     name: Pets Allowed
     type: OPTION
     options:
-      - id: 1
-        name: yes
-      - id: 2
-        name: no
+      - id: 4
+        name: Yes
+      - id: 5
+        name: No
   - id: 7
     name: Other Features
     type: CHECKBOX
     options:
-      - id: 3
-        name: Garage
-      - id: 4
-        name: High Ceilings
-      - id: 5
-        name: Electric Door Openers
       - id: 6
+        name: Garage
+      - id: 7
+        name: High Ceilings
+      - id: 8
+        name: Electric Door Openers
+      - id: 9
         name: Long Driveway

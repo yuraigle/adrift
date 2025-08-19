@@ -26,6 +26,7 @@ public class DbInitializer {
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
     private final QuestionRepository questionRepository;
+    private final OptionRepository optionRepository;
     private final TemplateRepository templateRepository;
     private final AdRepository adRepository;
     private final AdService adService;
@@ -35,6 +36,7 @@ public class DbInitializer {
             UserRepository userRepository,
             CategoryRepository categoryRepository,
             QuestionRepository questionRepository,
+            OptionRepository optionRepository,
             TemplateRepository templateRepository,
             AdRepository adRepository,
             AdService adService,
@@ -43,6 +45,7 @@ public class DbInitializer {
         this.userRepository = userRepository;
         this.categoryRepository = categoryRepository;
         this.questionRepository = questionRepository;
+        this.optionRepository = optionRepository;
         this.templateRepository = templateRepository;
         this.adRepository = adRepository;
         this.adService = adService;
@@ -51,6 +54,7 @@ public class DbInitializer {
         this.adRepository.deleteAll();
         this.categoryRepository.deleteAll();
         this.questionRepository.deleteAll();
+        this.optionRepository.deleteAll();
         this.templateRepository.deleteAll();
 
         if (this.categoryRepository.count() == 0) {
@@ -83,6 +87,8 @@ public class DbInitializer {
                 question.setName(qq.getName());
                 question.setType(Question.Type.valueOf(qq.getType()));
                 question.setRequired(qq.getRequired() != null && qq.getRequired());
+                question.setRegex(qq.getRegex());
+                question.setMessage(qq.getMessage());
 
                 for (QuestionsResource.QuestionYamlRef.OptionYamlRef o1 : qq.getOptions()) {
                     Option option = new Option();
@@ -238,6 +244,8 @@ public class DbInitializer {
             private String name;
             private String type;
             private Boolean required;
+            private String regex;
+            private String message;
             private List<OptionYamlRef> options = new ArrayList<>();
 
             @Data
