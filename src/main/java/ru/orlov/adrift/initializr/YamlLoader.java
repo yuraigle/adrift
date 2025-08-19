@@ -1,11 +1,11 @@
-package ru.orlov.adrift.config;
+package ru.orlov.adrift.initializr;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
-@Configuration
+@Component
 public class YamlLoader {
 
     @Bean

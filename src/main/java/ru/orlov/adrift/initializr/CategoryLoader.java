@@ -1,78 +1,46 @@
-package ru.orlov.adrift.config;
+package ru.orlov.adrift.initializr;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.javafaker.Faker;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.asm.TypeReference;
-import org.springframework.context.annotation.Configuration;
-import ru.orlov.adrift.controller.dto.AdRequestDto;
+import org.springframework.stereotype.Service;
 import ru.orlov.adrift.domain.*;
-import ru.orlov.adrift.domain.ex.AppException;
-import ru.orlov.adrift.service.AdService;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Log4j2
-@Configuration
-public class DbInitializer {
+/**
+ * Initial categories, fields and options
+ */
 
-    private final UserRepository userRepository;
+@Log4j2
+@Service
+@RequiredArgsConstructor
+public class CategoryLoader {
+
     private final CategoryRepository categoryRepository;
     private final QuestionRepository questionRepository;
-    private final OptionRepository optionRepository;
     private final TemplateRepository templateRepository;
-    private final AdRepository adRepository;
-    private final AdService adService;
     private final ObjectMapper objectMapper;
 
-    public DbInitializer(
-            UserRepository userRepository,
-            CategoryRepository categoryRepository,
-            QuestionRepository questionRepository,
-            OptionRepository optionRepository,
-            TemplateRepository templateRepository,
-            AdRepository adRepository,
-            AdService adService,
-            ObjectMapper objectMapper
-    ) {
-        this.userRepository = userRepository;
-        this.categoryRepository = categoryRepository;
-        this.questionRepository = questionRepository;
-        this.optionRepository = optionRepository;
-        this.templateRepository = templateRepository;
-        this.adRepository = adRepository;
-        this.adService = adService;
-        this.objectMapper = objectMapper;
+    public boolean isCategoriesTableEmpty() {
+        return categoryRepository.count() == 0;
+    }
 
-        this.adRepository.deleteAll();
-        this.categoryRepository.deleteAll();
-        this.questionRepository.deleteAll();
-        this.optionRepository.deleteAll();
-        this.templateRepository.deleteAll();
-
-        if (this.categoryRepository.count() == 0) {
-            initQuestionsTable();
-            initTemplatesTable();
-            initCategoriesTable();
-        }
-
-        if (this.userRepository.count() == 0) {
-            initUsersTable();
-        }
-
-        if (this.adRepository.count() == 0) {
-            initAdsTable();
-        }
+    public void initCategoryTables() {
+        initQuestionsTable();
+        initTemplatesTable();
+        initCategoriesTable();
     }
 
     private void initQuestionsTable() {
+        int cntQuestions = 0;
+        int cntOptions = 0;
+
         try (
                 InputStream is = TypeReference.class
                         .getResourceAsStream("/data/questions.yaml")
@@ -98,19 +66,25 @@ public class DbInitializer {
                     option.setName(o1.getName());
                     option.setQuestion(question);
                     question.getOptions().add(option);
+                    cntOptions++;
                 }
 
                 questionList.add(question);
+                cntQuestions++;
             }
 
             questionRepository.saveAll(questionList);
-            log.info("{} questions created", yaml.questions.size());
         } catch (IOException e) {
             log.error(e.getMessage());
         }
+
+        log.info("{} questions created", cntQuestions);
+        log.info("{} options created", cntOptions);
     }
 
     private void initTemplatesTable() {
+        int cntTemplates = 0;
+
         try (
                 InputStream is = TypeReference.class
                         .getResourceAsStream("/data/templates.yaml")
@@ -129,15 +103,18 @@ public class DbInitializer {
                 }
 
                 templateRepository.save(template);
+                cntTemplates++;
             }
-
-            log.info("Templates created");
         } catch (IOException e) {
             log.error(e.getMessage());
         }
+
+        log.info("{} templates created", cntTemplates);
     }
 
     private void initCategoriesTable() {
+        int cntCategories = 0;
+
         try (
                 InputStream is = TypeReference.class
                         .getResourceAsStream("/data/categories.yaml")
@@ -162,75 +139,13 @@ public class DbInitializer {
                         .ifPresent(category::setTemplate);
 
                 categoryRepository.save(category);
+                cntCategories++;
             }
-            log.info("Categories created");
         } catch (IOException e) {
             log.error(e.getMessage());
         }
-    }
 
-    private void initUsersTable() {
-        User user = new User();
-        user.setEmail("admin@admin");
-        user.setUsername("admin");
-        user.setPassword(User.hashPassword("admin"));
-        user.setCreated(LocalDateTime.now());
-        this.userRepository.save(user);
-        log.info("Admin user created");
-    }
-
-    private void initAdsTable() {
-        User user = userRepository.findByUsername("admin").orElse(null);
-        if (user == null) {
-            log.info("Admin user not found: won't generate ads");
-            return;
-        }
-
-        Faker faker = new Faker();
-        try {
-            for (Category cat : categoryRepository.findAll()) {
-                for (int i = 0; i < 5; i++) {
-                    AdRequestDto form = new AdRequestDto();
-                    form.setCategory(cat.getId());
-                    form.setTitle(faker.address().fullAddress());
-                    form.setDescription(faker.lorem().paragraph());
-
-                    BigDecimal price = cat.getSlug().contains("rent") ?
-                            randomHousingRentPrice() : randomHousingSellPrice();
-                    form.setPrice(price);
-
-                    String www = "https://" + faker.internet().url();
-                    Integer yr = faker.random().nextInt(1900, 2020);
-                    Double area = faker.number().randomDouble(2, 40, 120);
-                    form.setFields(List.of(
-                            new AdRequestDto.AdFieldDto(1L, String.valueOf(area)),
-                            new AdRequestDto.AdFieldDto(3L, yr.toString()),
-                            new AdRequestDto.AdFieldDto(4L, www),
-                            new AdRequestDto.AdFieldDto(6L, "4"), // pets allowed
-                            new AdRequestDto.AdFieldDto(7L, "6"), // some features
-                            new AdRequestDto.AdFieldDto(7L, "7")
-                    ));
-
-                    adService.createDraft(form, user);
-                }
-            }
-        } catch (AppException e) {
-            log.error(e.getMessage());
-        }
-
-        log.info("Ads created");
-    }
-
-    private BigDecimal randomHousingSellPrice() {
-        int min = 40_000;
-        int max = 300_000;
-        double price = (new Faker()).number().randomDouble(2, min, max);
-        return BigDecimal.valueOf(price).setScale(2, RoundingMode.HALF_UP);
-    }
-
-    private BigDecimal randomHousingRentPrice() {
-        BigDecimal price = randomHousingSellPrice();
-        return price.divide(BigDecimal.valueOf(150), 2, RoundingMode.HALF_UP);
+        log.info("{} categories created", cntCategories);
     }
 
     @Data
