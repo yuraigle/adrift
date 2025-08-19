@@ -1,6 +1,5 @@
 package ru.orlov.adrift.config;
 
-import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -15,7 +14,6 @@ import ru.orlov.adrift.domain.ex.AppException;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.nio.file.Path;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -24,13 +22,8 @@ public class GlobalExceptionHandler {
 
     private String html404 = "404 - Not found";
 
-    public GlobalExceptionHandler(Environment env) {
-        String appPath = env.getProperty("APP_PATH", ".");
-        appPath = appPath.replace('\\', '/').trim();
-        String webappDist = Path.of(appPath, "webapp/dist") + "/";
-        webappDist = webappDist.replace("//", "/");
-
-        try (InputStream is = new FileInputStream(webappDist + "404.html")) {
+    public GlobalExceptionHandler(String webappDist) {
+        try (InputStream is = new FileInputStream(webappDist + "/404.html")) {
             html404 = new String(is.readAllBytes());
         } catch (Exception ignore) {
         }

@@ -89,7 +89,7 @@ public class AdService {
     }
 
     private void validateFieldValue(Question question, String value) throws AppException {
-        if (value == null) {
+        if (value == null || value.isEmpty()) {
             return;
         }
 
@@ -97,25 +97,34 @@ public class AdService {
                 ? "Invalid value for field #" + question.getId()
                 : question.getMessage().trim();
 
+        BigDecimal decVal = null;
+        Integer intVal = null;
+
+        try {
+            if (question.getType() == Question.Type.NUMBER) {
+                intVal = Integer.parseInt(value.trim());
+            } else if (question.getType() == Question.Type.DECIMAL) {
+                decVal = new BigDecimal(value.trim());
+            }
+        } catch (NumberFormatException e) {
+            throw new AppException(message, 400);
+        }
+
         if (question.getMin() != null) {
-            if (question.getType() == Question.Type.NUMBER
-                    && Integer.parseInt(value) < question.getMin()
-            ) {
+            if (question.getType() == Question.Type.NUMBER && intVal < question.getMin()) {
                 throw new AppException(message, 400);
             } else if (question.getType() == Question.Type.DECIMAL
-                    && new BigDecimal(value).compareTo(new BigDecimal(question.getMin())) < 0
+                    && decVal.compareTo(new BigDecimal(question.getMin())) < 0
             ) {
                 throw new AppException(message, 400);
             }
         }
 
         if (question.getMax() != null) {
-            if (question.getType() == Question.Type.NUMBER
-                    && Integer.parseInt(value) > question.getMax()
-            ) {
+            if (question.getType() == Question.Type.NUMBER && intVal > question.getMax()) {
                 throw new AppException(message, 400);
             } else if (question.getType() == Question.Type.DECIMAL
-                    && new BigDecimal(value).compareTo(new BigDecimal(question.getMax())) > 0
+                    && decVal.compareTo(new BigDecimal(question.getMax())) > 0
             ) {
                 throw new AppException(message, 400);
             }

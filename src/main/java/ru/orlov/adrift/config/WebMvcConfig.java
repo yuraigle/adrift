@@ -3,11 +3,9 @@ package ru.orlov.adrift.config;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
 import org.springframework.lang.NonNull;
 import org.springframework.web.servlet.config.annotation.*;
 
-import java.nio.file.Path;
 import java.util.List;
 
 @Log4j2
@@ -16,7 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class WebMvcConfig implements WebMvcConfigurer {
 
-    private final Environment env;
+    private final String webappDist;
 
     @Override
     public void addCorsMappings(@NonNull CorsRegistry registry) {
@@ -27,17 +25,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(@NonNull ResourceHandlerRegistry registry) {
-        String appPath = env.getProperty("APP_PATH", ".");
-        appPath = appPath.replace('\\', '/').trim();
-        String webappDist = Path.of(appPath, "webapp/dist") + "/";
-        webappDist = webappDist.replace("//", "/");
-
-        if (!webappDist.startsWith("file:/")) {
-            webappDist = "file:/" + webappDist;
-        }
-
         registry.addResourceHandler("/**")
-                .addResourceLocations(webappDist);
+                .addResourceLocations("file:/" + webappDist);
     }
 
     @Override
