@@ -38,6 +38,7 @@ public class GlobalExceptionHandler {
                 : HttpStatus.FORBIDDEN;
 
         return ResponseEntity.status(status)
+                .header("Content-Type", "application/json")
                 .body(ErrorResponseDto.of(ex.getMessage()));
     }
 
@@ -47,10 +48,12 @@ public class GlobalExceptionHandler {
     ) {
         if (ex.getHeaderName().equals("Authorization")) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .header("Content-Type", "application/json")
                     .body(ErrorResponseDto.of("Authorization is missing"));
         }
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .header("Content-Type", "application/json")
                 .body(ErrorResponseDto.of(ex.getMessage()));
     }
 
@@ -63,6 +66,7 @@ public class GlobalExceptionHandler {
                 : HttpStatus.INTERNAL_SERVER_ERROR;
 
         return ResponseEntity.status(status)
+                .header("Content-Type", "application/json")
                 .body(ErrorResponseDto.of(ex.getMessage()));
     }
 
@@ -75,6 +79,7 @@ public class GlobalExceptionHandler {
                 .collect(Collectors.toSet());
 
         return ResponseEntity.badRequest()
+                .header("Content-Type", "application/json")
                 .body(ErrorResponseDto.of(messages));
     }
 
@@ -83,6 +88,7 @@ public class GlobalExceptionHandler {
             HttpMessageNotReadableException ignore
     ) {
         return ResponseEntity.badRequest()
+                .header("Content-Type", "application/json")
                 .body(ErrorResponseDto.of("Invalid JSON request"));
     }
 
@@ -92,6 +98,7 @@ public class GlobalExceptionHandler {
     ) {
         if (ex.getResourcePath().startsWith("api/")) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .header("Content-Type", "application/json")
                     .body(ErrorResponseDto.of("Not Found").toJson());
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(html404);

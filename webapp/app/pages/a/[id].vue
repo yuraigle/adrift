@@ -5,6 +5,12 @@ const route = useRoute()
 const id = computed(() => route.params.id)
 const { data: ad } = await useFetch<AdSummary>(`${API_BASE}/ads/${id.value}`)
 
+onMounted(async () => {
+  if (!ad.value) {
+    ad.value = await $fetch(`${API_BASE}/ads/${id.value}`)
+  }
+});
+
 </script>
 
 <template>

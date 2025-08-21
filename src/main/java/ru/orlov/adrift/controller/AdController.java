@@ -11,6 +11,7 @@ import ru.orlov.adrift.controller.dto.AdRequestDto;
 import ru.orlov.adrift.domain.*;
 import ru.orlov.adrift.domain.ex.AppAuthException;
 import ru.orlov.adrift.domain.ex.AppException;
+import ru.orlov.adrift.initializr.FakeAdLoader;
 import ru.orlov.adrift.service.AdService;
 import ru.orlov.adrift.service.AuthService;
 
@@ -25,6 +26,8 @@ public class AdController {
     private final AdService adService;
     private final AuthService authService;
     private final UserRepository userRepository;
+    private final CategoryRepository categoryRepository;
+    private final FakeAdLoader fakeAdLoader;
 
     @GetMapping(value = "/api/ads/{id}", produces = "application/json")
     public AdSummary show(@PathVariable Long id) throws AppException {
@@ -35,6 +38,7 @@ public class AdController {
     // to handle SSR
     @GetMapping("/a/{id}")
     public ModelAndView index(@PathVariable Long id) {
+//        return new ModelAndView("forward:/200.html");
         return new ModelAndView("forward:/a/" + id + "/index.html");
     }
 
@@ -68,5 +72,16 @@ public class AdController {
 
         AdSummary updated = adService.updateAd(request, ad);
         return new ResponseEntity<>(updated, null, HttpStatus.OK);
+    }
+
+    @GetMapping("/api/new-ad")
+    public ResponseEntity<String> test() throws AppException {
+        Category cat = categoryRepository.findById(1L)
+                .orElseThrow(() -> new AppException("Category not found", 400));
+        User user = userRepository.findByUsername("admin")
+                .orElseThrow(() -> new AppException("User not found", 400));
+
+        fakeAdLoader.generateFakeAd(cat, user);
+        return new ResponseEntity<>("OK", null, HttpStatus.OK);
     }
 }
