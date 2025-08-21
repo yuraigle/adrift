@@ -26,6 +26,7 @@ public class Ad {
     private String description;
     private BigDecimal price;
     private LocalDateTime created;
+    private LocalDateTime updated;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

@@ -8,6 +8,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@ToString(exclude = {"options"})
 @NoArgsConstructor
 @Entity
 @Table(name = "questions")
@@ -42,8 +43,8 @@ public class Question {
         TEXT("TEXT"),
         NUMBER("NUMBER"),
         DECIMAL("DECIMAL"),
-        CHECKBOX("CHECKBOX"),
-        OPTION("OPTION");
+        OPTION("OPTION"),
+        CHECKBOX("CHECKBOX");
 
         private final String value;
     }

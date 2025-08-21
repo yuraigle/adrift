@@ -39,7 +39,7 @@ public class LoginFormTests extends AbstractTest {
 
     @Test
     void generatedTokenIsValid() throws Exception {
-        String token = retrieveToken();
+        String token = retrieveAdminToken();
 
         assert token != null;
         assert !token.isEmpty();

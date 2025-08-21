@@ -20,6 +20,9 @@ public class InitializerService {
     @Value("${app.clear-on-startup:false}")
     private Boolean clearOnStartup;
 
+    @Value("${app.generate-fake-data:false}")
+    private Boolean generateFakeData;
+
     private final AdRepository adRepository;
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
@@ -51,10 +54,13 @@ public class InitializerService {
         if (userLoader.isUsersTableEmpty()) {
             log.info("Initializing Users table ...");
             userLoader.createAdminUser();
-            userLoader.createFakeUsers(10);
+
+            if (generateFakeData) {
+                userLoader.createFakeUsers(10);
+            }
         }
 
-        if (adLoader.isAdsTableEmpty()) {
+        if (adLoader.isAdsTableEmpty() && generateFakeData) {
             log.info("Initializing Ads table ...");
             adLoader.createFakeAds(5);
         }

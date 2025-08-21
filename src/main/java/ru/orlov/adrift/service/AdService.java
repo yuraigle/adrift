@@ -46,24 +46,55 @@ public class AdService {
         ad.setPrice(req.getPrice());
         ad.setCreated(LocalDateTime.now());
 
+        fillAdFields(ad, req.getFields());
+
+        Ad savedAd = adRepository.save(ad);
+
+        return adRepository.findAdSummaryById(savedAd.getId())
+                .orElseThrow(() -> new AppException("Ad not created"));
+    }
+
+    @Transactional
+    public AdSummary updateAd(AdRequestDto req, Ad ad) throws AppException {
+        Category category = categoryRepository.findById(req.getCategory())
+                .orElseThrow(() -> new AppException("Category not found", 400));
+
+        ad.setCategory(category);
+        ad.setTitle(req.getTitle());
+        ad.setDescription(req.getDescription());
+        ad.setPrice(req.getPrice());
+        ad.setUpdated(LocalDateTime.now());
+
+        fillAdFields(ad, req.getFields());
+
+        adRepository.save(ad);
+
+        return adRepository.findAdSummaryById(ad.getId())
+                .orElseThrow(() -> new AppException("Something went wrong"));
+    }
+
+    private void fillAdFields(Ad ad, List<AdRequestDto.AdFieldDto> fields) throws AppException {
         ad.getFields().clear();
         ad.getOptions().clear();
 
-        for (Question question : category.getTemplate().getQuestions()) {
-            List<AdRequestDto.AdFieldDto> answers = req.getFields().stream()
+        for (Question question : ad.getCategory().getTemplate().getQuestions()) {
+            List<AdRequestDto.AdFieldDto> answers = fields.stream()
                     .filter(f -> question.getId().equals(f.getQid()))
                     .toList();
 
-            if (answers.isEmpty()) {
-                continue;  // no answers for this question
+            boolean hasAnswer = !answers.isEmpty() &&
+                    answers.stream().anyMatch(a -> a.getValue() != null && !a.getValue().isEmpty());
+            if (question.getRequired() && !hasAnswer) {
+                throw new AppException("Missing required field: " + question.getName(), 400);
             }
 
-            // todo check for required questions
-            // todo fields validation
+            if (answers.isEmpty()) {
+                continue; // no answers for this optional question
+            }
 
             if (typesField.contains(question.getType())) {
                 if (answers.size() > 1) {
-                    throw new AppException("Multiple answers for field #" + question.getId(), 400);
+                    throw new AppException("Multiple answers for field: " + question.getName(), 400);
                 }
 
                 String value = answers.getFirst().getValue();
@@ -71,21 +102,18 @@ public class AdService {
                 createAdField(ad, question, value);
             } else if (typesOption.contains(question.getType())) {
                 if (question.getType() == Question.Type.OPTION && answers.size() > 1) {
-                    throw new AppException("Multiple answers for field #" + question.getId(), 400);
+                    throw new AppException("Multiple answers for field: " + question.getName(), 400);
                 }
 
                 for (AdRequestDto.AdFieldDto answer : answers) {
-                    createAdOption(ad, question, answer.getValue());
+                    if (answer.getValue() != null && !answer.getValue().isEmpty()) {
+                        createAdOption(ad, question, answer.getValue());
+                    }
                 }
             } else {
                 throw new AppException("Unknown question type", 400);
             }
         }
-
-        Ad savedAd = adRepository.save(ad);
-
-        return adRepository.findAdSummaryById(savedAd.getId())
-                .orElseThrow(() -> new AppException("Ad not created"));
     }
 
     private void validateFieldValue(Question question, String value) throws AppException {
@@ -162,10 +190,6 @@ public class AdService {
     }
 
     private void createAdOption(Ad ad, Question question, String value) throws AppException {
-        if (value == null) {
-            return;
-        }
-
         long oid;
 
         try {
@@ -187,14 +211,6 @@ public class AdService {
         option.setQuestion(question);
         option.setOption(opt);
         ad.getOptions().add(option);
-    }
-
-    public void addImages() {
-
-    }
-
-    public void activateDraft() {
-
     }
 
 }

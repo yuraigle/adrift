@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.core.JdbcTemplate;
 import ru.orlov.adrift.controller.dto.AdRequestDto;
 import ru.orlov.adrift.domain.Ad;
 import ru.orlov.adrift.domain.AdField;
@@ -24,15 +23,14 @@ public class AdCreatingTests extends AbstractTest {
     @Autowired
     AdRepository adRepository;
 
-    @Autowired
-    JdbcTemplate jdbc;
-
     @Test
     void createAdUnauthorized() {
         AdRequestDto form = new AdRequestDto();
         form.setTitle("Test AD #0");
         form.setCategory(1L);
-        ResponseEntity<String> response = apiRequestPost("/api/ads", form, null, String.class);
+        ResponseEntity<String> response = apiRequestPost(
+                "/api/ads", form, null, String.class
+        );
 
         assert response.getStatusCode() == HttpStatus.UNAUTHORIZED;
     }
@@ -40,41 +38,88 @@ public class AdCreatingTests extends AbstractTest {
     @Test
     void createAdMalformed() {
         AdRequestDto form = new AdRequestDto();
+        form.setCategory(null);
         form.setTitle(null);
-        form.setCategory(0L);
+        form.setPrice(null);
 
-        String token = retrieveToken();
-        ResponseEntity<String> response = apiRequestPost("/api/ads", form, token, String.class);
+        String token = retrieveAdminToken();
+        ResponseEntity<String> response = apiRequestPost(
+                "/api/ads", form, token, String.class
+        );
 
         assert response.getStatusCode() == HttpStatus.BAD_REQUEST;
         assert response.getBody() != null;
         assert response.getBody().contains("messages");
-        assert response.getBody().contains("title");
         assert response.getBody().contains("category");
+        assert response.getBody().contains("title");
+        assert response.getBody().contains("price");
+    }
+
+    @Test
+    void createAdWithoutRequiredFields() {
+        AdRequestDto form = new AdRequestDto();
+        form.setCategory(2L);
+        form.setTitle("Test AD #3");
+        form.setPrice(BigDecimal.valueOf(0));
+        form.getFields().add(new AdRequestDto.AdFieldDto(2L, null));
+
+        String token = retrieveAdminToken();
+        ResponseEntity<String> response = apiRequestPost(
+                "/api/ads", form, token, String.class
+        );
+
+        assert response.getStatusCode() == HttpStatus.BAD_REQUEST;
+        assert response.getBody() != null;
+        assert response.getBody().contains("messages");
+        assert response.getBody().contains("Missing required field");
+    }
+
+    @Test
+    void createAdWithMultipleOptionField() {
+        AdRequestDto form = new AdRequestDto();
+        form.setCategory(2L);
+        form.setTitle("Test AD #3");
+        form.setPrice(BigDecimal.valueOf(0));
+        form.getFields().add(new AdRequestDto.AdFieldDto(2L, "1")); // weekly
+        form.getFields().add(new AdRequestDto.AdFieldDto(2L, "2")); // and monthly
+
+        String token = retrieveAdminToken();
+        ResponseEntity<String> response = apiRequestPost(
+                "/api/ads", form, token, String.class
+        );
+
+        assert response.getStatusCode() == HttpStatus.BAD_REQUEST;
+        assert response.getBody() != null;
+        assert response.getBody().contains("messages");
+        assert response.getBody().toLowerCase().contains("multiple");
     }
 
     @Test
     void createAdSuccessContainsCreatedId() {
+        cleanupTestAds();
+
         AdRequestDto form = new AdRequestDto();
         form.setTitle("Test AD #0");
         form.setDescription("Test description");
         form.setCategory(1L);
+        form.setPrice(BigDecimal.valueOf(0));
 
-        String token = retrieveToken();
-        ResponseEntity<String> resp = apiRequestPost("/api/ads", form, token, String.class);
+        String token = retrieveAdminToken();
+        ResponseEntity<String> resp = apiRequestPost(
+                "/api/ads", form, token, String.class
+        );
 
         assert resp.getStatusCode() == HttpStatus.CREATED;
         assert resp.getBody() != null;
         assert resp.getBody().contains("\"id\":");
 
-        adRepository.deleteAll(adRepository.findAllByTitleLike("Test AD %"));
+        cleanupTestAds();
     }
 
     @Test
     void createAdWithCustomFields() {
-        adRepository.deleteAll(adRepository.findAllByTitleLike("Test AD %"));
+        cleanupTestAds();
 
-        // create an Ad using rest api
         AdRequestDto form = new AdRequestDto();
         form.setTitle("Test AD #1");
         form.setDescription("Test description");
@@ -86,7 +131,7 @@ public class AdCreatingTests extends AbstractTest {
                 new AdRequestDto.AdFieldDto(4L, "https://example.com") // www
         ));
 
-        String token = retrieveToken();
+        String token = retrieveAdminToken();
         ResponseEntity<String> resp = apiRequestPost(
                 "/api/ads", form, token, String.class
         );
@@ -111,13 +156,12 @@ public class AdCreatingTests extends AbstractTest {
         assert f1.isPresent();
         assert f1.get().getValDecimal().equals(BigDecimal.valueOf(67.60));
 
-        // cleanup: delete test Ads
-        adRepository.deleteAll(adRepository.findAllByTitleLike("Test AD %"));
+        cleanupTestAds();
     }
 
     @Test
     void createAdWithCheckboxFields() {
-        adRepository.deleteAll(adRepository.findAllByTitleLike("Test AD %"));
+        cleanupTestAds();
 
         // create an Ad using rest api
         AdRequestDto form = new AdRequestDto();
@@ -129,7 +173,7 @@ public class AdCreatingTests extends AbstractTest {
                 new AdRequestDto.AdFieldDto(7L, "7") // High Ceilings
         ));
 
-        String token = retrieveToken();
+        String token = retrieveAdminToken();
         ResponseEntity<String> resp = apiRequestPost(
                 "/api/ads", form, token, String.class
         );
@@ -153,7 +197,6 @@ public class AdCreatingTests extends AbstractTest {
         assert f1.isPresent();
         assert !f1.get().getOption().getName().isBlank();
 
-        // cleanup: delete test Ads
-        adRepository.deleteAll(adRepository.findAllByTitleLike("Test AD %"));
+        cleanupTestAds();
     }
 }

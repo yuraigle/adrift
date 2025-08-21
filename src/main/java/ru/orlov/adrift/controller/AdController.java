@@ -8,14 +8,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import ru.orlov.adrift.controller.dto.AdRequestDto;
-import ru.orlov.adrift.domain.AdRepository;
-import ru.orlov.adrift.domain.AdSummary;
-import ru.orlov.adrift.domain.User;
-import ru.orlov.adrift.domain.UserRepository;
+import ru.orlov.adrift.domain.*;
 import ru.orlov.adrift.domain.ex.AppAuthException;
 import ru.orlov.adrift.domain.ex.AppException;
 import ru.orlov.adrift.service.AdService;
 import ru.orlov.adrift.service.AuthService;
+
+import java.util.Objects;
 
 @Log4j2
 @RestController
@@ -52,4 +51,22 @@ public class AdController {
         return new ResponseEntity<>(draft, null, HttpStatus.CREATED);
     }
 
+    @PostMapping("/api/ads/{id}")
+    public ResponseEntity<AdSummary> update(
+            @RequestHeader("Authorization") String token,
+            @PathVariable Long id,
+            @Valid @RequestBody AdRequestDto request
+    ) throws AppException {
+        Long userId = authService.parseToken(token).getId();
+
+        Ad ad = adRepository.findById(id)
+                .orElseThrow(() -> new AppException("Ad not found", HttpStatus.NOT_FOUND));
+
+        if (!Objects.equals(ad.getUser().getId(), userId)) {
+            throw new AppException("Ad belongs to another user", HttpStatus.FORBIDDEN);
+        }
+
+        AdSummary updated = adService.updateAd(request, ad);
+        return new ResponseEntity<>(updated, null, HttpStatus.OK);
+    }
 }

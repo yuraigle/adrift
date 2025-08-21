@@ -85,6 +85,7 @@ create table ads
     description text null,
     price       decimal(10, 2) null,
     created     timestamp not null,
+    updated     timestamp null,
     user_id     integer not null,
     category_id integer not null,
     constraint PK_ADS primary key (id),

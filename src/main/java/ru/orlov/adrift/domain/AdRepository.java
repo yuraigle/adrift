@@ -11,6 +11,6 @@ public interface AdRepository extends JpaRepository<Ad, Long> {
 
     List<Ad> findByTitle(String title);
 
-    List<Ad> findAllByTitleLike(String title);
+    List<Ad> findAllByTitleStartingWith(String title);
 
 }

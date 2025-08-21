@@ -13,16 +13,16 @@ import java.util.List;
 @Data
 public class AdRequestDto {
 
-    @NotBlank
+    @NotBlank(message = "Title must be set")
     private String title;
 
     private String description;
 
-    @Min(0)
+    @NotNull(message = "Price must be set")
+    @Min(value = 0, message = "Price must be positive")
     private BigDecimal price;
 
-    @NotNull
-    @Min(1)
+    @NotNull(message = "Category must be set")
     private Long category;
 
     private List<AdFieldDto> fields = new ArrayList<>();

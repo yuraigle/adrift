@@ -1,8 +1,10 @@
 package ru.orlov.adrift.initializr;
 
 import com.github.javafaker.Faker;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import ru.orlov.adrift.domain.User;
 import ru.orlov.adrift.domain.UserRepository;
@@ -45,7 +47,7 @@ public class FakeUserLoader {
 
         for (int i = 0; i < num; i++) {
             User user = new User();
-            user.setEmail(faker.internet().emailAddress());
+            user.setEmail("tester." + faker.internet().emailAddress());
             user.setUsername(faker.name().username());
             user.setPassword(User.hashPassword("password"));
             user.setCreated(LocalDateTime.now());
@@ -56,6 +58,13 @@ public class FakeUserLoader {
         this.userRepository.saveAll(users);
 
         log.info("{} fake Users created", users.size());
+    }
+
+    @Modifying
+    @Transactional
+    public void deleteFakeUsers() {
+        List<User> users = userRepository.findAllByEmailStartingWith("tester.");
+        userRepository.deleteAll(users);
     }
 
 }
