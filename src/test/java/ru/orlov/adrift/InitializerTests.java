@@ -1,6 +1,5 @@
 package ru.orlov.adrift;
 
-import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -8,7 +7,6 @@ import ru.orlov.adrift.domain.AdRepository;
 import ru.orlov.adrift.initializr.FakeAdLoader;
 import ru.orlov.adrift.initializr.FakeUserLoader;
 
-@Log4j2
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class InitializerTests extends AbstractTest {
 
@@ -46,6 +44,5 @@ public class InitializerTests extends AbstractTest {
 
         fakeUserLoader.deleteFakeUsers();
     }
-
 
 }

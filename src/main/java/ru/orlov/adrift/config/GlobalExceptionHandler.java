@@ -33,7 +33,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponseDto> handleAuthExceptions(
             AppAuthException ex
     ) {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+        HttpStatus status = ex.getHttpStatus() != null
+                ? HttpStatus.valueOf(ex.getHttpStatus())
+                : HttpStatus.FORBIDDEN;
+
+        return ResponseEntity.status(status)
                 .body(ErrorResponseDto.of(ex.getMessage()));
     }
 

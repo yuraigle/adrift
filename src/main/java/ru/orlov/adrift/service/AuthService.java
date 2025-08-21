@@ -50,11 +50,11 @@ public class AuthService {
             String password
     ) throws AppAuthException {
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new AppAuthException("User not found"));
+                .orElseThrow(() -> new AppAuthException("Username or password is incorrect", HttpStatus.UNAUTHORIZED));
 
         String hashedPassword = user.getPassword();
         if (!verifyPassword(password, hashedPassword)) {
-            throw new AppAuthException("Username or password incorrect");
+            throw new AppAuthException("Username or password is incorrect", HttpStatus.UNAUTHORIZED);
         }
 
         AuthDetails details = new AuthDetails();
@@ -69,10 +69,10 @@ public class AuthService {
             String password
     ) throws AppAuthException {
         if (userRepository.findByUsername(username).isPresent()) {
-            throw new AppAuthException("Username already taken");
+            throw new AppAuthException("Username is already taken", HttpStatus.BAD_REQUEST);
         }
         if (userRepository.findByEmail(email).isPresent()) {
-            throw new AppAuthException("Email already taken");
+            throw new AppAuthException("Email is already taken", HttpStatus.BAD_REQUEST);
         }
 
         User user = new User();

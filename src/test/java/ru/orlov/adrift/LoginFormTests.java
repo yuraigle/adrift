@@ -28,6 +28,16 @@ public class LoginFormTests extends AbstractTest {
     }
 
     @Test
+    void loginWithWrongPassword() {
+        LoginRequestDto form = new LoginRequestDto("admin", "wrong");
+        ResponseEntity<String> resp = apiRequestPost("/api/auth/login", form, null, String.class);
+
+        assert resp.getStatusCode() == HttpStatus.UNAUTHORIZED;
+        assert resp.getBody() != null;
+        assert resp.getBody().contains(" is incorrect");
+    }
+
+    @Test
     void loginSuccessResponseContainsToken() {
         LoginRequestDto form = new LoginRequestDto("admin", "admin");
         ResponseEntity<String> resp = apiRequestPost("/api/auth/login", form, null, String.class);
