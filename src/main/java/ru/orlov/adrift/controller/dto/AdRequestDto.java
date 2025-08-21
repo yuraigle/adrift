@@ -1,5 +1,6 @@
 package ru.orlov.adrift.controller.dto;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -25,7 +26,7 @@ public class AdRequestDto {
     @NotNull(message = "Category must be set")
     private Long category;
 
-    private List<AdFieldDto> fields = new ArrayList<>();
+    private List<@Valid AdFieldDto> fields = new ArrayList<>();
 
     @Data
     @AllArgsConstructor
