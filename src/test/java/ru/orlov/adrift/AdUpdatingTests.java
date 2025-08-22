@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import ru.orlov.adrift.controller.dto.AdRequestDto;
 import ru.orlov.adrift.domain.Ad;
@@ -34,6 +35,8 @@ public class AdUpdatingTests extends AbstractTest {
         );
 
         assert response.getStatusCode() == HttpStatus.UNAUTHORIZED;
+        assert response.getHeaders().getContentType() != null;
+        assert response.getHeaders().getContentType().includes(MediaType.APPLICATION_JSON);
     }
 
     @Test
@@ -52,6 +55,9 @@ public class AdUpdatingTests extends AbstractTest {
         );
 
         assert response.getStatusCode() == HttpStatus.FORBIDDEN;
+        assert response.getHeaders().getContentType() != null;
+        assert response.getHeaders().getContentType().includes(MediaType.APPLICATION_JSON);
+
         assert response.getBody() != null;
         assert response.getBody().contains("messages");
         assert response.getBody().contains("belongs to another user");
@@ -68,16 +74,19 @@ public class AdUpdatingTests extends AbstractTest {
         req.setPrice(null);
 
         String token = retrieveAdminToken();
-        ResponseEntity<String> resp = apiRequestPost(
+        ResponseEntity<String> response = apiRequestPost(
                 "/api/ads/" + id, req, token, String.class
         );
 
-        assert resp.getStatusCode() == HttpStatus.BAD_REQUEST;
-        assert resp.getBody() != null;
-        assert resp.getBody().contains("messages");
-        assert resp.getBody().contains("category");
-        assert resp.getBody().contains("title");
-        assert resp.getBody().contains("price");
+        assert response.getStatusCode() == HttpStatus.BAD_REQUEST;
+        assert response.getHeaders().getContentType() != null;
+        assert response.getHeaders().getContentType().includes(MediaType.APPLICATION_JSON);
+
+        assert response.getBody() != null;
+        assert response.getBody().contains("messages");
+        assert response.getBody().contains("category");
+        assert response.getBody().contains("title");
+        assert response.getBody().contains("price");
     }
 
     @Test
@@ -122,13 +131,16 @@ public class AdUpdatingTests extends AbstractTest {
 
         // via controller
         String token = retrieveAdminToken();
-        ResponseEntity<String> resp = apiRequestPost(
+        ResponseEntity<String> response = apiRequestPost(
                 "/api/ads/" + id, req, token, String.class
         );
 
-        assert resp.getStatusCode() == HttpStatus.OK;
-        assert resp.getBody() != null;
-        assert resp.getBody().contains("\"title\":");
+        assert response.getStatusCode() == HttpStatus.OK;
+        assert response.getHeaders().getContentType() != null;
+        assert response.getHeaders().getContentType().includes(MediaType.APPLICATION_JSON);
+
+        assert response.getBody() != null;
+        assert response.getBody().contains("\"title\":");
 
         Ad updatedAd = adRepo.findById(id).orElseThrow();
         assert updatedAd.getTitle().toLowerCase().contains("updated");
@@ -152,14 +164,17 @@ public class AdUpdatingTests extends AbstractTest {
         req.getFields().add(new AdRequestDto.AdFieldDto(2L, null));
 
         String token = retrieveAdminToken();
-        ResponseEntity<String> resp = apiRequestPost(
+        ResponseEntity<String> response = apiRequestPost(
                 "/api/ads/" + id, req, token, String.class
         );
 
-        assert resp.getStatusCode() == HttpStatus.BAD_REQUEST;
-        assert resp.getBody() != null;
-        assert resp.getBody().contains("messages"); // json
-        assert resp.getBody().contains("Missing required field");
+        assert response.getStatusCode() == HttpStatus.BAD_REQUEST;
+        assert response.getHeaders().getContentType() != null;
+        assert response.getHeaders().getContentType().includes(MediaType.APPLICATION_JSON);
+
+        assert response.getBody() != null;
+        assert response.getBody().contains("messages"); // json
+        assert response.getBody().contains("Missing required field");
     }
 
     @Test
@@ -174,14 +189,17 @@ public class AdUpdatingTests extends AbstractTest {
         req.getFields().add(new AdRequestDto.AdFieldDto(3L, "9025")); // year
 
         String token = retrieveAdminToken();
-        ResponseEntity<String> resp = apiRequestPost(
+        ResponseEntity<String> response = apiRequestPost(
                 "/api/ads/" + id, req, token, String.class
         );
 
-        assert resp.getStatusCode() == HttpStatus.BAD_REQUEST;
-        assert resp.getBody() != null;
-        assert resp.getBody().contains("messages"); // json
-        assert resp.getBody().toLowerCase().contains("construction year");
+        assert response.getStatusCode() == HttpStatus.BAD_REQUEST;
+        assert response.getHeaders().getContentType() != null;
+        assert response.getHeaders().getContentType().includes(MediaType.APPLICATION_JSON);
+
+        assert response.getBody() != null;
+        assert response.getBody().contains("messages"); // json
+        assert response.getBody().toLowerCase().contains("construction year");
     }
 
     @Test
@@ -196,14 +214,17 @@ public class AdUpdatingTests extends AbstractTest {
         req.getFields().add(new AdRequestDto.AdFieldDto(3L, "ABC")); // year
 
         String token = retrieveAdminToken();
-        ResponseEntity<String> resp = apiRequestPost(
+        ResponseEntity<String> response = apiRequestPost(
                 "/api/ads/" + id, req, token, String.class
         );
 
-        assert resp.getStatusCode() == HttpStatus.BAD_REQUEST;
-        assert resp.getBody() != null;
-        assert resp.getBody().contains("messages"); // json
-        assert resp.getBody().toLowerCase().contains("construction year");
+        assert response.getStatusCode() == HttpStatus.BAD_REQUEST;
+        assert response.getHeaders().getContentType() != null;
+        assert response.getHeaders().getContentType().includes(MediaType.APPLICATION_JSON);
+
+        assert response.getBody() != null;
+        assert response.getBody().contains("messages"); // json
+        assert response.getBody().toLowerCase().contains("construction year");
     }
 
     @Test
@@ -218,14 +239,17 @@ public class AdUpdatingTests extends AbstractTest {
         req.getFields().add(new AdRequestDto.AdFieldDto(4L, "INVALID-URL"));
 
         String token = retrieveAdminToken();
-        ResponseEntity<String> resp = apiRequestPost(
+        ResponseEntity<String> response = apiRequestPost(
                 "/api/ads/" + id, req, token, String.class
         );
 
-        assert resp.getStatusCode() == HttpStatus.BAD_REQUEST;
-        assert resp.getBody() != null;
-        assert resp.getBody().contains("messages"); // json
-        assert resp.getBody().toLowerCase().contains("url is incorrect");
+        assert response.getStatusCode() == HttpStatus.BAD_REQUEST;
+        assert response.getHeaders().getContentType() != null;
+        assert response.getHeaders().getContentType().includes(MediaType.APPLICATION_JSON);
+
+        assert response.getBody() != null;
+        assert response.getBody().contains("messages"); // json
+        assert response.getBody().toLowerCase().contains("url is incorrect");
     }
 
     @Test
@@ -241,13 +265,16 @@ public class AdUpdatingTests extends AbstractTest {
         req.getFields().add(new AdRequestDto.AdFieldDto(3L, "9025")); // year
 
         String token = retrieveAdminToken();
-        ResponseEntity<String> resp = apiRequestPost(
+        ResponseEntity<String> response = apiRequestPost(
                 "/api/ads/" + id, req, token, String.class
         );
 
-        assert resp.getStatusCode() == HttpStatus.BAD_REQUEST;
-        assert resp.getBody() != null;
-        assert resp.getBody().contains("messages"); // json
-        assert resp.getBody().toLowerCase().contains("multiple answers");
+        assert response.getStatusCode() == HttpStatus.BAD_REQUEST;
+        assert response.getHeaders().getContentType() != null;
+        assert response.getHeaders().getContentType().includes(MediaType.APPLICATION_JSON);
+
+        assert response.getBody() != null;
+        assert response.getBody().contains("messages"); // json
+        assert response.getBody().toLowerCase().contains("multiple answers");
     }
 }

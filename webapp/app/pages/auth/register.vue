@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { callApi } from '~/utils/api'
 
+useHead({
+  titleTemplate: (t) => 'Register - ' + t,
+})
+
 const form = reactive({
   email: '',
   username: '',
@@ -62,17 +66,17 @@ form {
   width: 400px;
 }
 
-form > div {
+form>div {
   display: flex;
   margin-bottom: 8px;
 }
 
-form > div label {
+form>div label {
   width: 100px;
   padding: 4px 0;
 }
 
-form > div input {
+form>div input {
   flex-grow: 1;
   padding: 4px 8px;
 }

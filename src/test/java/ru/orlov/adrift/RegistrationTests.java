@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import ru.orlov.adrift.controller.dto.RegisterRequestDto;
 import ru.orlov.adrift.controller.dto.RegisterResponseDto;
@@ -23,14 +24,17 @@ public class RegistrationTests extends AbstractTest {
                 .password("tester")
                 .build();
 
-        ResponseEntity<String> resp = apiRequestPost(
+        ResponseEntity<String> response = apiRequestPost(
                 "/api/auth/register", form, null, String.class
         );
 
-        assert resp.getStatusCode() == HttpStatus.BAD_REQUEST;
-        assert resp.getBody() != null;
-        assert resp.getBody().contains("messages");
-        assert resp.getBody().toLowerCase().contains("email");
+        assert response.getStatusCode() == HttpStatus.BAD_REQUEST;
+        assert response.getHeaders().getContentType() != null;
+        assert response.getHeaders().getContentType().includes(MediaType.APPLICATION_JSON);
+
+        assert response.getBody() != null;
+        assert response.getBody().contains("messages");
+        assert response.getBody().toLowerCase().contains("email");
     }
 
     @Test
@@ -43,14 +47,17 @@ public class RegistrationTests extends AbstractTest {
                 .password("tester")
                 .build();
 
-        ResponseEntity<RegisterResponseDto> resp = apiRequestPost(
+        ResponseEntity<RegisterResponseDto> response = apiRequestPost(
                 "/api/auth/register", form, null, RegisterResponseDto.class
         );
 
-        assert resp.getStatusCode() == HttpStatus.OK;
-        assert resp.getBody() != null;
-        assert resp.getBody().getId() > 0;
-        assert resp.getBody().getToken() != null;
+        assert response.getStatusCode() == HttpStatus.OK;
+        assert response.getHeaders().getContentType() != null;
+        assert response.getHeaders().getContentType().includes(MediaType.APPLICATION_JSON);
+
+        assert response.getBody() != null;
+        assert response.getBody().getId() > 0;
+        assert response.getBody().getToken() != null;
 
         fakeUserLoader.deleteFakeUsers();
     }
@@ -64,11 +71,13 @@ public class RegistrationTests extends AbstractTest {
                 .username("tester.123")
                 .password("tester").build();
 
-        ResponseEntity<RegisterResponseDto> resp = apiRequestPost(
+        ResponseEntity<RegisterResponseDto> response = apiRequestPost(
                 "/api/auth/register", form, null, RegisterResponseDto.class
         );
 
-        assert resp.getStatusCode() == HttpStatus.OK;
+        assert response.getStatusCode() == HttpStatus.OK;
+        assert response.getHeaders().getContentType() != null;
+        assert response.getHeaders().getContentType().includes(MediaType.APPLICATION_JSON);
 
         RegisterRequestDto form2 = RegisterRequestDto.builder()
                 .email("tester.123@tester")
@@ -80,6 +89,9 @@ public class RegistrationTests extends AbstractTest {
         );
 
         assert resp2.getStatusCode() == HttpStatus.BAD_REQUEST;
+        assert resp2.getHeaders().getContentType() != null;
+        assert resp2.getHeaders().getContentType().includes(MediaType.APPLICATION_JSON);
+
         assert resp2.getBody() != null;
         assert resp2.getBody().toLowerCase().contains("email is already taken");
 

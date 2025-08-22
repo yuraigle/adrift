@@ -6,8 +6,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.lang.NonNull;
 import org.springframework.web.servlet.config.annotation.*;
 
-import java.util.List;
-
 @Log4j2
 @EnableWebMvc
 @Configuration
@@ -29,17 +27,4 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .addResourceLocations("file:/" + webappDist);
     }
 
-    @Override
-    public void addViewControllers(@NonNull ViewControllerRegistry registry) {
-        List<String> ssrRoutes = List.of(
-                "/", "/about",
-                "/auth/login", "/auth/register"
-        );
-
-        for (String route : ssrRoutes) {
-            String html = route.replace("/", "") + "/index.html";
-            registry.addViewController(route)
-                    .setViewName("forward:" + html);
-        }
-    }
 }

@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import ru.orlov.adrift.controller.dto.AuthDetails;
 import ru.orlov.adrift.controller.dto.LoginRequestDto;
@@ -18,33 +19,42 @@ public class LoginFormTests extends AbstractTest {
     @Test
     void loginMalformedContainsErrorMessages() {
         LoginRequestDto form = new LoginRequestDto("", "");
-        ResponseEntity<String> resp = apiRequestPost("/api/auth/login", form, null, String.class);
+        ResponseEntity<String> response = apiRequestPost("/api/auth/login", form, null, String.class);
 
-        assert resp.getStatusCode() == HttpStatus.BAD_REQUEST;
-        assert resp.getBody() != null;
-        assert resp.getBody().contains("messages");
-        assert resp.getBody().contains("username");
-        assert resp.getBody().contains("password");
+        assert response.getStatusCode() == HttpStatus.BAD_REQUEST;
+        assert response.getHeaders().getContentType() != null;
+        assert response.getHeaders().getContentType().includes(MediaType.APPLICATION_JSON);
+
+        assert response.getBody() != null;
+        assert response.getBody().contains("messages");
+        assert response.getBody().contains("username");
+        assert response.getBody().contains("password");
     }
 
     @Test
     void loginWithWrongPassword() {
         LoginRequestDto form = new LoginRequestDto("admin", "wrong");
-        ResponseEntity<String> resp = apiRequestPost("/api/auth/login", form, null, String.class);
+        ResponseEntity<String> response = apiRequestPost("/api/auth/login", form, null, String.class);
 
-        assert resp.getStatusCode() == HttpStatus.UNAUTHORIZED;
-        assert resp.getBody() != null;
-        assert resp.getBody().contains(" is incorrect");
+        assert response.getStatusCode() == HttpStatus.UNAUTHORIZED;
+        assert response.getHeaders().getContentType() != null;
+        assert response.getHeaders().getContentType().includes(MediaType.APPLICATION_JSON);
+
+        assert response.getBody() != null;
+        assert response.getBody().contains(" is incorrect");
     }
 
     @Test
     void loginSuccessResponseContainsToken() {
         LoginRequestDto form = new LoginRequestDto("admin", "admin");
-        ResponseEntity<String> resp = apiRequestPost("/api/auth/login", form, null, String.class);
+        ResponseEntity<String> response = apiRequestPost("/api/auth/login", form, null, String.class);
 
-        assert resp.getStatusCode() == HttpStatus.OK;
-        assert resp.getBody() != null;
-        assert resp.getBody().contains("token");
+        assert response.getStatusCode() == HttpStatus.OK;
+        assert response.getHeaders().getContentType() != null;
+        assert response.getHeaders().getContentType().includes(MediaType.APPLICATION_JSON);
+
+        assert response.getBody() != null;
+        assert response.getBody().contains("token");
     }
 
     @Test

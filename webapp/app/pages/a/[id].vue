@@ -1,15 +1,13 @@
 <script setup lang="ts">
 import { API_BASE } from '~/utils/api';
 
+useHead({
+  titleTemplate: (t) => (ad.value ? ad.value.title + ' - ' : '') + t,
+})
+
 const route = useRoute()
 const id = computed(() => route.params.id)
 const { data: ad } = await useFetch<AdSummary>(`${API_BASE}/ads/${id.value}`)
-
-onMounted(async () => {
-  if (!ad.value) {
-    ad.value = await $fetch(`${API_BASE}/ads/${id.value}`)
-  }
-});
 
 </script>
 

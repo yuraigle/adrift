@@ -5,9 +5,8 @@ import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-
-import java.util.List;
 
 @Log4j2
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -23,6 +22,9 @@ public class AdListingTests extends AbstractTest {
         );
 
         assert response.getStatusCode() == HttpStatus.OK;
+        assert response.getHeaders().getContentType() != null;
+        assert response.getHeaders().getContentType().includes(MediaType.APPLICATION_JSON);
+
         assert response.getBody() != null;
         assert response.getBody().contains("\"title\":");
     }
@@ -37,12 +39,15 @@ public class AdListingTests extends AbstractTest {
         );
 
         assert response.getStatusCode() == HttpStatus.OK;
+        assert response.getHeaders().getContentType() != null;
+        assert response.getHeaders().getContentType().includes(MediaType.APPLICATION_JSON);
+
         assert response.getBody() != null;
         assert response.getBody().contains("\"title\":");
     }
 
     @Test
-    void publicAdHtmlShown() throws Exception {
+    void newlyCreatedAdHtmlIsShown() throws Exception {
         Long id = generateRandomTestAd();
         assert id != null;
 
@@ -51,7 +56,16 @@ public class AdListingTests extends AbstractTest {
         );
 
         int statusCode = response.getStatusCode().value();
-        assert List.of(200, 404).contains(statusCode); // not pre-rendered
+        assert statusCode == 200 || statusCode == 404;
+
+        // todo 404 when not pre-rendered, should be 200
+
+        assert response.getHeaders().getContentType() != null;
+        assert response.getHeaders().getContentType().includes(MediaType.TEXT_HTML);
+
+        assert response.getBody() != null;
+        assert response.getBody().contains("<body>");
+        assert response.getBody().contains("<title>");
     }
 
 }

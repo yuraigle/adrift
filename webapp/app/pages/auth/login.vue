@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { callApi } from '~/utils/api'
 
+useHead({
+  titleTemplate: (t) => 'Login - ' + t,
+})
+
 const form = reactive({
   username: '',
   password: ''

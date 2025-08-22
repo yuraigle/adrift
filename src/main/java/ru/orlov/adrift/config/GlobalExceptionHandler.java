@@ -1,5 +1,6 @@
 package ru.orlov.adrift.config;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -18,16 +19,10 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
+@RequiredArgsConstructor
 public class GlobalExceptionHandler {
 
-    private String html404 = "404 - Not found";
-
-    public GlobalExceptionHandler(String webappDist) {
-        try (InputStream is = new FileInputStream(webappDist + "/404.html")) {
-            html404 = new String(is.readAllBytes());
-        } catch (Exception ignore) {
-        }
-    }
+    private final String webappDist;
 
     @ExceptionHandler(AppAuthException.class)
     public ResponseEntity<ErrorResponseDto> handleAuthExceptions(
@@ -101,7 +96,16 @@ public class GlobalExceptionHandler {
                     .header("Content-Type", "application/json")
                     .body(ErrorResponseDto.of("Not Found").toJson());
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(html404);
+            String html404 = "404 - Not found";
+            try (InputStream is = new FileInputStream(webappDist + "/404.html")) {
+                html404 = new String(is.readAllBytes());
+            } catch (Exception ignore) {
+            }
+
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .header("Content-Type", "text/html;charset=UTF-8")
+                    .body(html404);
         }
     }
 }

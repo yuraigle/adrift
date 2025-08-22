@@ -15,8 +15,8 @@ public class CorsHeaderTests extends AbstractTest {
             return true;
         }
 
-        List<String> vary = response.getHeaders().get("Vary");
-        return vary != null && vary.contains("Origin");
+        List<String> vary = response.getHeaders().getVary();
+        return vary.contains("Origin");
     }
 
     @Test

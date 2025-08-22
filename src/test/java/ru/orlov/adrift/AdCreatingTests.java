@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import ru.orlov.adrift.controller.dto.AdRequestDto;
 import ru.orlov.adrift.domain.Ad;
@@ -33,6 +34,8 @@ public class AdCreatingTests extends AbstractTest {
         );
 
         assert response.getStatusCode() == HttpStatus.UNAUTHORIZED;
+        assert response.getHeaders().getContentType() != null;
+        assert response.getHeaders().getContentType().includes(MediaType.APPLICATION_JSON);
     }
 
     @Test
@@ -48,6 +51,9 @@ public class AdCreatingTests extends AbstractTest {
         );
 
         assert response.getStatusCode() == HttpStatus.BAD_REQUEST;
+        assert response.getHeaders().getContentType() != null;
+        assert response.getHeaders().getContentType().includes(MediaType.APPLICATION_JSON);
+
         assert response.getBody() != null;
         assert response.getBody().contains("messages");
         assert response.getBody().contains("category");
@@ -69,6 +75,9 @@ public class AdCreatingTests extends AbstractTest {
         );
 
         assert response.getStatusCode() == HttpStatus.BAD_REQUEST;
+        assert response.getHeaders().getContentType() != null;
+        assert response.getHeaders().getContentType().includes(MediaType.APPLICATION_JSON);
+
         assert response.getBody() != null;
         assert response.getBody().contains("messages");
         assert response.getBody().contains("Missing required field");
@@ -89,6 +98,9 @@ public class AdCreatingTests extends AbstractTest {
         );
 
         assert response.getStatusCode() == HttpStatus.BAD_REQUEST;
+        assert response.getHeaders().getContentType() != null;
+        assert response.getHeaders().getContentType().includes(MediaType.APPLICATION_JSON);
+
         assert response.getBody() != null;
         assert response.getBody().contains("messages");
         assert response.getBody().toLowerCase().contains("multiple");
@@ -105,13 +117,16 @@ public class AdCreatingTests extends AbstractTest {
         form.setPrice(BigDecimal.valueOf(0));
 
         String token = retrieveAdminToken();
-        ResponseEntity<String> resp = apiRequestPost(
+        ResponseEntity<String> response = apiRequestPost(
                 "/api/ads", form, token, String.class
         );
 
-        assert resp.getStatusCode() == HttpStatus.CREATED;
-        assert resp.getBody() != null;
-        assert resp.getBody().contains("\"id\":");
+        assert response.getStatusCode() == HttpStatus.CREATED;
+        assert response.getHeaders().getContentType() != null;
+        assert response.getHeaders().getContentType().includes(MediaType.APPLICATION_JSON);
+
+        assert response.getBody() != null;
+        assert response.getBody().contains("\"id\":");
 
         cleanupTestAds();
     }
@@ -132,13 +147,16 @@ public class AdCreatingTests extends AbstractTest {
         ));
 
         String token = retrieveAdminToken();
-        ResponseEntity<String> resp = apiRequestPost(
+        ResponseEntity<String> response = apiRequestPost(
                 "/api/ads", form, token, String.class
         );
 
         // assert Ad is created
-        assert resp.getStatusCode() == HttpStatus.CREATED;
-        assert resp.getBody() != null;
+        assert response.getStatusCode() == HttpStatus.CREATED;
+        assert response.getHeaders().getContentType() != null;
+        assert response.getHeaders().getContentType().includes(MediaType.APPLICATION_JSON);
+
+        assert response.getBody() != null;
 
         List<Ad> ads = adRepository.findByTitle("Test AD #1");
         assert !ads.isEmpty();
@@ -174,12 +192,15 @@ public class AdCreatingTests extends AbstractTest {
         ));
 
         String token = retrieveAdminToken();
-        ResponseEntity<String> resp = apiRequestPost(
+        ResponseEntity<String> response = apiRequestPost(
                 "/api/ads", form, token, String.class
         );
 
-        assert resp.getStatusCode() == HttpStatus.CREATED;
-        assert resp.getBody() != null;
+        assert response.getStatusCode() == HttpStatus.CREATED;
+        assert response.getHeaders().getContentType() != null;
+        assert response.getHeaders().getContentType().includes(MediaType.APPLICATION_JSON);
+
+        assert response.getBody() != null;
 
         List<Ad> ads = adRepository.findByTitle("Test AD #2");
         assert !ads.isEmpty();

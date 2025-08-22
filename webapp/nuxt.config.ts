@@ -13,5 +13,16 @@ export default defineNuxtConfig({
       'types/*.ts', // Auto-import types from 'types/'
       'types/**/*.ts' // Auto-import types from nested 'types/' subdirectories
     ]
+  },
+  app: {
+    head: {
+      title: 'Adrift', // default fallback title
+      htmlAttrs: {
+        lang: 'en',
+      },
+      link: [
+        { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+      ]
+    }
   }
 })
