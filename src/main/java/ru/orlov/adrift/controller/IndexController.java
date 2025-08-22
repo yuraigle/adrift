@@ -21,6 +21,11 @@ public class IndexController {
         return "/about/index.html";
     }
 
+    @GetMapping(value = "/terms", produces = "text/html;charset=UTF-8")
+    public String terms() {
+        return "/terms/index.html";
+    }
+
     @GetMapping(value = "/auth/login", produces = "text/html")
     public String login() {
         return "/auth/login/index.html";
@@ -29,6 +34,11 @@ public class IndexController {
     @GetMapping(value = "/auth/register", produces = "text/html")
     public String register() {
         return "/auth/register/index.html";
+    }
+
+    @GetMapping(value = "/auth/reset", produces = "text/html")
+    public String reset() {
+        return "/auth/reset/index.html";
     }
 
     @GetMapping(value = "/a/{id}", produces = "text/html")

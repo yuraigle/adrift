@@ -10,7 +10,7 @@
         <NuxtLink to="/about" class="hover:underline me-4 md:me-6">About</NuxtLink>
       </li>
       <li>
-        <a href="#" class="hover:underline me-4 md:me-6">Terms of use</a>
+        <NuxtLink to="/terms" class="hover:underline me-4 md:me-6">Terms of use</NuxtLink>
       </li>
       <li>
         <a href="#" class="hover:underline">Contact</a>
