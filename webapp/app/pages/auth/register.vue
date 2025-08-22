@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { callApi } from '~/utils/api'
 
+definePageMeta({
+  layout: 'empty'
+})
+
 useHead({
   titleTemplate: (t) => 'Register - ' + t,
 })
@@ -28,61 +32,41 @@ const onSubmit = () => {
 </script>
 
 <template>
-  <div>
-    <h1>Register</h1>
+  <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+    <div class="sm:mx-auto sm:w-full sm:max-w-sm">
+      <NuxtLink to="/">
+        <IconLogoIcon class="mx-auto h-10 w-auto" />
+      </NuxtLink>
+      <h2 class="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">
+        Register a new account
+      </h2>
+    </div>
+    <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+      <form class="space-y-6" @submit.prevent="onSubmit">
+        <FormInput id="email" label="Email" :val="form.email" type="email" autocomplete="email"
+          @update:val="form.email = $event.target.value" />
 
-    <form @submit.prevent="onSubmit">
-      <div>
-        <label for="login-username">Username:</label>
-        <input id="login-username" v-model="form.username" type="text">
-      </div>
+        <FormInput id="username" label="Username" :val="form.username" autocomplete="username"
+          @update:val="form.username = $event.target.value" />
 
-      <div>
-        <label for="login-email">Email:</label>
-        <input id="login-email" v-model="form.email" type="email">
-      </div>
+        <FormInput id="password" label="Password" :val="form.password" type="password" autocomplete="new-password"
+          @update:val="form.password = $event.target.value" />
 
-      <div>
-        <label for="login-password">Password:</label>
-        <input id="login-password" v-model="form.password" type="password" autocomplete="new-password">
-      </div>
+        <div>
+          <button type="submit" :class="`flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6
+              font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2
+              focus-visible:outline-offset-2 focus-visible:outline-indigo-600`">
+            Register
+          </button>
+        </div>
+      </form>
 
-      <div>
-        <button type="submit">Create Account</button>
-      </div>
-
-      <p>
+      <p class="mt-10 text-center text-sm/6 text-gray-500">
         Already have an account?
-        <NuxtLink to="/auth/login">Sign in</NuxtLink>
+        <NuxtLink to="/auth/login" class="font-semibold text-indigo-600 hover:text-indigo-500">Log in</NuxtLink>
       </p>
-    </form>
 
-    <p v-if="message" :class="message_type">{{ message }}</p>
+      <p v-if="message" :class="message_type">{{ message }}</p>
+    </div>
   </div>
 </template>
-
-<style scoped>
-form {
-  width: 400px;
-}
-
-form>div {
-  display: flex;
-  margin-bottom: 8px;
-}
-
-form>div label {
-  width: 100px;
-  padding: 4px 0;
-}
-
-form>div input {
-  flex-grow: 1;
-  padding: 4px 8px;
-}
-
-button {
-  width: 100%;
-  padding: 4px 8px;
-}
-</style>

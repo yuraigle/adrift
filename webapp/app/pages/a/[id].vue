@@ -16,7 +16,7 @@ const { data: ad } = await useFetch<AdSummary>(`${API_BASE}/ads/${id.value}`)
     <p>No content</p>
   </div>
   <div v-else>
-    <h1>{{ ad.title }}</h1>
+    <h1 class="text-2xl font-bold py-2">{{ ad.title }}</h1>
 
     <ul class="pagination">
       <li v-if="ad.id > 1">
