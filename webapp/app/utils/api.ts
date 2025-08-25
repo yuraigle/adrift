@@ -1,4 +1,4 @@
-export const API_BASE: string = 'http://localhost:8080/api';
+export const API_BASE: string = 'https://adrift.orlov.bar/api';
 
 const getTokenFromLocalStorage = (): string => {
   const user: string | null = localStorage.getItem('user')

@@ -6,7 +6,7 @@ definePageMeta({
 })
 
 useHead({
-  titleTemplate: (t) => 'Login - ' + t,
+  titleTemplate: (t: string | undefined) => 'Login - ' + t,
 })
 
 const form = reactive({

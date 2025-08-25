@@ -1,6 +1,6 @@
 <script setup lang="ts">
 useHead({
-  titleTemplate: (t) => 'Home - ' + t,
+  titleTemplate: (t: string | undefined) => 'Home - ' + t,
 })
 </script>
 

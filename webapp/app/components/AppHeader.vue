@@ -1,7 +1,7 @@
 <template>
   <header class="absolute inset-x-0 top-0 z-50">
     <nav class="flex items-center p-6 lg:px-8">
-      <div class="flex">
+      <div class="flex lg:w-xs">
         <NuxtLink to="/">
           <div class="flex gap-x-2">
             <IconLogoIcon />
@@ -18,7 +18,8 @@
           </div>
         </div>
       </div>
-      <div class="flex lg:justify-end">
+
+      <div class="flex lg:w-xs justify-end">
         <NuxtLink to="/auth/login" :class="`text-sm/6 font-semibold text-gray-900 flex w-16 gap-x-1
               hover:gap-x-2 hover:text-indigo-600`">
           Log in

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 useHead({
-  titleTemplate: (t) => 'Terms of Use - ' + t,
+  titleTemplate: (t: string | undefined) => 'Terms of Use - ' + t,
 })
 </script>
 

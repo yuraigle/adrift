@@ -10,6 +10,9 @@ export default defineNuxtConfig({
     typeCheck: true,
     strict: true
   },
+  runtimeConfig: {
+    APP_VERSION: JSON.stringify(process.env.npm_package_version)
+  },
   vite: {
     plugins: [
       tailwindcss(),
@@ -31,5 +34,5 @@ export default defineNuxtConfig({
         { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
       ]
     }
-  }
+  },
 })

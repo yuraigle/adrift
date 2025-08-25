@@ -2,7 +2,7 @@
 import { API_BASE } from '~/utils/api';
 
 useHead({
-  titleTemplate: (t) => (ad.value ? ad.value.title + ' - ' : '') + t,
+  titleTemplate: (t: string | undefined) => (ad.value ? ad.value.title + ' - ' : '') + t,
 })
 
 const route = useRoute()
