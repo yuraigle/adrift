@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const version = useRuntimeConfig().APP_VERSION;
+const version = useAppConfig().APP_VERSION || '';
 </script>
 
 <template>

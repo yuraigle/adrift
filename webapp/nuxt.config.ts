@@ -10,8 +10,8 @@ export default defineNuxtConfig({
     typeCheck: true,
     strict: true
   },
-  runtimeConfig: {
-    APP_VERSION: JSON.stringify(process.env.npm_package_version)
+  appConfig: {
+    APP_VERSION: process.env.npm_package_version
   },
   vite: {
     plugins: [
