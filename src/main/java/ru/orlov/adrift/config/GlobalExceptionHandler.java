@@ -1,5 +1,6 @@
 package ru.orlov.adrift.config;
 
+import jakarta.servlet.ServletException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,21 +9,18 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 import ru.orlov.adrift.controller.dto.ErrorResponseDto;
 import ru.orlov.adrift.domain.ex.AppAuthException;
 import ru.orlov.adrift.domain.ex.AppException;
 
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
 @RequiredArgsConstructor
 public class GlobalExceptionHandler {
-
-    private final String webappDist;
 
     @ExceptionHandler(AppAuthException.class)
     public ResponseEntity<ErrorResponseDto> handleAuthExceptions(
@@ -34,6 +32,7 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(status)
                 .header("Content-Type", "application/json")
+                .header("Vary", "Origin")
                 .body(ErrorResponseDto.of(ex.getMessage()));
     }
 
@@ -44,11 +43,13 @@ public class GlobalExceptionHandler {
         if (ex.getHeaderName().equals("Authorization")) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .header("Content-Type", "application/json")
+                    .header("Vary", "Origin")
                     .body(ErrorResponseDto.of("Authorization is missing"));
         }
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .header("Content-Type", "application/json")
+                .header("Vary", "Origin")
                 .body(ErrorResponseDto.of(ex.getMessage()));
     }
 
@@ -62,6 +63,7 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(status)
                 .header("Content-Type", "application/json")
+                .header("Vary", "Origin")
                 .body(ErrorResponseDto.of(ex.getMessage()));
     }
 
@@ -75,6 +77,7 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.badRequest()
                 .header("Content-Type", "application/json")
+                .header("Vary", "Origin")
                 .body(ErrorResponseDto.of(messages));
     }
 
@@ -84,28 +87,17 @@ public class GlobalExceptionHandler {
     ) {
         return ResponseEntity.badRequest()
                 .header("Content-Type", "application/json")
+                .header("Vary", "Origin")
                 .body(ErrorResponseDto.of("Invalid JSON request"));
     }
 
-    @ExceptionHandler(NoResourceFoundException.class)
+    @ExceptionHandler({NoResourceFoundException.class, NoHandlerFoundException.class})
     protected ResponseEntity<String> handleNoResourceExceptions(
-            NoResourceFoundException ex
+            ServletException ignore
     ) {
-        if (ex.getResourcePath().startsWith("api/")) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .header("Content-Type", "application/json")
-                    .body(ErrorResponseDto.of("Not Found").toJson());
-        } else {
-            String html404 = "404 - Not found";
-            try (InputStream is = new FileInputStream(webappDist + "/404.html")) {
-                html404 = new String(is.readAllBytes());
-            } catch (Exception ignore) {
-            }
-
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .header("Content-Type", "text/html;charset=UTF-8")
-                    .body(html404);
-        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .header("Content-Type", "application/json")
+                .header("Vary", "Origin")
+                .body(ErrorResponseDto.of("Not Found").toJson());
     }
 }

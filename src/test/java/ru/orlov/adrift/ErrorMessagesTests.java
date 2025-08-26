@@ -35,16 +35,4 @@ public class ErrorMessagesTests extends AbstractTest {
         assert response.getBody().contains("\"messages\":[");
     }
 
-    @Test
-    void invalidPublicUrlReturns404AndHtml() {
-        ResponseEntity<String> response = apiRequestGet("/invalid");
-
-        assert response.getStatusCode() == HttpStatus.NOT_FOUND;
-        assert response.getHeaders().getContentType() != null;
-        assert response.getHeaders().getContentType().includes(MediaType.TEXT_HTML);
-
-        assert response.getBody() != null;
-        assert response.getBody().toLowerCase().contains("<html");
-    }
-
 }

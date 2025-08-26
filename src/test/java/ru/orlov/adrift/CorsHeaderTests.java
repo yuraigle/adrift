@@ -20,13 +20,6 @@ public class CorsHeaderTests extends AbstractTest {
     }
 
     @Test
-    void apiPageContainsCorsHeaders() {
-        ResponseEntity<String> response = apiRequestGet("/api/version");
-
-        assert hasCorsHeaders(response);
-    }
-
-    @Test
     void malformedPostRequestContainsCorsHeaders() {
         LoginRequestDto form = new LoginRequestDto("", null);
         ResponseEntity<String> response = apiRequestPost("/api/auth/register", form, null, String.class);
@@ -41,4 +34,10 @@ public class CorsHeaderTests extends AbstractTest {
         assert hasCorsHeaders(response);
     }
 
+    @Test
+    void apiNotFoundPageContainsCorsHeaders() {
+        ResponseEntity<String> response = apiRequestGet("/api/invalid");
+
+        assert hasCorsHeaders(response);
+    }
 }

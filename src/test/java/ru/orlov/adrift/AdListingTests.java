@@ -46,26 +46,4 @@ public class AdListingTests extends AbstractTest {
         assert response.getBody().contains("\"title\":");
     }
 
-    @Test
-    void newlyCreatedAdHtmlIsShown() throws Exception {
-        Long id = generateRandomTestAd();
-        assert id != null;
-
-        ResponseEntity<String> response = apiRequestGet(
-                "/a/" + id, null, String.class
-        );
-
-        int statusCode = response.getStatusCode().value();
-        assert statusCode == 200 || statusCode == 404;
-
-        // todo 404 when not pre-rendered, should be 200
-
-        assert response.getHeaders().getContentType() != null;
-        assert response.getHeaders().getContentType().includes(MediaType.TEXT_HTML);
-
-        assert response.getBody() != null;
-        assert response.getBody().contains("<body>");
-        assert response.getBody().contains("<title>");
-    }
-
 }

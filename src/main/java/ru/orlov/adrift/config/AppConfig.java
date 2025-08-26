@@ -25,11 +25,4 @@ public class AppConfig {
         return appPath;
     }
 
-    @Bean(name = "webappDist")
-    String webappDist() {
-        String s = Path.of(appPath(), "webapp", "dist").toString();
-        log.info("WEBAPP_DIST = {}", s);
-        return Path.of(appPath(), "webapp", "dist").toString();
-    }
-
 }

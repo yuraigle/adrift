@@ -42,20 +42,6 @@ public abstract class AbstractTest {
         return "http://localhost:" + port + path;
     }
 
-    ResponseEntity<String> htmlRequestGet(String path) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7");
-//        headers.add("Accept-Encoding", "gzip, deflate, br, zstd");
-        headers.add("Accept-Language", "en-US");
-
-        return restTemplate.exchange(
-                url(path),
-                HttpMethod.GET,
-                new HttpEntity<>(null, headers),
-                String.class
-        );
-    }
-
     ResponseEntity<String> apiRequestGet(String path) {
         return apiRequestGet(path, null, String.class);
     }
