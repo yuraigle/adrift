@@ -1,6 +1,6 @@
 services:
   java_app:
-    build: .
+    build: ./Dockerfile-jar
     image: yuraigle/adrift-jar:latest
     container_name: adrift-jar
     ports:
@@ -8,7 +8,7 @@ services:
     volumes:
       - ./adrift.sqlite:/adrift.sqlite
   web_app:
-    build: ./webapp
+    build: ./Dockerfile-webapp
     image: yuraigle/adrift-nginx:latest
     container_name: adrift-nginx
     ports:
