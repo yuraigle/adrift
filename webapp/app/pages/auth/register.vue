@@ -35,21 +35,26 @@ const onSubmit = () => {
   <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
     <div class="sm:mx-auto sm:w-full sm:max-w-sm">
       <NuxtLink to="/">
-        <IconLogoIcon class="mx-auto h-10 w-auto" />
+        <span class="text-indigo-600 dark:text-indigo-200">
+          <IconLogoIcon class="mx-auto h-10 w-auto" />
+        </span>
       </NuxtLink>
-      <h2 class="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">
+      <h2 class="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900 dark:text-gray-100">
         Register a new account
       </h2>
     </div>
     <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
       <form class="space-y-6" @submit.prevent="onSubmit">
-        <FormInput id="email" label="Email" :val="form.email" type="email" autocomplete="email"
+        <FormInput
+          id="email" label="Email" :val="form.email" type="email" autocomplete="email"
           @update:val="form.email = $event.target.value" />
 
-        <FormInput id="username" label="Username" :val="form.username" autocomplete="username"
+        <FormInput
+          id="username" label="Username" :val="form.username" autocomplete="username"
           @update:val="form.username = $event.target.value" />
 
-        <FormInput id="password" label="Password" :val="form.password" type="password" autocomplete="new-password"
+        <FormInput
+          id="password" label="Password" :val="form.password" type="password" autocomplete="new-password"
           @update:val="form.password = $event.target.value" />
 
         <div>
@@ -59,7 +64,7 @@ const onSubmit = () => {
 
       <p class="mt-10 text-center text-sm/6 text-gray-500">
         Already have an account?
-        <NuxtLink to="/auth/login" class="font-semibold text-indigo-600 hover:text-indigo-500">Log in</NuxtLink>
+        <NuxtLink to="/auth/login" class="link-clr1">Log in</NuxtLink>
       </p>
 
       <p v-if="message" :class="message_type">{{ message }}</p>

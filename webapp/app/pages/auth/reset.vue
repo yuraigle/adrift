@@ -33,12 +33,14 @@ const onSubmit = () => {
   <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
     <div class="sm:mx-auto sm:w-full sm:max-w-sm">
       <NuxtLink to="/">
-        <IconLogoIcon class="mx-auto h-10 w-auto" />
+        <span class="text-indigo-600 dark:text-indigo-200">
+          <IconLogoIcon class="mx-auto h-10 w-auto" />
+        </span>
       </NuxtLink>
-      <h2 class="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">
+      <h2 class="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900 dark:text-gray-100">
         Reset your password
       </h2>
-      <p class="text-center">
+      <p class="text-center text-gray-900 dark:text-gray-100">
         Enter your user account's verified email address and we will send you a password reset link.
       </p>
     </div>
@@ -48,9 +50,7 @@ const onSubmit = () => {
           id="email" label="Email" :val="form.email" type="email" autocomplete="email"
           @update:val="form.email = $event.target.value" />
 
-        <div>
-          <UiButtonPrimary type="submit">Send a password reset instructions</UiButtonPrimary>
-        </div>
+        <UiButtonPrimary type="submit">Send a password reset instructions</UiButtonPrimary>
       </form>
 
       <p v-if="message" :class="message_type">{{ message }}</p>

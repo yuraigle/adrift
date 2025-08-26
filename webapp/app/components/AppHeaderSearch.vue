@@ -1,5 +1,5 @@
 <template>
-  <form>
+  <form class="w-full">
     <label for="default-search" class="sr-only">Search</label>
     <div class="relative">
       <div
@@ -10,18 +10,18 @@
       <input
         id="default-search" 
         type="search"
-        :class="`block w-full py-2 ps-10 pe-4 text-sm
-                  text-gray-900 rounded-xl bg-gray-50
-                  border-2 border-indigo-700 focus-visible:outline-none
-                  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
-                  dark:focus:ring-indigo-500 dark:focus:border-indigo-500`"
+        :class="`w-full py-2 ps-10 pe-4 text-sm rounded-xl
+                  text-gray-900 bg-gray-50 dark:text-white dark:bg-gray-700
+                  border-2 border-indigo-700 dark:border-indigo-500
+                  focus-visible:outline-none`"
         placeholder="Search...">
       <button
         type="submit"
         :class="`text-white absolute px-4 py-2 end-0 bottom-0
-                  border-2 border-indigo-700 bg-indigo-700 hover:bg-indigo-800
-                  font-medium rounded-r-xl text-sm cursor-pointer
-                  dark:bg-indigo-600 dark:hover:bg-indigo-700 dark:focus:ring-indigo-800`">
+                  bg-indigo-700 hover:bg-indigo-600
+                  dark:bg-indigo-500 dark:hover:bg-indigo-400
+                  border-2 border-indigo-700 dark:border-indigo-500
+                  font-medium rounded-r-xl text-sm cursor-pointer`">
         Search
       </button>
     </div>

@@ -34,9 +34,11 @@ const onSubmit = () => {
   <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
     <div class="sm:mx-auto sm:w-full sm:max-w-sm">
       <NuxtLink to="/">
-        <IconLogoIcon class="mx-auto h-10 w-auto" />
+        <span class="text-indigo-600 dark:text-indigo-200">
+          <IconLogoIcon class="mx-auto h-10 w-auto" />
+        </span>
       </NuxtLink>
-      <h2 class="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">
+      <h2 class="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900 dark:text-gray-100">
         Sign in to your account
       </h2>
     </div>
@@ -48,9 +50,9 @@ const onSubmit = () => {
 
         <div>
           <div class="flex items-center justify-between">
-            <label for="password" class="block text-sm/6 font-medium text-gray-900">Password</label>
+            <label for="password" class="block text-sm/6 font-medium text-gray-700 dark:text-gray-300">Password:</label>
             <div class="text-sm">
-              <NuxtLink to="/auth/reset" class="font-semibold text-indigo-600 hover:text-indigo-500">
+              <NuxtLink to="/auth/reset" class="link-clr1">
                 Forgot password?
               </NuxtLink>
             </div>
@@ -65,7 +67,7 @@ const onSubmit = () => {
 
       <p class="mt-10 text-center text-sm/6 text-gray-500">
         Don't have an account?
-        <NuxtLink to="/auth/register" class="font-semibold text-indigo-600 hover:text-indigo-500">
+        <NuxtLink to="/auth/register" class="link-clr1">
           Register
         </NuxtLink>
       </p>

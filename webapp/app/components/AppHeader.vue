@@ -1,27 +1,27 @@
 <template>
   <header class="absolute inset-x-0 top-0 z-50">
-    <nav class="flex items-center p-6 lg:px-8">
-      <div class="flex lg:w-xs">
-        <NuxtLink to="/">
-          <div class="flex gap-x-2">
-            <IconLogoIcon />
-            <span class="font-bold">Adrift</span>
-          </div>
-        </NuxtLink>
-      </div>
+    <nav class="flex items-center justify-between p-6 lg:px-8">
+      <NuxtLink to="/" class="flex pt-1 gap-x-2">
+        <span class="text-indigo-600 dark:text-indigo-200">
+          <IconLogoIcon />
+        </span>
+        <span class="font-bold">Adrift</span>
+      </NuxtLink>
 
-      <div class="flex-1 pe-4">
-        <div class="flex max-w-xl mx-auto gap-x-2">
-          <AppHeaderCategories />
-          <div class="flex-1 ms-1">
-            <AppHeaderSearch />
-          </div>
+      <div class="max-w-3xl px-4 gap-x-2 hidden sm:flex">
+        <AppHeaderCategories />
+        <AppHeaderSearch />
+      </div>
+      <div class="flex justify-end">
+        <div class="pt-1 me-4">
+          <ThemeTogglerButton />
         </div>
-      </div>
-
-      <div class="flex lg:w-xs justify-end">
-        <NuxtLink to="/auth/login" :class="`text-sm/6 font-semibold text-gray-900 flex w-16 gap-x-1
-              hover:gap-x-2 hover:text-indigo-600`">
+        <NuxtLink
+          to="/auth/login"
+          :class="`text-sm/6 font-semibold flex w-16 pt-1
+              gap-x-1 hover:gap-x-2
+              hover:text-indigo-600 dark:hover:text-indigo-200
+              `">
           Log in
           <span>&rarr;</span>
         </NuxtLink>
