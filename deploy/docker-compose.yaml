@@ -1,6 +1,6 @@
 services:
   java_app:
-    build: ./Dockerfile-jar
+    build: Dockerfile-api
     image: yuraigle/adrift-jar:latest
     container_name: adrift-jar
     ports:

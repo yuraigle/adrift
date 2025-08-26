@@ -13,11 +13,10 @@
   "dependencies": {
     "@nuxt/eslint": "1.8.0",
     "@tailwindcss/vite": "^4.1.12",
-    "@tailwindplus/elements": "^1.0.9",
-    "eslint": "^9.33.0",
+    "eslint": "^9.34.0",
     "nuxt": "^4.0.3",
     "tailwindcss": "^4.1.12",
-    "vue": "^3.5.19",
+    "vue": "^3.5.20",
     "vue-router": "^4.5.1"
   },
   "devDependencies": {

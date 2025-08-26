@@ -8,10 +8,11 @@
         <span class="font-bold">Adrift</span>
       </NuxtLink>
 
-      <div class="max-w-3xl px-4 gap-x-2 hidden sm:flex">
+      <div class="px-4 gap-x-2 flex hidden md:flex w-xl md:w-2xl">
         <AppHeaderCategories />
         <AppHeaderSearch />
       </div>
+
       <div class="flex justify-end">
         <div class="pt-1 me-4">
           <ThemeTogglerButton />
