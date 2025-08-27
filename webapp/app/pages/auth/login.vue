@@ -62,7 +62,7 @@ const onSubmit = () => {
                       dark:text-gray-300
                       `.replaceAll(/\s+/g, ' ')">Password:</label>
             <div class="text-sm">
-              <NuxtLink to="/auth/reset" class="link-clr1">
+              <NuxtLink to="/auth/reset" class="link-clr1 font-semibold">
                 Forgot password?
               </NuxtLink>
             </div>
@@ -78,7 +78,7 @@ const onSubmit = () => {
 
       <p class="mt-10 text-center text-sm/6 text-gray-500">
         Don't have an account?
-        <NuxtLink to="/auth/register" class="link-clr1">
+        <NuxtLink to="/auth/register" class="link-clr1 font-semibold">
           Register
         </NuxtLink>
       </p>

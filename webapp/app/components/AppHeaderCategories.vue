@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { IconListSearchIcon } from '#components';
-
 const isMenuShown = ref(false)
 
 const handleClickOutsideMenu = (event: MouseEvent) => {
@@ -27,12 +25,6 @@ onMounted(() => {
 onUnmounted(() => {
   document.removeEventListener('click', handleClickOutsideMenu);
 });
-
-
-// const { data: categories } = await useAsyncData<Array<CategorySummary>>(
-//   'categories',
-//   () => $fetch(`${API_BASE}/categories`)
-// );
 
 </script>
 

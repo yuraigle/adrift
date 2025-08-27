@@ -19,7 +19,7 @@ const onSubmitSearch = () => {
         <IconSearchIcon :size=20 />
       </div>
       <input
-        id="default-search"
+        id="search-query"
         v-model="q"
         type="search"
         :class="`

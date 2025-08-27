@@ -12,7 +12,9 @@ import ru.orlov.adrift.domain.ex.AppException;
 import ru.orlov.adrift.service.AdService;
 import ru.orlov.adrift.service.AuthService;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -59,6 +61,21 @@ public class AdController {
 
         AdSummary updated = adService.updateAd(request, ad);
         return new ResponseEntity<>(updated, null, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/api/ads/crawl", produces = "application/json")
+    public ResponseEntity<List<String>> crawlUrls(
+            @RequestHeader("Authorization") String token
+    ) throws AppException {
+        if (token == null || !token.equals("CRAWLER")) {
+            throw new AppAuthException("Unauthorized", HttpStatus.UNAUTHORIZED);
+        }
+
+        List<String> urls = adRepository.getAllIds().stream()
+                .map(id -> "/" + id)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(urls, null, HttpStatus.OK);
     }
 
 }

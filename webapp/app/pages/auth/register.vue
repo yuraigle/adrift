@@ -69,7 +69,7 @@ const onSubmit = () => {
 
       <p class="mt-10 text-center text-sm/6 text-gray-500">
         Already have an account?
-        <NuxtLink to="/auth/login" class="link-clr1">Log in</NuxtLink>
+        <NuxtLink to="/auth/login" class="link-clr1 font-semibold">Log in</NuxtLink>
       </p>
 
       <p v-if="message" :class="message_type">{{ message }}</p>
