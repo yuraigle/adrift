@@ -1,5 +1,14 @@
+<script setup lang="ts">
+const q = ref('')
+const router = useRouter()
+
+const onSubmitSearch = () => {
+  router.push({ path: '/search', query: { q: q.value } })
+}
+</script>
+
 <template>
-  <form class="flex-grow">
+  <form class="flex-grow" @submit.prevent="onSubmitSearch">
     <label for="default-search" class="sr-only">Search</label>
     <div class="relative">
       <div
@@ -8,7 +17,8 @@
         <IconSearchIcon :size=20 />
       </div>
       <input
-        id="default-search" 
+        id="default-search"
+        v-model="q"
         type="search"
         :class="`w-full py-2 ps-10 pe-4 text-sm rounded-xl
                   text-gray-900 bg-gray-50 dark:text-white dark:bg-gray-700
