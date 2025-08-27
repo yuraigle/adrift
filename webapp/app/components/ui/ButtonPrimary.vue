@@ -14,10 +14,14 @@ defineProps({
 <template>
   <button
     :type="type"
-    :class="`w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5
-              text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500
-              focus-visible:outline-2 focus-visible:outline-offset-2
-              focus-visible:outline-indigo-600 cursor-pointer ${cls}`">
+    :class="`
+            w-full justify-center rounded-md px-3 py-1.5
+            text-sm/6 font-semibold shadow-xs cursor-pointer
+            focus-visible:outline-2 focus-visible:outline-offset-2
+            text-white bg-accent-600 hover:bg-accent-500
+            focus-visible:outline-accent-600
+            ${cls}
+            `.replaceAll(/\s+/g, ' ')">
     <slot />
   </button>
 </template>

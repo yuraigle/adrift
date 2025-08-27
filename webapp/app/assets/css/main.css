@@ -1,16 +1,41 @@
 @import "tailwindcss";
 @custom-variant dark (&:where(.dark, .dark *));
 
-html, body, #__nuxt {
-  height: 100%;
+@theme {
+    --color-accent-100: var(--color-emerald-100);
+    --color-accent-200: var(--color-emerald-200);
+    --color-accent-300: var(--color-emerald-300);
+    --color-accent-400: var(--color-emerald-400);
+    --color-accent-500: var(--color-emerald-500);
+    --color-accent-600: var(--color-emerald-600);
+    --color-accent-700: var(--color-emerald-700);
+    --color-accent-800: var(--color-emerald-800);
+    --color-accent-900: var(--color-emerald-900);
+
+    --color-siberia-100: var(--color-amber-100);
+    --color-siberia-200: var(--color-amber-200);
+    --color-siberia-300: var(--color-amber-300);
+    --color-siberia-400: var(--color-amber-400);
+    --color-siberia-500: var(--color-amber-500);
+    --color-siberia-600: var(--color-amber-600);
+    --color-siberia-700: var(--color-amber-700);
+    --color-siberia-800: var(--color-amber-800);
+    --color-siberia-900: var(--color-amber-900);
+}
+
+html,
+body,
+#__nuxt {
+    height: 100%;
 }
 
 body {
-    @apply bg-white text-black dark:bg-gray-800 dark:text-white
+    @apply bg-white text-black
+    dark:bg-[#15202b] dark:text-[#f7f9f9];
 }
 
 .link-clr1 {
     @apply font-semibold
-        text-indigo-600 hover:text-indigo-500
-        dark:text-indigo-400 dark:hover:text-indigo-300;
+    text-sky-600 hover:text-sky-500
+    dark:text-sky-400 dark:hover:text-sky-300;
 }

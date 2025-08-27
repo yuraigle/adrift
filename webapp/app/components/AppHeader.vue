@@ -2,7 +2,7 @@
   <header class="absolute inset-x-0 top-0 z-50">
     <nav class="flex items-center justify-between p-6 lg:px-8">
       <NuxtLink to="/" class="flex pt-1 gap-x-2">
-        <span class="text-indigo-600 dark:text-indigo-200">
+        <span class="text-accent-600 dark:text-accent-400">
           <IconLogoIcon />
         </span>
         <span class="font-bold">Adrift</span>
@@ -19,10 +19,11 @@
         </div>
         <NuxtLink
           to="/auth/login"
-          :class="`text-sm/6 font-semibold flex w-16 pt-1
-              gap-x-1 hover:gap-x-2
-              hover:text-indigo-600 dark:hover:text-indigo-200
-              `">
+          :class="`
+                  text-sm/6 font-semibold flex w-16 pt-1
+                  gap-x-1 hover:gap-x-2
+                  hover:text-accent-800 dark:hover:text-accent-200
+                  `.replaceAll(/\s+/g, ' ')">
           Log in
           <span>&rarr;</span>
         </NuxtLink>

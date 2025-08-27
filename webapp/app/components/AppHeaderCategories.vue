@@ -45,9 +45,9 @@ onUnmounted(() => {
                 justify-center rounded-md px-3 py-2 rounded-xl
                 font-semibold text-sm/6 text-white shadow-xs
                 cursor-pointer flex gap-x-2
-                bg-indigo-700 dark:bg-indigo-500
-                hover:bg-indigo-600 dark:hover:bg-indigo-400
-                active:bg-indigo-600 dark:active:bg-indigo-400
+                bg-siberia-600 dark:bg-siberia-700
+                hover:bg-siberia-700 dark:hover:bg-siberia-600
+                active:bg-siberia-700 dark:active:bg-siberia-600
               `.replaceAll(/\s+/g, ' ')"
       @click="isMenuShown = !isMenuShown"
     >
@@ -59,12 +59,12 @@ onUnmounted(() => {
     <div
       id="categories-menu"
       :class="`
-                absolute top-12 rounded-3xl shadow-lg
-                w-screen max-w-md overflow-hidden
-                bg-gray-50 dark:bg-gray-700
-                outline-1 outline-gray-900/5 backdrop:bg-transparent
-                transition transition-discrete [--anchor-gap:--spacing(3)]
-                ${isMenuShown ? 'opacity-100' : 'opacity-0 pointer-events-none'}
+              absolute top-12 rounded-3xl shadow-lg
+              w-screen max-w-md overflow-hidden
+              bg-gray-50 dark:bg-gray-700
+              outline-1 outline-gray-900/5 backdrop:bg-transparent
+              transition transition-discrete [--anchor-gap:--spacing(3)]
+              ${isMenuShown ? 'opacity-100' : 'opacity-0 pointer-events-none'}
               `.replaceAll(/\s+/g, ' ')"
     >
       <div class="p-4">
@@ -117,10 +117,10 @@ onUnmounted(() => {
         <NuxtLink
           to="/a/post"
           :class="`
-                    flex items-center justify-center gap-x-2.5 p-3
-                    text-sm font-semibold
-                    text-gray-900 hover:bg-gray-200
-                    dark:text-gray-100 dark:hover:bg-gray-700/50
+                  flex items-center justify-center gap-x-2.5 p-3
+                  text-sm font-semibold
+                  text-gray-900 hover:bg-gray-200
+                  dark:text-gray-100 dark:hover:bg-gray-700/50
                   `.replaceAll(/\s+/g, ' ')"
           @click="isMenuShown = false"
         >
@@ -130,10 +130,10 @@ onUnmounted(() => {
         <NuxtLink
           to="/category"
           :class="`
-                    flex items-center justify-center gap-x-2.5 p-3
-                    text-sm font-semibold
-                    text-gray-900 hover:bg-gray-200
-                    dark:text-gray-100 dark:hover:bg-gray-700/50
+                  flex items-center justify-center gap-x-2.5 p-3
+                  text-sm font-semibold
+                  text-gray-900 hover:bg-gray-200
+                  dark:text-gray-100 dark:hover:bg-gray-700/50
                   `.replaceAll(/\s+/g, ' ')"
           @click="isMenuShown = false"
         >
@@ -150,11 +150,11 @@ onUnmounted(() => {
 
 .categories-menu-item {
     @apply relative flex items-center gap-x-6 rounded-lg p-4
-      hover:bg-gray-300/50 dark:hover:bg-gray-800/50
+    hover:bg-gray-300/50 dark:hover:bg-gray-800/50;
 }
 
 .categories-menu-icon {
     @apply flex size-11 flex-none items-center justify-center
-      rounded-lg text-gray-800 dark:text-gray-200
+    rounded-lg text-gray-800 dark:text-gray-200;
 }
 </style>
