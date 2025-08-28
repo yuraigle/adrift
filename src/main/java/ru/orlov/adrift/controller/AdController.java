@@ -12,6 +12,7 @@ import ru.orlov.adrift.domain.ex.AppAuthException;
 import ru.orlov.adrift.domain.ex.AppException;
 import ru.orlov.adrift.service.AdService;
 import ru.orlov.adrift.service.AuthService;
+import ru.orlov.adrift.service.ImageService;
 
 import java.util.Objects;
 
@@ -23,6 +24,7 @@ public class AdController {
     private final AuthService authService;
     private final AdRepository adRepository;
     private final UserRepository userRepository;
+    private final ImageService imageService;
 
     @GetMapping(value = "/api/ads/{id}", produces = "application/json")
     public AdSummary show(@PathVariable Long id) throws AppException {
@@ -57,14 +59,16 @@ public class AdController {
     }
 
     @PostMapping(value = "/api/ads/{id}/images", produces = "application/json")
-    public ResponseEntity<AdImage> upload(
+    public ResponseEntity<String> upload(
             @RequestHeader("Authorization") String token,
             @PathVariable Long id,
             @RequestParam("file") MultipartFile file
     ) throws AppException {
         Ad ad = findAdAndCheckOwner(id, token);
 
-        return new ResponseEntity<>(null, null, HttpStatus.OK);
+        AdImage image = imageService.uploadAdImage(ad, file);
+
+        return new ResponseEntity<>(image.getFilename(), null, HttpStatus.OK);
     }
 
     private Ad findAdAndCheckOwner(Long id, String token) throws AppException {

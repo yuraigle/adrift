@@ -33,4 +33,4 @@ build/
 .vscode/
 
 *.sqlite
-
+application-secret.properties

@@ -29,9 +29,7 @@ public class CrawlerController {
     public ResponseEntity<List<String>> crawlAdUrls(
             @RequestHeader("Authorization") String token
     ) throws AppException {
-        if (token == null || !token.equals("CRAWLER")) {
-            throw new AppAuthException("Unauthorized", HttpStatus.UNAUTHORIZED);
-        }
+        checkCrawlerToken(token);
 
         List<String> urls = adRepository.getAllIds().stream()
                 .map(id -> "/" + id)
@@ -44,9 +42,7 @@ public class CrawlerController {
     public ResponseEntity<List<String>> crawlCategoryUrls(
             @RequestHeader("Authorization") String token
     ) throws AppException {
-        if (token == null || !token.equals("CRAWLER")) {
-            throw new AppAuthException("Unauthorized", HttpStatus.UNAUTHORIZED);
-        }
+        checkCrawlerToken(token);
 
         List<String> urls = categoryRepository.findAll().stream()
                 .map(c -> "/" + c.getSlug())
@@ -54,4 +50,11 @@ public class CrawlerController {
 
         return new ResponseEntity<>(urls, null, HttpStatus.OK);
     }
+
+    private void checkCrawlerToken(String token) throws AppAuthException {
+        if (token == null || !token.equals("CRAWLER")) {
+            throw new AppAuthException("Unauthorized", HttpStatus.UNAUTHORIZED);
+        }
+    }
+
 }

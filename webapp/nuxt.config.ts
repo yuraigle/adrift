@@ -12,7 +12,8 @@ export default defineNuxtConfig({
     },
     appConfig: {
         APP_VERSION: process.env.npm_package_version,
-        API_BASE: 'https://adrift.orlov.bar/api'
+        API_BASE: 'https://adrift.orlov.bar/api',
+        S3_BASE: 'https://bucket-5f7c65.s3.cloud.ru/',
     },
     vite: {
         plugins: [

@@ -30,8 +30,10 @@ const toggleTheme = () => {
 <template>
   <button
     type="button" title="Toggle dark mode"
-    :class="`cursor-pointer text-gray-500 dark:text-gray-400
-              hover:text-gray-600 dark:hover:text-gray-300`"
+    :class="`
+            cursor-pointer text-gray-500 dark:text-gray-400
+            hover:text-gray-600 dark:hover:text-gray-300
+            `.replaceAll(/\s+/g, ' ')"
     @click="toggleTheme"
   >
     <IconSunIcon v-if="theme === 'light'" />

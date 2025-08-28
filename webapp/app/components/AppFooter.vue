@@ -5,9 +5,9 @@ const version = useAppConfig().APP_VERSION || '';
 <template>
   <footer
     :class="`
-            fixed bottom-0 left-0 z-20 w-full p-4 border-t shadow-sm
+            bottom-0 left-0 z-20 w-full p-4 border-t shadow-sm
             md:flex md:items-center md:justify-between md:p-6
-            border-gray-200 dark:border-gray-700
+            border-gray-200 dark:border-gray-700 mt-10
             `.replaceAll(/\s+/g, ' ')">
     <div class="text-sm text-gray-500 sm:text-center">
       &copy; {{ new Date().getFullYear() }}
