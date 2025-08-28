@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import ru.orlov.adrift.controller.dto.AdRequestDto;
 import ru.orlov.adrift.domain.*;
 import ru.orlov.adrift.domain.ex.AppAuthException;
@@ -12,9 +13,7 @@ import ru.orlov.adrift.domain.ex.AppException;
 import ru.orlov.adrift.service.AdService;
 import ru.orlov.adrift.service.AuthService;
 
-import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -50,6 +49,25 @@ public class AdController {
             @PathVariable Long id,
             @Valid @RequestBody AdRequestDto request
     ) throws AppException {
+        Ad ad = findAdAndCheckOwner(id, token);
+
+        AdSummary updated = adService.updateAd(request, ad);
+
+        return new ResponseEntity<>(updated, null, HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/api/ads/{id}/images", produces = "application/json")
+    public ResponseEntity<AdImage> upload(
+            @RequestHeader("Authorization") String token,
+            @PathVariable Long id,
+            @RequestParam("file") MultipartFile file
+    ) throws AppException {
+        Ad ad = findAdAndCheckOwner(id, token);
+
+        return new ResponseEntity<>(null, null, HttpStatus.OK);
+    }
+
+    private Ad findAdAndCheckOwner(Long id, String token) throws AppException {
         Long userId = authService.parseToken(token).getId();
 
         Ad ad = adRepository.findById(id)
@@ -59,23 +77,6 @@ public class AdController {
             throw new AppException("Ad belongs to another user", HttpStatus.FORBIDDEN);
         }
 
-        AdSummary updated = adService.updateAd(request, ad);
-        return new ResponseEntity<>(updated, null, HttpStatus.OK);
+        return ad;
     }
-
-    @GetMapping(value = "/api/ads/crawl", produces = "application/json")
-    public ResponseEntity<List<String>> crawlUrls(
-            @RequestHeader("Authorization") String token
-    ) throws AppException {
-        if (token == null || !token.equals("CRAWLER")) {
-            throw new AppAuthException("Unauthorized", HttpStatus.UNAUTHORIZED);
-        }
-
-        List<String> urls = adRepository.getAllIds().stream()
-                .map(id -> "/" + id)
-                .collect(Collectors.toList());
-
-        return new ResponseEntity<>(urls, null, HttpStatus.OK);
-    }
-
 }

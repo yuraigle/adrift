@@ -52,4 +52,12 @@ public class Ad {
     )
     private List<AdOption> options = new ArrayList<>();
 
+    @OneToMany(
+            mappedBy = "ad",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
+    private List<AdImage> images = new ArrayList<>();
+
 }

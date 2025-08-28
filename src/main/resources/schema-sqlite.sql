@@ -99,7 +99,7 @@ create table ads_fields
 
 create index IX_ADS_FIELDS_ON_AD on ads_fields (ad_id);
 
-create table  ads_options
+create table ads_options
 (
     ad_id       integer not null,
     question_id integer not null,
@@ -112,3 +112,18 @@ create table  ads_options
 
 create index IX_ADS_OPTIONS_ON_AD on ads_options (ad_id);
 create index IX_ADS_OPTIONS_ON_OPTION on ads_options (option_id);
+
+create table ads_images
+(
+    id integer not null,
+    ad_id integer not null,
+    filename varchar(32) not null,
+    ord integer null,
+    orig_filename varchar(255) null,
+    alt varchar(255) null,
+    constraint PK_ADS_IMAGES primary key (id),
+    constraint FK_ADS_IMAGES_ON_AD foreign key (ad_id) references ads (id) on delete cascade
+);
+
+create index IX_ADS_IMAGES_AD on ads_images (ad_id);
+create index UQ_ADS_IMAGES_FILENAME on ads_images (filename);
