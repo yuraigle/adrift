@@ -1,5 +1,5 @@
 <template>
-  <header class="absolute inset-x-0 top-0 z-50 max-w-[1100px] mx-auto py-6 px-4 md:px-6">
+  <header class="absolute inset-x-0 top-0 z-50 max-w-[1200px] mx-auto py-6 px-4 md:px-6">
     <nav class="flex items-center justify-between">
       <NuxtLink to="/" class="flex pt-1 gap-x-2">
         <span class="text-accent-600 dark:text-accent-400">
@@ -20,9 +20,9 @@
         <NuxtLink
           to="/auth/login"
           :class="`
-                  text-sm/6 font-semibold flex w-16 pt-1
+                  text-sm/6 font-semibold flex w-18 pt-1
                   gap-x-1 hover:gap-x-2
-                  hover:text-accent-800 dark:hover:text-accent-200
+                  hover:text-accent-600 dark:hover:text-accent-400
                   `.replaceAll(/\s+/g, ' ')">
           Log in
           <span>&rarr;</span>

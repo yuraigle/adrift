@@ -5,7 +5,7 @@ export default defineNuxtConfig({
     compatibilityDate: '2025-07-15',
     css: ['~/assets/css/main.css'],
     devtools: { enabled: true },
-    modules: ['@nuxt/eslint'],
+    modules: ['@nuxt/eslint', '@nuxtjs/google-fonts'],
     typescript: {
         typeCheck: true,
         strict: true
@@ -56,4 +56,10 @@ export default defineNuxtConfig({
                 .then((data: Array<string>) => data.forEach((x: string) => ctx.routes.add('/category' + x)));
         },
     },
+    googleFonts: {
+        families: {
+            'Manrope': true,
+        },
+        download: true,
+    }
 })

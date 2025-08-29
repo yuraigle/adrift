@@ -2,15 +2,17 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-    --color-accent-100: var(--color-emerald-100);
-    --color-accent-200: var(--color-emerald-200);
-    --color-accent-300: var(--color-emerald-300);
-    --color-accent-400: var(--color-emerald-400);
-    --color-accent-500: var(--color-emerald-500);
-    --color-accent-600: var(--color-emerald-600);
-    --color-accent-700: var(--color-emerald-700);
-    --color-accent-800: var(--color-emerald-800);
-    --color-accent-900: var(--color-emerald-900);
+    --font-sans: "Manrope", sans-serif;
+
+    --color-accent-100: var(--color-cyan-100);
+    --color-accent-200: var(--color-cyan-200);
+    --color-accent-300: var(--color-cyan-300);
+    --color-accent-400: var(--color-cyan-400);
+    --color-accent-500: var(--color-cyan-500);
+    --color-accent-600: var(--color-cyan-600);
+    --color-accent-700: var(--color-cyan-700);
+    --color-accent-800: var(--color-cyan-800);
+    --color-accent-900: var(--color-cyan-900);
 
     --color-siberia-100: var(--color-amber-100);
     --color-siberia-200: var(--color-amber-200);
@@ -35,6 +37,6 @@ body {
 }
 
 .link-clr1 {
-    @apply text-sky-600 hover:text-sky-500
-    dark:text-sky-500 dark:hover:text-sky-400;
+    @apply text-cyan-600 hover:text-cyan-500
+    dark:text-cyan-500 dark:hover:text-cyan-400;
 }

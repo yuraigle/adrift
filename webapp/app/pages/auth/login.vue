@@ -78,7 +78,7 @@ const onSubmit = () => {
 
       <p class="mt-10 text-center text-sm/6 text-gray-500">
         Don't have an account?
-        <NuxtLink to="/auth/register" class="link-clr1 font-semibold">
+        <NuxtLink to="/auth/register" class="link-clr1 font-semibold ms-1">
           Register
         </NuxtLink>
       </p>

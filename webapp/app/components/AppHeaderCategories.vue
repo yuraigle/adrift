@@ -35,7 +35,7 @@ onUnmounted(() => {
       type="button"
       :class="`
                 justify-center rounded-md px-3 py-2 rounded-xl
-                font-semibold text-sm/6 text-white shadow-xs
+                text-sm/6 text-white shadow-xs
                 cursor-pointer flex gap-x-2
                 bg-siberia-600 dark:bg-siberia-700
                 hover:bg-siberia-700 dark:hover:bg-siberia-600

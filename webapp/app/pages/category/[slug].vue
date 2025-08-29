@@ -41,7 +41,7 @@ const { data: page, pending } = await useAsyncData<AdsPage>(
                   mt-6 grid gap-y-10 gap-x-6 xl:gap-x-8
                   sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6
                   `">
-          <AdCatalogPreview v-for="a in page.content" :key="a.id" :a="a" />
+          <AdPreviewThumbnail v-for="a in page.content" :key="a.id" :a="a" />
         </div>
       </div>
       <div v-else>
@@ -61,13 +61,3 @@ const { data: page, pending } = await useAsyncData<AdsPage>(
     </div>
   </div>
 </template>
-
-<style lang="css" scoped>
-.two-lines-only {
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-</style>

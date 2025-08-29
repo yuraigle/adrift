@@ -17,4 +17,8 @@ public class AdSearchService {
         return adRepository.findAllByCategoryIdOrderByCreatedDesc(categoryId, pageable);
     }
 
+    public Page<AdSummary> listRecommended(Pageable pageable) {
+        return adRepository.findAllOrderByCreatedDesc(pageable);
+    }
+
 }

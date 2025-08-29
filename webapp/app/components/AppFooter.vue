@@ -9,7 +9,7 @@ const version = useAppConfig().APP_VERSION || '';
             mt-10 py-6 px-4 md:px-6
             border-t border-gray-200 dark:border-gray-700
             `.replaceAll(/\s+/g, ' ')">
-    <div class="max-w-[1100px] mx-auto md:flex md:items-center md:justify-between">
+    <div class="max-w-[1200px] mx-auto md:flex md:items-center md:justify-between">
       <div class="text-sm text-gray-500">
         &copy; {{ new Date().getFullYear() }}
         <a href="/" class="font-semibold hover:text-black dark:hover:text-white">

@@ -21,4 +21,7 @@ public interface AdRepository extends JpaRepository<Ad, Long> {
     @Query("SELECT a.id FROM Ad a")
     List<Long> getAllIds();
 
+    @Query("SELECT a FROM Ad a ORDER BY a.created DESC")
+    Page<AdSummary> findAllOrderByCreatedDesc(Pageable pageable);
+
 }
