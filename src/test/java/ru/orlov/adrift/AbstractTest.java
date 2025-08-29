@@ -90,7 +90,7 @@ public abstract class AbstractTest {
 
     String retrieveAdminToken() {
         LoginRequestDto request = new LoginRequestDto();
-        request.setUsername("admin");
+        request.setEmail("admin@admin");
         request.setPassword("admin");
 
         ResponseEntity<LoginResponseDto> response = apiRequestPost(
@@ -110,7 +110,7 @@ public abstract class AbstractTest {
         this.userRepository.save(user);
 
         LoginRequestDto request = new LoginRequestDto();
-        request.setUsername("tester");
+        request.setEmail("tester@tester");
         request.setPassword("tester");
 
         ResponseEntity<LoginResponseDto> response = apiRequestPost(

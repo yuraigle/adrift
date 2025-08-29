@@ -50,7 +50,8 @@ public class FakeAdLoader {
         int cntCreated = 0;
         Random random = new Random();
         for (Category cat : categoryRepository.findAll()) {
-            for (int i = 0; i < numPerCategory; i++) {
+            int cnt = cat.getId() == 1L ? 112 : numPerCategory;
+            for (int i = 0; i < cnt; i++) {
                 try {
                     int usrN = random.nextInt(users.size());
                     generateFakeAd(cat, users.get(usrN));

@@ -30,7 +30,7 @@ public class CategoryController {
     @GetMapping(value = "/api/categories/{cid}/a", produces = "application/json")
     public Page<AdSummary> listAds(
             @PathVariable Long cid,
-            @PageableDefault(size = 5) Pageable pageable
+            @PageableDefault(size = 24) Pageable pageable
     ) throws AppException {
         return adSearchService.listByCategory(cid, pageable);
     }

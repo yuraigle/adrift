@@ -16,6 +16,7 @@ const { data: ad } = await useFetch<AdSummary>(`${API_BASE}/ads/${id.value}`)
     <p>No content</p>
   </div>
   <div v-else>
+    <NuxtLink :to="'/category/' + ad.category?.slug">&laquo; {{ ad.category?.name }}</NuxtLink>
     <h1 class="text-2xl font-bold py-2">{{ ad.title }}</h1>
   </div>
 </template>

@@ -1,6 +1,6 @@
 <template>
-  <header class="absolute inset-x-0 top-0 z-50">
-    <nav class="flex items-center justify-between p-6 lg:px-8">
+  <header class="absolute inset-x-0 top-0 z-50 max-w-[1100px] mx-auto py-6 px-4 md:px-6">
+    <nav class="flex items-center justify-between">
       <NuxtLink to="/" class="flex pt-1 gap-x-2">
         <span class="text-accent-600 dark:text-accent-400">
           <IconLogoIcon />
@@ -8,7 +8,7 @@
         <span class="font-bold">Adrift</span>
       </NuxtLink>
 
-      <div class="px-4 gap-x-2 flex hidden md:flex w-xl md:w-2xl">
+      <div class="px-4 gap-x-2 flex hidden md:flex w-lg lg:w-xl">
         <AppHeaderCategories />
         <AppHeaderSearch />
       </div>

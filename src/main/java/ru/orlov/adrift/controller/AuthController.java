@@ -20,7 +20,7 @@ public class AuthController {
             @Valid @RequestBody LoginRequestDto request
     ) throws AppAuthException {
         AuthDetails details = authService.authenticate(
-                request.getUsername(), request.getPassword()
+                request.getEmail(), request.getPassword()
         );
 
         LoginResponseDto response = new LoginResponseDto();

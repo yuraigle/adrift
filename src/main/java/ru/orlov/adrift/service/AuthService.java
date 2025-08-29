@@ -46,15 +46,17 @@ public class AuthService {
     }
 
     public AuthDetails authenticate(
-            String username,
+            String email,
             String password
     ) throws AppAuthException {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new AppAuthException("Username or password is incorrect", HttpStatus.UNAUTHORIZED));
+        String failMsg = "That didn’t work — give it another shot.";
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new AppAuthException(failMsg, HttpStatus.UNAUTHORIZED));
 
         String hashedPassword = user.getPassword();
         if (!verifyPassword(password, hashedPassword)) {
-            throw new AppAuthException("Username or password is incorrect", HttpStatus.UNAUTHORIZED);
+            throw new AppAuthException(failMsg, HttpStatus.UNAUTHORIZED);
         }
 
         AuthDetails details = new AuthDetails();

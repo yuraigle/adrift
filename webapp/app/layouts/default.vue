@@ -1,9 +1,11 @@
 <template>
-  <div>
+  <div class="h-screen flex flex-col">
     <AppHeader />
 
-    <main class="relative isolate px-6 pt-20 lg:px-8">
-      <slot />
+    <main class="flex-grow relative isolate pt-20">
+      <div class="max-w-[1100px] mx-auto py-6 px-4 md:px-6">
+        <slot />
+      </div>
     </main>
 
     <AppFooter />

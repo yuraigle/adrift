@@ -29,10 +29,4 @@ public interface AdSummary extends Serializable {
         String getUsername();
     }
 
-    interface CategorySummary extends Serializable {
-        Long getId();
-
-        String getName();
-    }
-
 }

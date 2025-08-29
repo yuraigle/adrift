@@ -3,4 +3,5 @@ export interface AdSummary {
   title: string
   description: string
   price: number
+  category: CategorySummary
 }
