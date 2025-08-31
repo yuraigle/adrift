@@ -4,7 +4,8 @@ const theme = ref('light');
 
 onMounted(() => {
   const docEl: HTMLElement = document.documentElement;
-  if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+  const browserPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  if (localStorage.theme === 'dark' || (!('theme' in localStorage) && browserPrefersDark)) {
     docEl.classList.add('dark');
     theme.value = 'dark';
   } else {

@@ -13,19 +13,17 @@ const form = reactive({
   email: ''
 })
 
-const message = ref('')
-const message_type = ref('')
+const loading = ref(false)
 
 const onSubmit = () => {
+  loading.value = true
+
   callApi('/auth/reset', 'POST', JSON.stringify(form))
     .then(() => {
-      message.value = 'Instructions have been sent to your email'
-      message_type.value = 'success'
+      useToastsStore().showMessage('Instructions have been sent to your email', 'info')
     })
-    .catch((error) => {
-      message.value = error
-      message_type.value = 'error'
-    })
+    .catch((error) => useToastsStore().showError(error))
+    .finally(() => loading.value = false)
 }
 </script>
 
@@ -60,8 +58,6 @@ const onSubmit = () => {
           Send a password reset instructions
         </UiButtonPrimary>
       </form>
-
-      <p v-if="message" :class="message_type">{{ message }}</p>
     </div>
   </div>
 </template>

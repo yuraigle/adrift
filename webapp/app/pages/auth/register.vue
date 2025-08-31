@@ -15,19 +15,18 @@ const form = reactive({
   password: ''
 })
 
-const message = ref('')
-const message_type = ref('')
+const loading = ref(false)
 
 const onSubmit = () => {
+  loading.value = true
+
   callApi('/auth/register', 'POST', JSON.stringify(form))
     .then(() => {
-      message.value = 'Registration successful'
-      message_type.value = 'success'
+      useToastsStore().showMessage('Registration successful', 'success')
+      useRouter().push({ path: '/' })
     })
-    .catch((error) => {
-      message.value = 'Registration failed: ' + error
-      message_type.value = 'error'
-    })
+    .catch((error) => useToastsStore().showError(error))
+    .finally(() => loading.value = false)
 }
 </script>
 
@@ -64,15 +63,15 @@ const onSubmit = () => {
           type="password" autocomplete="new-password"
           @update:val="form.password = $event.target.value" />
 
-        <UiButtonPrimary type="submit">Register</UiButtonPrimary>
+        <UiButtonPrimary type="submit" :loading="loading">
+          Register
+        </UiButtonPrimary>
       </form>
 
       <p class="mt-10 text-center text-sm/6 text-gray-500">
         Already have an account?
         <NuxtLink to="/auth/login" class="link-clr1 font-semibold ms-1">Log in</NuxtLink>
       </p>
-
-      <p v-if="message" :class="message_type">{{ message }}</p>
     </div>
   </div>
 </template>

@@ -42,17 +42,17 @@ const { data: page, pending } = await useAsyncData<AdsPage>(
       <div class="col-span-6 md:col-span-4">
         <ClientOnly>
           <h2 class="text-2xl font-bold py-1">Recommended for you</h2>
-          <div v-if="pending">
-            <p>Loading...</p>
-          </div>
-          <div v-else-if="page?.content?.length">
-            <div
-              :class="`
-                      mt-6 grid gap-y-10 gap-x-6 xl:gap-x-8
-                      grid-cols-2 md:grid-cols-3 lg:grid-cols-4
-                      `">
+          <div
+            :class="`
+                    mt-6 grid gap-y-10 gap-x-6 xl:gap-x-8
+                    grid-cols-2 md:grid-cols-3 lg:grid-cols-4
+                    `">
+            <template v-if="pending">
+              <AdPreviewPlaceholder v-for="i in 9" :key="i" />
+            </template>
+            <template v-else-if="page?.content?.length">
               <AdPreviewThumbnail v-for="a in page.content" :key="a.id" :a="a" />
-            </div>
+            </template>
           </div>
         </ClientOnly>
       </div>
