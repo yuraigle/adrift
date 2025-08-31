@@ -29,35 +29,38 @@ const { data: page, pending } = await useAsyncData<AdsPage>(
 
 <template>
   <div>
-    <h1 class="text-2xl font-bold py-2">{{ cat?.name }}</h1>
+    <div class="grid grid-cols-6 gap-x-4">
+      <div class="col-span-6 md:col-span-2">
+        <p>Filters...</p>
+      </div>
+      <div class="col-span-6 md:col-span-4">
+        <h1 class="text-2xl font-bold py-2">{{ cat?.name }}</h1>
+        <ClientOnly>
+          <div
+            :class="`
+                    mt-6 grid gap-y-10 gap-x-6 xl:gap-x-8
+                    grid-cols-2 md:grid-cols-3 lg:grid-cols-4
+                    `">
+            <template v-if="pending">
+              <AdPreviewPlaceholder v-for="i in 9" :key="i" />
+            </template>
+            <template v-else-if="page?.content?.length">
+              <AdPreviewThumbnail v-for="a in page.content" :key="a.id" :a="a" />
+            </template>
+          </div>
 
-    <ClientOnly>
-      <div v-if="pending">
-        <p>Loading...</p>
+          <div
+            v-if="page && page.pageable && page.totalPages > 1"
+            class="my-4"
+            :class="{ 'opacity-50 pointer-events-none': pending }">
+            <PaginationPrevNext
+              :prev="`/category/${cat?.slug}?page=${page.pageable.pageNumber - 1}`"
+              :next="`/category/${cat?.slug}?page=${page.pageable.pageNumber + 1}`"
+              :page="page.pageable.pageNumber"
+              :total="page.totalPages" />
+          </div>
+        </ClientOnly>
       </div>
-      <div v-else-if="page?.content?.length">
-        <div
-          :class="`
-                  mt-6 grid gap-y-10 gap-x-6 xl:gap-x-8
-                  sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6
-                  `">
-          <AdPreviewThumbnail v-for="a in page.content" :key="a.id" :a="a" />
-        </div>
-      </div>
-      <div v-else>
-        <p>No content</p>
-      </div>
-    </ClientOnly>
-
-    <div
-      v-if="page && page.pageable && page.totalPages > 1"
-      class="my-4"
-      :class="{ 'opacity-50 pointer-events-none': pending }">
-      <PaginationPrevNext
-        :prev="`/category/${cat?.slug}?page=${page.pageable.pageNumber - 1}`"
-        :next="`/category/${cat?.slug}?page=${page.pageable.pageNumber + 1}`"
-        :page="page.pageable.pageNumber"
-        :total="page.totalPages" />
     </div>
   </div>
 </template>
