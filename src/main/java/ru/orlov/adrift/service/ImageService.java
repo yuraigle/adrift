@@ -27,15 +27,30 @@ public class ImageService {
     List<String> allowedTypes = List.of("image/jpeg", "image/jpg", "image/png", "image/webp");
 
     public AdImage uploadAdImage(Ad ad, MultipartFile file) throws AppException {
+        BufferedImage image;
+        try {
+            image = readImage(file);
+
+            if (image == null) {
+                throw new Exception();
+            }
+        } catch (Exception e) {
+            throw new AppException("Failed to read image", 400);
+        }
+
+        return uploadAdImage(ad, image, file.getOriginalFilename());
+    }
+
+    public AdImage uploadAdImage(Ad ad, BufferedImage image1, String filename) throws AppException {
         AdImage image = new AdImage();
 
         image.setAd(ad);
         image.setFilename(generateFileName());
-        image.setOrigFilename(file.getOriginalFilename());
+        image.setOrigFilename(filename);
 
-        convertAndSaveImage(file, image.getFilename(), 1280, 960);
-        convertAndSaveImage(file, image.getFilename(), 800, 600);
-        convertAndSaveImage(file, image.getFilename(), 400, 300);
+        convertAndSaveImage(image1, image.getFilename(), 1280, 960);
+        convertAndSaveImage(image1, image.getFilename(), 800, 600);
+        convertAndSaveImage(image1, image.getFilename(), 400, 300);
 
         // todo generate alt text
 
@@ -48,18 +63,7 @@ public class ImageService {
                 .toLowerCase();
     }
 
-    private void convertAndSaveImage(MultipartFile file, String filename, int w, int h) throws AppException {
-        BufferedImage image;
-        try {
-            image = readImage(file);
-
-            if (image == null) {
-                throw new Exception();
-            }
-        } catch (Exception e) {
-            throw new AppException("Failed to read image", 400);
-        }
-
+    private void convertAndSaveImage(BufferedImage image, String filename, int w, int h) throws AppException {
         byte[] resizedImage;
         try {
             resizedImage = resizeJpeg(image, w, h);

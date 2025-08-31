@@ -16,12 +16,13 @@ public interface AdRepository extends JpaRepository<Ad, Long> {
 
     List<Ad> findAllByTitleStartingWith(String title);
 
-    Page<AdSummary> findAllByCategoryIdOrderByCreatedDesc(Long categoryId, Pageable pageable);
-
     @Query("SELECT a.id FROM Ad a")
     List<Long> getAllIds();
 
-    @Query("SELECT a FROM Ad a ORDER BY a.created DESC")
+    @Query("SELECT a FROM Ad a LEFT JOIN FETCH a.images WHERE a.category.id = :categoryId ORDER BY a.created DESC")
+    Page<AdSummary> findAllByCategoryIdOrderByCreatedDesc(Long categoryId, Pageable pageable);
+
+    @Query("SELECT a FROM Ad a LEFT JOIN FETCH a.images ORDER BY a.created DESC")
     Page<AdSummary> findAllOrderByCreatedDesc(Pageable pageable);
 
 }

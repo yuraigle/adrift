@@ -16,6 +16,7 @@ public class InitializerService {
     private final CategoryLoader categoryLoader;
     private final FakeUserLoader userLoader;
     private final FakeAdLoader adLoader;
+    private final FakeImageLoader imageLoader;
 
     @Value("${app.clear-on-startup:false}")
     private Boolean clearOnStartup;
@@ -63,7 +64,7 @@ public class InitializerService {
         if (adLoader.isAdsTableEmpty() && generateFakeData) {
             log.info("Initializing Ads table ...");
             adLoader.createFakeAds(5);
+            imageLoader.createFakeImages();
         }
-
     }
 }

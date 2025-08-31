@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public interface AdSummary extends Serializable {
 
@@ -23,10 +24,18 @@ public interface AdSummary extends Serializable {
 
     CategorySummary getCategory();
 
+    List<AdImageSummary> getImages();
+
     interface UserSummary extends Serializable {
         Long getId();
 
         String getUsername();
+    }
+
+    interface AdImageSummary extends Serializable {
+        Long getId();
+        String getFilename();
+        String getAlt();
     }
 
 }
