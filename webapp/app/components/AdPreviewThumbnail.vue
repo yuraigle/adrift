@@ -11,13 +11,23 @@ const formatPrice = (price: number) => {
 
 const adUrl = computed(() => `/a/${a.id}`)
 
+const adImage = computed((): string => {
+  const placeholder: string = 'kysv0ztrvskldu8y'
+
+  if (a.images && a.images.length > 0) {
+    return a.images[0]?.filename || placeholder;
+  } else {
+    return placeholder;
+  }
+})
+
 </script>
 
 <template>
   <div class="relative">
     <NuxtLink :to="adUrl" :title="a.title">
       <img
-        :src="imageUrl('kysv0ztrvskldu8y', 300)"
+        :src="imageUrl(adImage, 300)"
         :class="`
                 rounded-md bg-gray-200
                 aspect-square

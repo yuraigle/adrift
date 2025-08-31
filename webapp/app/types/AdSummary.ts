@@ -4,4 +4,5 @@ export interface AdSummary {
   description: string
   price: number
   category: CategorySummary
+  images: ImageSummary[]
 }
