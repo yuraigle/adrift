@@ -10,14 +10,15 @@ import java.util.Optional;
 
 public interface AdRepository extends JpaRepository<Ad, Long> {
 
-    Optional<AdSummary> findAdSummaryById(Long id);
-
     List<Ad> findByTitle(String title);
 
     List<Ad> findAllByTitleStartingWith(String title);
 
     @Query("SELECT a.id FROM Ad a")
     List<Long> getAllIds();
+
+    @Query("SELECT a FROM Ad a LEFT JOIN FETCH a.images WHERE a.id = :id")
+    Optional<AdSummary> findAdSummaryById(Long id);
 
     @Query("SELECT a FROM Ad a LEFT JOIN FETCH a.images WHERE a.category.id = :categoryId ORDER BY a.created DESC")
     Page<AdSummary> findAllByCategoryIdOrderByCreatedDesc(Long categoryId, Pageable pageable);

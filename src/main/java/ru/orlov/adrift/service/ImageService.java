@@ -52,7 +52,7 @@ public class ImageService {
         convertAndSaveImage(image1, image.getFilename(), 800, 600);
         convertAndSaveImage(image1, image.getFilename(), 400, 300);
 
-        // todo generate alt text
+        // generate alt text later
 
         return imageRepository.save(image);
     }
