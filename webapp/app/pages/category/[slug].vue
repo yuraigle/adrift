@@ -1,26 +1,36 @@
 <script setup lang="ts">
 const route = useRoute()
 const slug = computed(() => route.params.slug)
-const pageNum = computed(() => route.query.page)
+const pageNum = computed(() => route.query.page || 0)
 
-const { data: categories } = await useAsyncData<Array<CategorySummary>>(
-  'categories',
-  () => $fetch(`${API_BASE}/categories`),
+const { data: cat } = await useAsyncData<CategorySummary>(
+  'category-by-slug-' + slug.value,
+  () => {
+    if (!slug.value) {
+      return Promise.resolve({} as CategorySummary);
+    }
+
+    return $fetch(`${API_BASE}/categories/slug/${slug.value}`);
+  },
   {
     watch: [slug],
     server: true,
   }
-);
-
-const cat: Ref<CategorySummary | undefined> = computed(
-  () => categories.value?.find((c) => c.slug === slug.value)
-);
+)
 
 const { data: page, pending } = await useAsyncData<AdsPage>(
-  'ads-by-category-' + cat.value?.id + '-page-' + pageNum.value,
-  () => $fetch(`${API_BASE}/categories/${cat.value?.id}/a?page=${pageNum.value || 0}`),
+  'ads-by-category-' + slug.value + '-page-' + pageNum.value,
+  () => {
+    if (!cat.value) {
+      return Promise.resolve({} as AdsPage);
+    }
+
+    const cid = cat.value.id;
+    const page = pageNum.value;
+    return $fetch(`${API_BASE}/categories/${cid}/a?page=${page}&size=10`);
+  },
   {
-    watch: [cat, pageNum],
+    watch: [slug, pageNum],
     server: false,
   }
 );
@@ -29,23 +39,22 @@ const { data: page, pending } = await useAsyncData<AdsPage>(
 
 <template>
   <div>
-    <div class="grid grid-cols-6 gap-x-4">
-      <div class="col-span-6 md:col-span-2">
+    <div class="grid grid-cols-12 gap-x-4">
+      <div class="col-span-12 md:col-span-3">
         <p>Filters...</p>
       </div>
-      <div class="col-span-6 md:col-span-4">
+      <div class="col-span-12 md:col-span-9">
         <h1 class="text-2xl font-bold py-2">{{ cat?.name }}</h1>
         <ClientOnly>
           <div
             :class="`
-                    mt-6 grid gap-y-10 gap-x-6 xl:gap-x-8
-                    grid-cols-2 md:grid-cols-3 lg:grid-cols-4
+                    mb-5
                     `">
             <template v-if="pending">
-              <AdPreviewPlaceholder v-for="i in 9" :key="i" />
+              <AdPreviewRowPlaceholder v-for="i in 9" :key="i" />
             </template>
             <template v-else-if="page?.content?.length">
-              <AdPreviewThumbnail v-for="a in page.content" :key="a.id" :a="a" />
+              <AdPreviewRow v-for="a in page.content" :key="a.id" :a="a" />
             </template>
           </div>
 
@@ -54,8 +63,8 @@ const { data: page, pending } = await useAsyncData<AdsPage>(
             class="my-4"
             :class="{ 'opacity-50 pointer-events-none': pending }">
             <PaginationPrevNext
-              :prev="`/category/${cat?.slug}?page=${page.pageable.pageNumber - 1}`"
-              :next="`/category/${cat?.slug}?page=${page.pageable.pageNumber + 1}`"
+              :prev="`/category/${slug}?page=${page.pageable.pageNumber - 1}`"
+              :next="`/category/${slug}?page=${page.pageable.pageNumber + 1}`"
               :page="page.pageable.pageNumber"
               :total="page.totalPages" />
           </div>

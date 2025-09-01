@@ -23,9 +23,26 @@ public class CategoryController {
     private final AdSearchService adSearchService;
 
     @GetMapping(value = "/api/categories", produces = "application/json")
-    public List<CategorySummary> list() throws AppException {
+    public List<CategorySummary> listAll() throws AppException {
         return categoryRepository.findAllSummary();
     }
+
+    @GetMapping(value = "/api/categories/slug/{slug}", produces = "application/json")
+    public CategorySummary getBySlug(
+            @PathVariable String slug
+    ) throws AppException {
+        return categoryRepository.findSummaryBySlug(slug)
+                .orElseThrow(() -> new AppException("Category not found"));
+    }
+
+    @GetMapping(value = "/api/categories/{id}", produces = "application/json")
+    public CategorySummary getById(
+            @PathVariable Long id
+    ) throws AppException {
+        return categoryRepository.findSummaryById(id)
+                .orElseThrow(() -> new AppException("Category not found"));
+    }
+
 
     @GetMapping(value = "/api/categories/{cid}/a", produces = "application/json")
     public Page<AdSummary> listAds(

@@ -48,10 +48,10 @@ const { data: page, pending } = await useAsyncData<AdsPage>(
                     grid-cols-2 md:grid-cols-3 lg:grid-cols-4
                     `">
             <template v-if="pending">
-              <AdPreviewPlaceholder v-for="i in 9" :key="i" />
+              <AdPreviewThumbPlaceholder v-for="i in 9" :key="i" />
             </template>
             <template v-else-if="page?.content?.length">
-              <AdPreviewThumbnail v-for="a in page.content" :key="a.id" :a="a" />
+              <AdPreviewThumb v-for="a in page.content" :key="a.id" :a="a" />
             </template>
           </div>
         </ClientOnly>
