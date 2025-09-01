@@ -31,7 +31,7 @@ const formatPrice = (price: number) => {
           <img
             :class="`
                     rounded-md
-                    aspect-square object-cover w-[200px]
+                    aspect-square object-cover w-[100px] lg:w-[200px]
                     bg-gray-200 dark:bg-gray-700
                     `.replaceAll(/\s+/g, ' ')"
             :src="imageUrl(adImage, 300)"
@@ -41,7 +41,7 @@ const formatPrice = (price: number) => {
           <span
             :class="`
                     rounded-md
-                    aspect-square object-cover w-[200px]
+                    aspect-square object-cover w-[100px] lg:w-[200px]
                     text-gray-400 bg-gray-200
                     dark:text-gray-600 dark:bg-gray-700
                     flex items-center justify-center
@@ -70,27 +70,15 @@ const formatPrice = (price: number) => {
         </button>
       </div>
       <NuxtLink :to="adUrl" class="block h-full">
-        <p class="text-xl font-semibold text-gray-900 dark:text-white">{{ formatPrice(a.price) }}</p>
-        <p class="text-gray-600 dark:text-gray-300 three-lines-only">{{ a.description }}</p>
+        <p class="text-xl font-semibold text-gray-900 dark:text-white">
+          {{ formatPrice(a.price) }}
+        </p>
+        <p
+          :class="`
+                  text-gray-600 dark:text-gray-300 three-lines-only
+                  text-xs lg:text-sm
+                  `.replaceAll(/\s+/g, ' ')">{{ a.description }}</p>
       </NuxtLink>
     </div>
   </div>
 </template>
-
-<style lang="css" scoped>
-.one-line-only {
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 1;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.three-lines-only {
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-</style>

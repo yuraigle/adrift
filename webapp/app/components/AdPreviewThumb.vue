@@ -70,13 +70,3 @@ const adImage = computed((): string => a.images[0]?.filename || '')
     </div>
   </div>
 </template>
-
-<style lang="css" scoped>
-.two-lines-only {
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-</style>

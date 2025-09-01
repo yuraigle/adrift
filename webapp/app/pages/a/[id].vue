@@ -20,7 +20,7 @@ const { data: ad } = await useFetch<AdSummary>(`${API_BASE}/ads/${id.value}`)
       <NuxtLink
         :to="'/category/' + ad.category?.slug"
         :class="`
-                text-sm hover:text-accent-600 dark:hover:text-accent-400
+                text-lg my-4 hover:text-accent-600 dark:hover:text-accent-400
                 `">
         <span class="flex items-center gap-x-1">
           <IconChevronLeft :size=18 />
