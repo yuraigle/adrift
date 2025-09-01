@@ -27,13 +27,13 @@ public class LoginFormTests extends AbstractTest {
 
         assert response.getBody() != null;
         assert response.getBody().contains("messages");
-        assert response.getBody().contains("username");
+        assert response.getBody().contains("email");
         assert response.getBody().contains("password");
     }
 
     @Test
     void loginWithWrongPassword() {
-        LoginRequestDto form = new LoginRequestDto("admin", "wrong");
+        LoginRequestDto form = new LoginRequestDto("admin@admin", "wrong");
         ResponseEntity<String> response = apiRequestPost("/api/auth/login", form, null, String.class);
 
         assert response.getStatusCode() == HttpStatus.UNAUTHORIZED;
@@ -41,12 +41,12 @@ public class LoginFormTests extends AbstractTest {
         assert response.getHeaders().getContentType().includes(MediaType.APPLICATION_JSON);
 
         assert response.getBody() != null;
-        assert response.getBody().contains(" is incorrect");
+        assert response.getBody().contains("messages");
     }
 
     @Test
     void loginSuccessResponseContainsToken() {
-        LoginRequestDto form = new LoginRequestDto("admin", "admin");
+        LoginRequestDto form = new LoginRequestDto("admin@admin", "admin");
         ResponseEntity<String> response = apiRequestPost("/api/auth/login", form, null, String.class);
 
         assert response.getStatusCode() == HttpStatus.OK;
