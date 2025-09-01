@@ -1,9 +1,0 @@
-open user1@sber1
-
-lcd "D:\sandbox\adrift\target"
-cd "/home/user1/adrift"
-
-put -nopermissions -nopreservetime adrift.jar
-
-close
-exit

@@ -1,9 +1,0 @@
-open user1@sber1
-
-lcd "D:\sandbox\adrift\webapp"
-cd "/home/user1/adrift/webapp"
-
-put -nopermissions -nopreservetime -filemask="|node_modules/;.output/;dist/" *
-
-close
-exit
