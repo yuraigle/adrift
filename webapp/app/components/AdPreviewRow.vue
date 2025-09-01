@@ -52,7 +52,7 @@ const formatPrice = (price: number) => {
       </NuxtLink>
     </div>
     <div class="flex-grow">
-      <div class="flex justify-between items-center gap-x-4 pb-2">
+      <div class="flex justify-between items-center gap-x-4 pb-0 lg:pb-2">
         <NuxtLink :to="adUrl" class="w-full">
           <h3
             :title="a.title"
@@ -76,7 +76,7 @@ const formatPrice = (price: number) => {
         <p
           :class="`
                   text-gray-600 dark:text-gray-300 three-lines-only
-                  text-xs lg:text-sm
+                  text-sm md:text-base
                   `.replaceAll(/\s+/g, ' ')">{{ a.description }}</p>
       </NuxtLink>
     </div>
