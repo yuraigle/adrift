@@ -5,13 +5,13 @@
 </template>
 
 <style>
-.page-enter-active,
-.page-leave-active {
+.blur-enter-active,
+.blur-leave-active {
   transition: all 0.2s;
 }
-.page-enter-from,
-.page-leave-to {
+.blur-enter-from,
+.blur-leave-to {
   opacity: 0;
-  filter: blur(0.5rem);
+  filter: blur(1rem);
 }
 </style>
