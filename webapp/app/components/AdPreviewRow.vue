@@ -22,16 +22,17 @@ const formatPrice = (price: number) => {
   <div
     :class="`
             mb-4 px-6 py-4 rounded-md
-            flex gap-x-4
+            xs:flex gap-x-4
             hover:bg-gray-100 dark:hover:bg-gray-800
             `.replaceAll(/\s+/g, ' ')">
     <div class="flex-shrink-0">
-      <NuxtLink :to="adUrl" :title="a.title">
+      <NuxtLink :to="adUrl" :title="a.title" class="">
         <template v-if="hasImage">
           <img
             :class="`
-                    rounded-md
-                    aspect-square object-cover w-[100px] lg:w-[200px]
+                    rounded-md mx-auto
+                    aspect-square object-cover
+                    w-[10rem] xs:w-[7rem] md:w-[10rem] lg:w-[13rem]
                     bg-gray-200 dark:bg-gray-700
                     `.replaceAll(/\s+/g, ' ')"
             :src="imageUrl(adImage, 300)"
@@ -40,8 +41,9 @@ const formatPrice = (price: number) => {
         <template v-else>
           <span
             :class="`
-                    rounded-md
-                    aspect-square object-cover w-[100px] lg:w-[200px]
+                    rounded-md mx-auto
+                    aspect-square object-cover
+                    w-[10rem] xs:w-[7rem] md:w-[10rem] lg:w-[13rem]
                     text-gray-400 bg-gray-200
                     dark:text-gray-600 dark:bg-gray-700
                     flex items-center justify-center
@@ -70,7 +72,7 @@ const formatPrice = (price: number) => {
         </button>
       </div>
       <NuxtLink :to="adUrl" class="block h-full">
-        <p class="text-xl font-semibold text-gray-900 dark:text-white">
+        <p class="text-base md:text-xl font-semibold text-gray-900 dark:text-white">
           {{ formatPrice(a.price) }}
         </p>
         <p

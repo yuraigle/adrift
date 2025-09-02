@@ -23,6 +23,8 @@
     --color-siberia-700: var(--color-amber-700);
     --color-siberia-800: var(--color-amber-800);
     --color-siberia-900: var(--color-amber-900);
+
+    --breakpoint-xs: 36rem;
 }
 
 html,
