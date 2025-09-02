@@ -51,8 +51,8 @@ onUnmounted(() => {
     <div
       id="categories-menu"
       :class="`
-              absolute top-12 rounded-lg shadow-lg
-              w-screen max-w-md overflow-hidden z-50
+              absolute top-12 rounded-lg shadow-lg z-50
+              w-[calc(100vw-3rem)] md:max-w-[500px] lg:max-w-[700px]
               bg-gray-50 dark:bg-gray-700
               outline-1 outline-gray-900/5 backdrop:bg-transparent
               transition transition-discrete [--anchor-gap:--spacing(3)]
