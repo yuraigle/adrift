@@ -8,7 +8,7 @@ const onSubmitSearch = () => {
 </script>
 
 <template>
-  <form class="flex-grow" @submit.prevent="onSubmitSearch">
+  <form class="w-full" @submit.prevent="onSubmitSearch">
     <label for="search-query" class="sr-only">Search</label>
     <div class="relative">
       <div
@@ -23,7 +23,7 @@ const onSubmitSearch = () => {
         v-model="q"
         type="search"
         :class="`
-                w-full py-2 ps-10 pe-4 text-sm rounded-xl border-2
+                w-full py-2 ps-10 pe-4 text-sm rounded-md border-2
                 text-gray-900 bg-gray-50 dark:text-white dark:bg-gray-700
                 border-siberia-600 dark:border-siberia-700
                 focus-visible:outline-none
@@ -33,13 +33,14 @@ const onSubmitSearch = () => {
         type="submit"
         :class="`
                 text-white absolute px-4 py-2 end-0 bottom-0 border-2
-                font-medium rounded-r-xl text-sm cursor-pointer
+                font-medium rounded-r-md text-sm cursor-pointer
                 bg-siberia-600 hover:bg-siberia-700
                 border-siberia-600 hover:border-siberia-700
                 dark:bg-siberia-700 dark:hover:bg-siberia-600
                 dark:border-siberia-700 dark:hover:border-siberia-600
                 `.replaceAll(/\s+/g, ' ')">
-        Search
+        <!-- Search -->
+        <IconSearchIcon :size=20 />
       </button>
     </div>
   </form>

@@ -34,7 +34,7 @@ onUnmounted(() => {
       id="categories-button"
       type="button"
       :class="`
-                justify-center rounded-md px-3 py-2 rounded-xl
+                justify-center rounded-md px-3 py-2
                 text-sm/6 text-white shadow-xs
                 cursor-pointer flex gap-x-2
                 bg-siberia-600 dark:bg-siberia-700
@@ -45,13 +45,13 @@ onUnmounted(() => {
     >
         <IconListSearchIcon v-if="!isMenuShown" :size=24 />
         <IconCloseIcon v-else :size=24 />
-        <span class="hidden sm:block">All Categories</span>
+        <span class="text-nowrap">Categories</span>
     </button>
 
     <div
       id="categories-menu"
       :class="`
-              absolute top-12 rounded-3xl shadow-lg
+              absolute top-12 rounded-lg shadow-lg
               w-screen max-w-md overflow-hidden z-50
               bg-gray-50 dark:bg-gray-700
               outline-1 outline-gray-900/5 backdrop:bg-transparent
