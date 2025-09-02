@@ -45,14 +45,14 @@ onUnmounted(() => {
     >
         <IconListSearchIcon v-if="!isMenuShown" :size=24 />
         <IconCloseIcon v-else :size=24 />
-        <span>All Categories</span>
+        <span class="hidden sm:block">All Categories</span>
     </button>
 
     <div
       id="categories-menu"
       :class="`
               absolute top-12 rounded-3xl shadow-lg
-              w-screen max-w-md overflow-hidden
+              w-screen max-w-md overflow-hidden z-50
               bg-gray-50 dark:bg-gray-700
               outline-1 outline-gray-900/5 backdrop:bg-transparent
               transition transition-discrete [--anchor-gap:--spacing(3)]

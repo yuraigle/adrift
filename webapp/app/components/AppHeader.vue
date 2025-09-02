@@ -1,26 +1,36 @@
 <template>
-  <header class="absolute inset-x-0 top-0 z-50 max-w-[1200px] mx-auto py-6 px-4 md:px-6">
-    <nav class="flex items-center justify-between">
-      <NuxtLink to="/" class="flex pt-1 gap-x-2">
-        <span class="text-accent-600 dark:text-accent-400">
-          <IconLogoIcon />
-        </span>
-        <span class="font-bold">Adrift</span>
-      </NuxtLink>
+  <header class="w-full relative max-w-[1200px] mx-auto">
+    <nav class="grid grid-cols-12 px-4 md:px-6">
+      <div class="col-span-12 md:col-span-2 h-18">
+        <NuxtLink to="/" class="flex items-center gap-x-2 px-4 py-4 h-full">
+          <span class="text-accent-600 dark:text-accent-400">
+            <IconLogoIcon />
+          </span>
+          <span class="font-bold">Adrift</span>
+        </NuxtLink>
+      </div>
 
-      <div class="px-4 gap-x-2 flex hidden md:flex w-lg lg:w-xl">
+      <div
+        :class="`
+                col-span-12 md:col-span-8 px-4 h-18
+                flex items-center gap-x-2 w-full
+                `.replaceAll(/\s+/g, ' ')">
         <AppHeaderCategories />
         <AppHeaderSearch />
       </div>
 
-      <div class="flex justify-end">
-        <div class="pt-1 me-4">
+      <div
+        :class="`
+                absolute top-0 right-0 ps-4 h-18
+                flex items-center justify-end
+                `">
+        <div class="me-4 py-4 flex items-center">
           <ThemeTogglerButton />
         </div>
         <NuxtLink
           to="/auth/login"
           :class="`
-                  text-sm/6 font-semibold flex w-18 pt-1
+                  text-sm font-semibold flex w-18
                   gap-x-1 hover:gap-x-2
                   hover:text-accent-600 dark:hover:text-accent-400
                   `.replaceAll(/\s+/g, ' ')">
