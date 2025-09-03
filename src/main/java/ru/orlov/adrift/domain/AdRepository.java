@@ -26,4 +26,11 @@ public interface AdRepository extends JpaRepository<Ad, Long> {
     @Query("SELECT a FROM Ad a LEFT JOIN FETCH a.images ORDER BY a.created DESC")
     Page<AdSummary> findAllOrderByCreatedDesc(Pageable pageable);
 
+    @Query("""
+            select a from Ad a
+                join fetch a.images i
+            where a.id = :id
+            """)
+    Optional<AdFullDetails> findAdDetailsById(Long id);
+
 }

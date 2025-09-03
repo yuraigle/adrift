@@ -9,7 +9,9 @@ import lombok.Setter;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -42,7 +44,7 @@ public class Ad {
             orphanRemoval = true,
             fetch = FetchType.EAGER
     )
-    private List<AdField> fields = new ArrayList<>();
+    private Set<AdField> fields = new HashSet<>();
 
     @OneToMany(
             mappedBy = "ad",
@@ -50,7 +52,7 @@ public class Ad {
             orphanRemoval = true,
             fetch = FetchType.EAGER
     )
-    private List<AdOption> options = new ArrayList<>();
+    private Set<AdOption> options = new HashSet<>();
 
     @OneToMany(
             mappedBy = "ad",
@@ -58,6 +60,7 @@ public class Ad {
             orphanRemoval = true,
             fetch = FetchType.LAZY
     )
+    @OrderColumn(name = "id")
     private List<AdImage> images = new ArrayList<>();
 
 }

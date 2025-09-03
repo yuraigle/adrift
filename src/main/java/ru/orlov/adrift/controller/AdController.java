@@ -1,5 +1,6 @@
 package ru.orlov.adrift.controller;
 
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,10 +26,11 @@ public class AdController {
     private final AdRepository adRepository;
     private final UserRepository userRepository;
     private final ImageService imageService;
+    private final TemplateRepository templateRepository;
 
     @GetMapping(value = "/api/ads/{id}", produces = "application/json")
-    public AdSummary show(@PathVariable Long id) throws AppException {
-        return adRepository.findAdSummaryById(id)
+    public AdFullDetails show(@PathVariable Long id) throws AppException {
+        return adRepository.findAdDetailsById(id)
                 .orElseThrow(() -> new AppException("Ad not found", 404));
     }
 
