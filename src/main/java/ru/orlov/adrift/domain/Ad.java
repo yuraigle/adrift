@@ -60,7 +60,6 @@ public class Ad {
             orphanRemoval = true,
             fetch = FetchType.LAZY
     )
-    @OrderColumn(name = "id")
     private List<AdImage> images = new ArrayList<>();
 
 }

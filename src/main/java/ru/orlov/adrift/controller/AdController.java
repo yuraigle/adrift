@@ -3,6 +3,7 @@ package ru.orlov.adrift.controller;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,8 +16,10 @@ import ru.orlov.adrift.service.AdService;
 import ru.orlov.adrift.service.AuthService;
 import ru.orlov.adrift.service.ImageService;
 
+import java.util.List;
 import java.util.Objects;
 
+@Log4j2
 @RestController
 @RequiredArgsConstructor
 public class AdController {
@@ -26,7 +29,6 @@ public class AdController {
     private final AdRepository adRepository;
     private final UserRepository userRepository;
     private final ImageService imageService;
-    private final TemplateRepository templateRepository;
 
     @GetMapping(value = "/api/ads/{id}", produces = "application/json")
     public AdFullDetails show(@PathVariable Long id) throws AppException {
