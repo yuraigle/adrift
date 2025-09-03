@@ -32,18 +32,18 @@ public class CategoryLoader {
     }
 
     public void initCategoryTables() {
-        initQuestionsTable();
-        initTemplatesTable();
-        initCategoriesTable();
+        initQuestionsTable("/data/questions.yaml");
+        initTemplatesTable("/data/templates.yaml");
+        initCategoriesTable("/data/categories.yaml");
     }
 
-    private void initQuestionsTable() {
+    public void initQuestionsTable(String filename) {
         int cntQuestions = 0;
         int cntOptions = 0;
 
         try (
                 InputStream is = TypeReference.class
-                        .getResourceAsStream("/data/questions.yaml")
+                        .getResourceAsStream(filename)
         ) {
             QuestionsResource yaml = objectMapper
                     .readValue(is, QuestionsResource.class);
@@ -82,12 +82,12 @@ public class CategoryLoader {
         log.info("{} options created", cntOptions);
     }
 
-    private void initTemplatesTable() {
+    public void initTemplatesTable(String filename) {
         int cntTemplates = 0;
 
         try (
                 InputStream is = TypeReference.class
-                        .getResourceAsStream("/data/templates.yaml")
+                        .getResourceAsStream(filename)
         ) {
             TemplatesResource yaml = objectMapper
                     .readValue(is, TemplatesResource.class);
@@ -112,12 +112,12 @@ public class CategoryLoader {
         log.info("{} templates created", cntTemplates);
     }
 
-    private void initCategoriesTable() {
+    public void initCategoriesTable(String filename) {
         int cntCategories = 0;
 
         try (
                 InputStream is = TypeReference.class
-                        .getResourceAsStream("/data/categories.yaml")
+                        .getResourceAsStream(filename)
         ) {
             CategoriesResource yaml = objectMapper
                     .readValue(is, CategoriesResource.class);

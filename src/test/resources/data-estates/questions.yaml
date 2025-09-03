@@ -1,0 +1,42 @@
+questions:
+  - id: 1
+    name: Area
+    type: DECIMAL
+    min: 0
+    message: Area value is incorrect
+  - id: 2
+    name: Period
+    type: OPTION
+    required: true
+    options:
+      - id: 1
+        name: Weekly
+      - id: 2
+        name: Monthly
+  - id: 3
+    name: Construction Year
+    type: NUMBER
+    min: 1800
+    max: 2050
+    message: Construction Year is incorrect
+  - id: 4
+    name: WWW
+    type: TEXT
+    regex: ^https?:\/\/(www\.)?[a-zA-Z0-9\-._~:\/?#\[\]@!$&'()*+,;=%]+$
+    message: URL is incorrect
+  - id: 5
+    name: Pets Allowed
+    type: OPTION
+    options:
+      - id: 3
+        name: Yes
+      - id: 4
+        name: No
+  - id: 6
+    name: Features
+    type: CHECKBOX
+    options:
+      - id: 5
+        name: Garage
+      - id: 6
+        name: High Ceilings

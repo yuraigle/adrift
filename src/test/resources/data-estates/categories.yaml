@@ -1,0 +1,14 @@
+categories:
+  - id: 1
+    name: Houses for sale
+    slug: houses-for-sale
+    template: 1
+  - id: 2
+    name: Houses for rent
+    slug: houses-for-rent
+    template: 2
+  - id: 3
+    name: Land for sale
+    slug: land-for-sale
+    template: 1
+    parent: 1

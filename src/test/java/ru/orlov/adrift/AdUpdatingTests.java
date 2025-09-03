@@ -127,7 +127,7 @@ public class AdUpdatingTests extends AbstractTest {
         req.setDescription("Test AD #102 Updated Description");
         req.setPrice(BigDecimal.valueOf(50102.5));
         req.getFields().add(new AdRequestDto.AdFieldDto(1L, "102.5")); // area
-        req.getFields().add(new AdRequestDto.AdFieldDto(7L, "9")); // feature
+        req.getFields().add(new AdRequestDto.AdFieldDto(6L, "5")); // feature
 
         // via controller
         String token = retrieveAdminToken();

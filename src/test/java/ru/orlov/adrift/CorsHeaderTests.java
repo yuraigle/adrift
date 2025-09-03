@@ -36,7 +36,7 @@ public class CorsHeaderTests extends AbstractTest {
 
     @Test
     void apiNotFoundPageContainsCorsHeaders() {
-        ResponseEntity<String> response = apiRequestGet("/api/invalid");
+        ResponseEntity<String> response = apiRequestGet("/api/invalid2");
 
         assert hasCorsHeaders(response);
     }

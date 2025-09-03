@@ -187,8 +187,8 @@ public class AdCreatingTests extends AbstractTest {
         form.setCategory(1L); // Houses for sale
         form.setPrice(BigDecimal.valueOf(102));
         form.setFields(List.of(
-                new AdRequestDto.AdFieldDto(7L, "6"), // Garage
-                new AdRequestDto.AdFieldDto(7L, "7") // High Ceilings
+                new AdRequestDto.AdFieldDto(6L, "5"), // Garage
+                new AdRequestDto.AdFieldDto(6L, "6") // High Ceilings
         ));
 
         String token = retrieveAdminToken();
@@ -212,7 +212,7 @@ public class AdCreatingTests extends AbstractTest {
         assert !ad.getOptions().isEmpty();
 
         Optional<AdOption> f1 = ad.getOptions().stream()
-                .filter(f -> f.getQuestion().getId() == 7L)
+                .filter(f -> f.getQuestion().getId() == 6L)
                 .findAny();
 
         assert f1.isPresent();

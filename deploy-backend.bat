@@ -1,5 +1,5 @@
 cd /D %~dp0
-call mvnw clean package
+call mvnw clean package -DskipTests
 
 pscp -i C:/Users/yurai/.ssh/id_sber1.ppk .\target\adrift.jar user1@176.108.244.255:/home/user1/adrift/
 
