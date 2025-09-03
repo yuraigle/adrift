@@ -132,6 +132,7 @@ create table ads_images
     ord integer null,
     orig_filename varchar(255) null,
     alt varchar(255) null,
+    alt1 varchar(255) null,
     constraint PK_ADS_IMAGES primary key (id),
     constraint FK_ADS_IMAGES_ON_AD foreign key (ad_id) references ads (id) on delete cascade
 );
