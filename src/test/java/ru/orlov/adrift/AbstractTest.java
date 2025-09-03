@@ -47,7 +47,7 @@ public abstract class AbstractTest {
     @Autowired
     CategoryLoader categoryLoader;
 
-    private String url(String path) {
+    public String url(String path) {
         return "http://localhost:" + port + path;
     }
 
