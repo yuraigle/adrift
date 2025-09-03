@@ -16,27 +16,7 @@ const { data: page, pending } = await useAsyncData<AdsPage>(
 <template>
   <div>
     <div>
-      <h1 class="text-2xl font-bold py-1">Browse popular categories</h1>
-      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 my-4">
-        <div class="col-span-2 border px-6 py-4 border-gray-200 dark:border-gray-700">
-          ABC
-        </div>
-        <div class="col-span-1 lg:col-span-2 border px-6 py-4 border-gray-200 dark:border-gray-700">
-          DEF
-        </div>
-        <div class="col-span-1 lg:col-span-2 border px-6 py-4 border-gray-200 dark:border-gray-700">
-          GHI
-        </div>
-        <div class="col-span-2 hidden md:block border px-6 py-4 border-gray-200 dark:border-gray-700">
-          JKL
-        </div>
-        <div class="col-span-2 hidden lg:block border px-6 py-4 border-gray-200 dark:border-gray-700">
-          MNO
-        </div>
-        <div class="col-span-2 hidden lg:block border px-6 py-4 border-gray-200 dark:border-gray-700">
-          PQR
-        </div>
-      </div>
+      <PopularCategories />
     </div>
     <div class="grid grid-cols-6 gap-x-4">
       <div class="col-span-6 md:col-span-4">
@@ -57,16 +37,7 @@ const { data: page, pending } = await useAsyncData<AdsPage>(
         </ClientOnly>
       </div>
       <div class="col-span-6 md:col-span-2">
-        <h2 class="text-xl font-bold py-1 mt-4 mb-3">Favorites</h2>
-        <div class="border px-4 py-3 mb-4 border-gray-200 dark:border-gray-700">
-          1
-        </div>
-        <div class="border px-4 py-3 mb-4 border-gray-200 dark:border-gray-700">
-          2
-        </div>
-        <div class="border px-4 py-3 mb-4 border-gray-200 dark:border-gray-700">
-          3
-        </div>
+        <FavoriteAds />
       </div>
     </div>
   </div>

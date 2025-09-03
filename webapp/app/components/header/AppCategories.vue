@@ -29,7 +29,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="relative">
+  <div class="">
     <button
       id="categories-button"
       type="button"
@@ -51,8 +51,8 @@ onUnmounted(() => {
     <div
       id="categories-menu"
       :class="`
-              absolute top-12 rounded-lg shadow-lg z-50
-              w-[calc(100vw-3rem)] md:max-w-[500px] lg:max-w-[700px]
+              absolute left-0 top-32 md:top-16
+              rounded-lg shadow-lg z-50 w-full
               bg-gray-50 dark:bg-gray-700
               outline-1 outline-gray-900/5 backdrop:bg-transparent
               transition transition-discrete [--anchor-gap:--spacing(3)]
@@ -148,5 +148,11 @@ onUnmounted(() => {
 .categories-menu-icon {
     @apply flex size-11 flex-none items-center justify-center
     rounded-lg text-gray-800 dark:text-gray-200;
+}
+
+#categories-button > span {
+  @media (max-width: 400px) {
+    display: none;
+  }
 }
 </style>
