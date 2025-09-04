@@ -1,6 +1,5 @@
 package ru.orlov.adrift.controller;
 
-import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -18,7 +17,6 @@ import ru.orlov.adrift.service.AdService;
 import ru.orlov.adrift.service.AuthService;
 import ru.orlov.adrift.service.ImageService;
 
-import java.util.List;
 import java.util.Objects;
 
 @Log4j2
@@ -33,19 +31,26 @@ public class AdController {
     private final ImageService imageService;
     private final TemplateRepository templateRepository;
 
-    @Transactional
     @GetMapping(value = "/api/ads/{id}", produces = "application/json")
     public AdDetailsDto show(@PathVariable Long id) throws AppException {
-        Ad ad = adRepository.findById(id)
+        Ad ad = adRepository.findAdWithFetchById(id)
                 .orElseThrow(() -> new AppException("Ad not found", 404));
 
         AdDetailsDto dto = new AdDetailsDto();
         BeanUtils.copyProperties(ad, dto);
-        adService.getAdFields(ad).forEach((qid, values) -> {
-            for (String val : values) {
-                dto.getFields().add(new AdDetailsDto.AdFieldDto(qid, val));
-            }
-        });
+
+        dto.setCategory(new AdDetailsDto.CategoryDto(ad.getCategory()));
+        dto.setUser(new AdDetailsDto.UserDto(ad.getUser()));
+
+        adService.getAdFields(ad.getId()).forEach((qid, values) ->
+                values.forEach(val ->
+                        dto.getFields().add(new AdDetailsDto.AdFieldDto(qid, val))
+                )
+        );
+
+        for (AdImage image : ad.getImages()) {
+            dto.getImages().add(new AdDetailsDto.AdImageDto(image));
+        }
 
         return dto;
     }

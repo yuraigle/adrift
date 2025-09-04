@@ -1,5 +1,6 @@
 package ru.orlov.adrift.domain;
 
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -26,10 +27,9 @@ public interface AdRepository extends JpaRepository<Ad, Long> {
     @Query("SELECT a FROM Ad a LEFT JOIN FETCH a.images ORDER BY a.created DESC")
     Page<AdSummary> findAllOrderByCreatedDesc(Pageable pageable);
 
+    @Transactional
     @Query("""
             select a from Ad a
-                join fetch a.options
-                join fetch a.fields
                 join fetch a.images
             where a.id = :id
             """)

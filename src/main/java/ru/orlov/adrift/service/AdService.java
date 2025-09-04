@@ -216,7 +216,10 @@ public class AdService {
     }
 
     @Transactional(readOnly = true)
-    public MultiValueMap<Long, String> getAdFields(Ad ad) {
+    public MultiValueMap<Long, String> getAdFields(Long adId) throws AppException {
+        Ad ad = adRepository.findById(adId)
+                .orElseThrow(() -> new AppException("Ad not found", 404));
+
         MultiValueMap<Long, String> result = new LinkedMultiValueMap<>();
 
         for (Question q : ad.getCategory().getTemplate().getQuestions()) {
