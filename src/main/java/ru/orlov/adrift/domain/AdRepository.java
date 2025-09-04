@@ -28,9 +28,11 @@ public interface AdRepository extends JpaRepository<Ad, Long> {
 
     @Query("""
             select a from Ad a
-                join fetch a.images i
+                join fetch a.options
+                join fetch a.fields
+                join fetch a.images
             where a.id = :id
             """)
-    Optional<AdFullDetails> findAdDetailsById(Long id);
+    Optional<Ad> findAdWithFetchById(Long id);
 
 }

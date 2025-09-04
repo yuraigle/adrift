@@ -55,4 +55,12 @@ public class AdField {
             return Objects.hash(ad.getId(), question.getId());
         }
     }
+
+    public String toString() {
+        return switch (question.getType()) {
+            case NUMBER -> valNumber.toString();
+            case DECIMAL -> valDecimal.toString();
+            default -> valText;
+        };
+    }
 }

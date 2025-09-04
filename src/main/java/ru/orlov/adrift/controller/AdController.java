@@ -4,10 +4,12 @@ import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import ru.orlov.adrift.controller.dto.AdDetailsDto;
 import ru.orlov.adrift.controller.dto.AdRequestDto;
 import ru.orlov.adrift.domain.*;
 import ru.orlov.adrift.domain.ex.AppAuthException;
@@ -29,11 +31,23 @@ public class AdController {
     private final AdRepository adRepository;
     private final UserRepository userRepository;
     private final ImageService imageService;
+    private final TemplateRepository templateRepository;
 
+    @Transactional
     @GetMapping(value = "/api/ads/{id}", produces = "application/json")
-    public AdFullDetails show(@PathVariable Long id) throws AppException {
-        return adRepository.findAdDetailsById(id)
+    public AdDetailsDto show(@PathVariable Long id) throws AppException {
+        Ad ad = adRepository.findById(id)
                 .orElseThrow(() -> new AppException("Ad not found", 404));
+
+        AdDetailsDto dto = new AdDetailsDto();
+        BeanUtils.copyProperties(ad, dto);
+        adService.getAdFields(ad).forEach((qid, values) -> {
+            for (String val : values) {
+                dto.getFields().add(new AdDetailsDto.AdFieldDto(qid, val));
+            }
+        });
+
+        return dto;
     }
 
     @PostMapping(value = "/api/ads", produces = "application/json")

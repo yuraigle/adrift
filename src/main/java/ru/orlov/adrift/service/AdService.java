@@ -1,9 +1,11 @@
 package ru.orlov.adrift.service;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import ru.orlov.adrift.controller.dto.AdRequestDto;
 import ru.orlov.adrift.domain.*;
 import ru.orlov.adrift.domain.ex.AppException;
@@ -213,4 +215,40 @@ public class AdService {
         ad.getOptions().add(option);
     }
 
+    @Transactional(readOnly = true)
+    public MultiValueMap<Long, String> getAdFields(Ad ad) {
+        MultiValueMap<Long, String> result = new LinkedMultiValueMap<>();
+
+        for (Question q : ad.getCategory().getTemplate().getQuestions()) {
+            List<AdField> fields = ad.getFields().stream()
+                    .filter(f -> f.getQuestion().equals(q))
+                    .toList();
+
+            List<AdOption> options = ad.getOptions().stream()
+                    .filter(o -> o.getQuestion().equals(q))
+                    .toList();
+
+            if (q.getType() == Question.Type.OPTION) {
+                if (!options.isEmpty()) {
+                    String val = options.getFirst().getOption().getId().toString();
+                    result.add(q.getId(), val);
+                }
+            }
+            else if (q.getType() == Question.Type.CHECKBOX) {
+                if (!options.isEmpty()) {
+                    for (AdOption option : options) {
+                        String val = option.getOption().getId().toString();
+                        result.add(q.getId(), val);
+                    }
+                }
+            } else {
+                if (!fields.isEmpty()) {
+                    String val = fields.getFirst().toString();
+                    result.add(q.getId(), val);
+                }
+            }
+        }
+
+        return result;
+    }
 }
