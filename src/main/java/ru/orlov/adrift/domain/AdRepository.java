@@ -30,7 +30,7 @@ public interface AdRepository extends JpaRepository<Ad, Long> {
     @Transactional
     @Query("""
             select a from Ad a
-                join fetch a.images
+                left join fetch a.images
             where a.id = :id
             """)
     Optional<Ad> findAdWithFetchById(Long id);

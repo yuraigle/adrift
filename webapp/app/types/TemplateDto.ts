@@ -1,10 +1,10 @@
 export interface TemplateDto {
   id: number;
-  questions: Question[];
+  questions: QuestionDto[];
   options: Record<number, string>;
 }
 
-export interface Question {
+export interface QuestionDto {
   id: number;
   name: string;
   type: 'TEXT' | 'NUMBER' | 'DECIMAL' | 'OPTION' | 'CHECKBOX';

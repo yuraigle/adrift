@@ -4,7 +4,8 @@ import type { TemplateDto } from '~/types/TemplateDto';
 import { API_BASE } from '~/utils/api';
 
 useHead({
-  titleTemplate: (t: string | undefined) => (ad.value ? ad.value.title + ' - ' : '') + t,
+  titleTemplate: (t: string | undefined) =>
+    (ad && ad.value ? ad.value.title + ' - ' : '') + t,
 })
 
 const route = useRoute()
@@ -28,13 +29,20 @@ const { data: template } = await useAsyncData<TemplateDto>(
       return Promise.resolve({} as TemplateDto);
     }
 
-    return $fetch(`${API_BASE}/categories/${ad.value.category.id}/template`)
+    const cid = ad.value.category.id;
+    return $fetch(`${API_BASE}/categories/${cid}/template`)
   },
   {
-    watch: [ad],
+    watch: [id],
     server: true,
   }
 )
+
+const formatPrice = (price: number) => {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency", currency: "USD"
+  }).format(price);
+}
 
 </script>
 
@@ -51,11 +59,31 @@ const { data: template } = await useAsyncData<TemplateDto>(
         </span>
       </NuxtLink>
     </div>
-    <h1 class="text-2xl font-bold py-2">{{ ad.title }}</h1>
-    <p>{{ ad.price }}</p>
-    <p>{{ ad.description }}</p>
-    <p>{{ new Date(ad.created).getFullYear() }}</p>
 
-    <p>{{ template?.id }}</p>
+    <div class="grid grid-cols-12 gap-x-4">
+      <div class="col-span-12 lg:col-span-8">
+        <h1 class="text-2xl font-bold py-4">{{ ad.title }}</h1>
+
+        <div v-if="ad && ad.images && ad.images.length > 0">
+          <AdDetailsImages :images="ad.images" />
+        </div>
+
+        <p>Price: {{ formatPrice(ad.price) }}</p>
+        <p>Created: {{ new Date(ad.created).toLocaleString('en-US') }}</p>
+
+        <div class="my-4">
+          <h3 class="text-xl font-semibold mb-2">Description</h3>
+          <div class="text-justify">{{ ad.description }}</div>
+        </div>
+
+        <div v-if="template && ad && ad.fields.length > 0" class="my-4">
+          <AdDetailsFields :fields="ad.fields" :template="template" />
+        </div>
+      </div>
+      <div class="col-span-12 lg:col-span-4">
+        User
+      </div>
+    </div>
+
   </div>
 </template>

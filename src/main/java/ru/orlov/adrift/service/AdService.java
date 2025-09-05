@@ -239,10 +239,11 @@ public class AdService {
             }
             else if (q.getType() == Question.Type.CHECKBOX) {
                 if (!options.isEmpty()) {
-                    for (AdOption option : options) {
-                        String val = option.getOption().getId().toString();
-                        result.add(q.getId(), val);
-                    }
+                    String val = options.stream()
+                            .map(o -> o.getOption().getId().toString())
+                            .reduce((a, b) -> a + "," + b)
+                            .get();
+                    result.add(q.getId(), val);
                 }
             } else {
                 if (!fields.isEmpty()) {
