@@ -1,8 +1,4 @@
 <script setup lang="ts">
-useHead({
-  titleTemplate: (t: string | undefined) => 'Home - ' + t,
-})
-
 const { data: page, pending } = await useAsyncData<AdsPage>(
   'ads-home-rec',
   () => $fetch(`${API_BASE}/recommended?size=12`),

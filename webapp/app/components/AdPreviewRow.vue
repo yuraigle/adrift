@@ -55,16 +55,11 @@ const formatPrice = (price: number) => {
     </div>
     <div class="flex-grow">
       <div class="flex justify-between items-center gap-x-4 pb-0 lg:pb-2">
-        <NuxtLink :to="adUrl" class="w-full">
-          <h3
-            :title="a.title"
-            :class="`
-                    text-lg one-line-only
-                    hover:text-accent-600 dark:hover:text-accent-400
-                    `.replaceAll(/\s+/g, ' ')">
+        <h3 :title="a.title" class="text-lg">
+          <NuxtLink :to="adUrl" class="link-clr0 one-line-only">
             {{ a.title }}
-          </h3>
-        </NuxtLink>
+          </NuxtLink>
+        </h3>
         <button
           class="cursor-pointer hover:text-rose-500"
           title="Add to favorites">

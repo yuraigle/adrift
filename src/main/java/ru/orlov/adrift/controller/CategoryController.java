@@ -50,10 +50,11 @@ public class CategoryController {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new AppException("Category not found"));
 
-        TemplateDto dto = new TemplateDto();
-        Template template = templateRepository.getTemplateWithQuestions(category.getId());
+        Long tid = category.getTemplate().getId();
+        Template template = templateRepository.getTemplateWithQuestions(tid);
 
-        dto.setId(template.getId());
+        TemplateDto dto = new TemplateDto();
+        dto.setId(tid);
 
         for (Question question : template.getQuestions()) {
             dto.getQuestions().add(new TemplateDto.QuestionDto(question));

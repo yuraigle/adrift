@@ -41,6 +41,10 @@ body {
     dark:bg-[#15202b] dark:text-[#f7f9f9];
 }
 
+.link-clr0 {
+    @apply hover:text-accent-600 dark:hover:text-accent-400
+}
+
 .link-clr1 {
     @apply text-cyan-600 hover:text-cyan-500
     dark:text-cyan-500 dark:hover:text-cyan-400;
