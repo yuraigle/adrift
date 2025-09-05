@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import type { AdDetailsDto } from '~/types/AdDetailsDto';
-import type { TemplateDto } from '~/types/TemplateDto';
 import { API_BASE } from '~/utils/api';
 
 useHead({
@@ -10,7 +8,7 @@ useHead({
 
 const route = useRoute()
 const id = computed(() => route.params.id)
-
+ 
 const { data: ad } = await useAsyncData<AdDetailsDto>(
   'ad-details-' + id.value,
   () => {
@@ -47,10 +45,7 @@ const formatPrice = (price: number) => {
 </script>
 
 <template>
-  <div v-if="!ad">
-    <p>No content</p>
-  </div>
-  <div v-else>
+  <div v-if="ad && template">
     <div class="flex justify-between items-center pb-2">
       <NuxtLink :to="`/category/${ad.category?.slug}`" class="text-lg link-clr0">
         <span class="flex items-center gap-x-1">
@@ -60,30 +55,38 @@ const formatPrice = (price: number) => {
       </NuxtLink>
     </div>
 
-    <div class="grid grid-cols-12 gap-x-4">
+    <div class="grid grid-cols-12 gap-x-6">
       <div class="col-span-12 lg:col-span-8">
-        <h1 class="text-2xl font-bold py-4">{{ ad.title }}</h1>
+        <div class="xs:flex justify-between gap-x-4">
+          <h1 class="text-3xl font-bold py-4">{{ ad.title }}</h1>
+          <div class="text-3xl font-bold py-4 lg:hidden">{{ formatPrice(ad.price) }}</div>
+        </div>
 
         <div v-if="ad && ad.images && ad.images.length > 0">
           <AdDetailsImages :images="ad.images" />
         </div>
-
-        <p>Price: {{ formatPrice(ad.price) }}</p>
-        <p>Created: {{ new Date(ad.created).toLocaleString('en-US') }}</p>
 
         <div class="my-4">
           <h3 class="text-xl font-semibold mb-2">Description</h3>
           <div class="text-justify">{{ ad.description }}</div>
         </div>
 
-        <div v-if="template && ad && ad.fields.length > 0" class="my-4">
+        <div v-if="template && ad && ad.fields && ad.fields.length > 0" class="my-4">
           <AdDetailsFields :fields="ad.fields" :template="template" />
         </div>
       </div>
       <div class="col-span-12 lg:col-span-4">
-        User
+        <p class="text-3xl font-bold py-4">{{ formatPrice(ad.price) }}</p>
+        <div class="text-xl">
+          {{ ad.user?.username }}
+        </div>
       </div>
     </div>
 
+    <div class="mt-4 pt-2 border-t border-gray-200 dark:border-gray-700">
+      Ad #{{ ad.id }} -
+      {{ new Date(ad.created).toLocaleDateString("en-US", {}) }} -
+      15 views
+    </div>
   </div>
 </template>
