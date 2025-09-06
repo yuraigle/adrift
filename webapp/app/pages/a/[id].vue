@@ -3,7 +3,7 @@ import { API_BASE } from '~/utils/api';
 
 useHead({
   titleTemplate: (t: string | undefined) =>
-    (ad && ad.value ? ad.value.title + ' - ' : '') + t,
+    (ad && ad.value ? ad.value.title + ' - ' : '') + (t || ''),
 })
 
 const route = useRoute()
@@ -57,11 +57,19 @@ const formatPrice = (price: number) => {
 
     <div class="grid grid-cols-12 gap-x-6">
       <div class="col-span-12 lg:col-span-8">
-        <div class="xs:flex justify-between gap-x-4">
-          <h1 class="text-3xl font-bold py-4">{{ ad.title }}</h1>
-          <div class="text-3xl font-bold py-4 lg:hidden">{{ formatPrice(ad.price) }}</div>
-        </div>
+        <h1 class="text-3xl font-bold py-4">
+          {{ ad.title }}
+        </h1>
+      </div>
+      <div class="col-span-12 lg:col-span-4">
+        <span class="text-3xl font-bold py-4">
+          {{ formatPrice(ad.price) }}
+        </span>
+      </div>
+    </div>
 
+    <div class="grid grid-cols-12 gap-x-6">
+      <div class="col-span-12 lg:col-span-8">
         <div v-if="ad && ad.images && ad.images.length > 0">
           <AdDetailsImages :images="ad.images" />
         </div>
@@ -76,17 +84,17 @@ const formatPrice = (price: number) => {
         </div>
       </div>
       <div class="col-span-12 lg:col-span-4">
-        <p class="text-3xl font-bold py-4">{{ formatPrice(ad.price) }}</p>
-        <div class="text-xl">
-          {{ ad.user?.username }}
-        </div>
+        <AdDetailsOwner v-if="ad.user" :user="ad.user" />
       </div>
     </div>
 
-    <div class="mt-4 pt-2 border-t border-gray-200 dark:border-gray-700">
+    <div class="mt-6 pt-2 border-t border-gray-200 dark:border-gray-700">
       Ad #{{ ad.id }} -
       {{ new Date(ad.created).toLocaleDateString("en-US", {}) }} -
       15 views
     </div>
+  </div>
+  <div v-else>
+    <p>Loading...</p>
   </div>
 </template>

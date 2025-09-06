@@ -23,9 +23,9 @@ defineProps({
             text-sm/6 font-semibold shadow-xs cursor-pointer
             focus-visible:outline-2 focus-visible:outline-offset-2
             text-white
-            bg-accent-600 hover:bg-accent-700
-            dark:bg-accent-700 dark:hover:bg-accent-800
-            focus-visible:outline-accent-600
+            bg-emerald-600 hover:bg-emerald-700
+            dark:bg-emerald-700 dark:hover:bg-emerald-800
+            focus-visible:outline-emerald-600
             ${loading ? 'animate-pulse opacity-50 pointer-events-none' : ''}
             ${cls}
             `.replaceAll(/\s+/g, ' ')">
