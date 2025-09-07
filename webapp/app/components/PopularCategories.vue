@@ -1,8 +1,3 @@
-<script setup lang="ts">
-import { IconChevronRight } from '#components';
-
-</script>
-
 <template>
   <h1 class="text-2xl font-bold py-1">Browse popular categories</h1>
   <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 my-4">

@@ -38,8 +38,8 @@ export default defineNuxtConfig({
                 { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
             ]
         },
-        pageTransition: { name: 'blur', mode: 'out-in' },
-        layoutTransition: { name: 'blur', mode: 'out-in' },
+        // pageTransition: { name: 'blur', mode: 'out-in' },
+        // layoutTransition: { name: 'blur', mode: 'out-in' },
     },
     nitro: {
         prerender: {

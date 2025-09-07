@@ -49,7 +49,7 @@ const onSubmit = () => {
     </div>
     <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
       <form class="space-y-6" @submit.prevent="onSubmit">
-        <FormInput
+        <UiFormInput
           id="email" label="Email:" :val="form.email"
           type="email" autocomplete="email"
           @update:val="form.email = $event.target.value" />

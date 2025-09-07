@@ -55,14 +55,14 @@ const formatPrice = (price: number) => {
       </NuxtLink>
     </div>
 
-    <div class="grid grid-cols-12 gap-x-6">
+    <div class="grid grid-cols-12 gap-x-6 py-4">
       <div class="col-span-12 lg:col-span-8">
-        <h1 class="text-3xl font-bold py-4">
+        <h1 class="text-3xl font-bold pb-4">
           {{ ad.title }}
         </h1>
       </div>
-      <div class="col-span-12 lg:col-span-4">
-        <span class="text-3xl font-bold py-4">
+      <div class="col-span-12 lg:col-span-4 pb-4">
+        <span class="text-3xl font-bold">
           {{ formatPrice(ad.price) }}
         </span>
       </div>
@@ -88,10 +88,14 @@ const formatPrice = (price: number) => {
       </div>
     </div>
 
-    <div class="mt-6 pt-2 border-t border-gray-200 dark:border-gray-700">
-      Ad #{{ ad.id }} -
-      {{ new Date(ad.created).toLocaleDateString("en-US", {}) }} -
-      15 views
+    <div class="grid grid-cols-12 gap-x-6">
+      <div class="col-span-12 lg:col-span-8">
+        <div class="mt-12 pt-2 border-t border-gray-200 dark:border-gray-700">
+          Ad #{{ ad.id }} -
+          {{ new Date(ad.created).toLocaleDateString("en-US", {}) }} -
+          15 views
+        </div>
+      </div>
     </div>
   </div>
   <div v-else>

@@ -39,12 +39,12 @@ const { data: page, pending } = await useAsyncData<AdsPage>(
 
 <template>
   <div>
+    <h1 class="text-2xl font-bold py-2 mb-4">{{ cat?.name }}</h1>
     <div class="grid grid-cols-12 gap-x-4">
       <div class="col-span-12 lg:col-span-3">
-        <p>Filters...</p>
+        <FilterDefaultCategory />
       </div>
       <div class="col-span-12 lg:col-span-9">
-        <h1 class="text-2xl font-bold py-2">{{ cat?.name }}</h1>
         <ClientOnly>
           <div
             :class="`
