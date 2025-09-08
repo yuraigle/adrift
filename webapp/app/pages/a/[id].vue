@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { API_BASE } from '~/utils/api';
-
 useHead({
   titleTemplate: (t: string | undefined) =>
     (ad && ad.value ? ad.value.title + ' - ' : '') + (t || ''),
@@ -8,11 +6,12 @@ useHead({
 
 const route = useRoute()
 const id = computed(() => route.params.id)
+const isMapShown = ref(false)
  
 const { data: ad } = await useAsyncData<AdDetailsDto>(
   'ad-details-' + id.value,
   () => {
-    return $fetch(`${API_BASE}/ads/${id.value}`)
+    return $fetch(useAppConfig().API_BASE + `/ads/${id.value}`)
   },
   {
     watch: [id],
@@ -28,7 +27,7 @@ const { data: template } = await useAsyncData<TemplateDto>(
     }
 
     const cid = ad.value.category.id;
-    return $fetch(`${API_BASE}/categories/${cid}/template`)
+    return $fetch(useAppConfig().API_BASE + `/categories/${cid}/template`)
   },
   {
     watch: [id],
@@ -74,12 +73,38 @@ const formatPrice = (price: number) => {
           <AdDetailsImages :images="ad.images" />
         </div>
 
-        <div class="my-4">
+        <div class="my-6">
           <h3 class="text-xl font-semibold mb-2">Description</h3>
           <div class="text-justify">{{ ad.description }}</div>
         </div>
 
-        <div v-if="template && ad && ad.fields && ad.fields.length > 0" class="my-4">
+        <div class="my-6">
+          <h3 class="text-xl font-semibold mb-2">Location</h3>
+          <div class="flex justify-between items-center gap-x-2">
+            <div>
+              29 Washington Pl, New York, NY 10003, USA
+            </div>
+            <div>
+              <button
+                class="link-clr0 cursor-pointer flex items-center gap-x-1"
+                @click="isMapShown = !isMapShown">
+                <span class="text-nowrap">{{ isMapShown ? 'Hide map' : 'Show on map' }}</span>
+                <IconChevronDown v-if="!isMapShown" :size=18 />
+                <IconChevronUp v-else :size=18 />
+              </button>
+            </div>
+          </div>
+          <div
+            class="transition-[height,opacity] duration-500 ease-in-out z-50 overflow-hidden"
+            :class="{ 'h-0': !isMapShown, 'h-full': isMapShown,
+                'opacity-0': !isMapShown, 'opacity-100': isMapShown }">
+            <ClientOnly>
+              <AdDetailsMap :lon="-122.2731" :lat="37.8079" />
+            </ClientOnly>
+          </div>
+        </div>
+
+        <div v-if="template && ad && ad.fields && ad.fields.length > 0" class="my-6">
           <AdDetailsFields :fields="ad.fields" :template="template" />
         </div>
       </div>

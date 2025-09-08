@@ -10,7 +10,7 @@ const { data: cat } = await useAsyncData<CategorySummary>(
       return Promise.resolve({} as CategorySummary);
     }
 
-    return $fetch(`${API_BASE}/categories/slug/${slug.value}`);
+    return $fetch(useAppConfig().API_BASE + `/categories/slug/${slug.value}`);
   },
   {
     watch: [slug],
@@ -27,7 +27,7 @@ const { data: page, pending } = await useAsyncData<AdsPage>(
 
     const cid = cat.value.id;
     const page = pageNum.value;
-    return $fetch(`${API_BASE}/categories/${cid}/a?page=${page}&size=10`);
+    return $fetch(useAppConfig().API_BASE + `/categories/${cid}/a?page=${page}&size=10`);
   },
   {
     watch: [slug, pageNum],

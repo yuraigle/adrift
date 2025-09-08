@@ -21,12 +21,12 @@ const formatPrice = (price: number) => {
 <template>
   <div
     :class="`
-            mb-4 px-6 py-4 rounded-md
-            xs:flex gap-x-4
+            mb-4 px-0 lg:px-6 py-4 rounded-md
+            xs:flex xs:gap-x-4
             hover:bg-gray-100 dark:hover:bg-gray-800
             `.replaceAll(/\s+/g, ' ')">
     <div class="flex-shrink-0">
-      <NuxtLink :to="adUrl" :title="a.title" class="">
+      <NuxtLink :to="adUrl" :title="a.title">
         <template v-if="hasImage">
           <img
             :class="`
@@ -53,7 +53,7 @@ const formatPrice = (price: number) => {
         </template>
       </NuxtLink>
     </div>
-    <div class="flex-grow">
+    <div class="flex-grow pt-4 xs:pt-0">
       <div class="flex justify-between items-center gap-x-4 pb-0 lg:pb-2">
         <h3 :title="a.title" class="text-lg">
           <NuxtLink :to="adUrl" class="link-clr0 one-line-only">

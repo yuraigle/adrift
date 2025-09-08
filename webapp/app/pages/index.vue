@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const { data: page, pending } = await useAsyncData<AdsPage>(
   'ads-home-rec',
-  () => $fetch(`${API_BASE}/recommended?size=12`),
+  () => $fetch(useAppConfig().API_BASE + '/recommended?size=12'),
   {
     server: false,
   }

@@ -1,5 +1,3 @@
-export const API_BASE: string = 'https://adrift.orlov.bar/api';
-
 const getTokenFromLocalStorage = (): string => {
   const user: string | null = localStorage.getItem('user')
   return user ? JSON.parse(user).token : ''
@@ -7,7 +5,7 @@ const getTokenFromLocalStorage = (): string => {
 
 export const callApi = async (url: string, method: string, body: string | null): Promise<unknown> => {
   return new Promise((resolve, reject) => {
-    fetch(API_BASE + url, {
+    fetch(useAppConfig().API_BASE + url, {
       method,
       headers: {
         'Content-Type': 'application/json',

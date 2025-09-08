@@ -10,10 +10,10 @@ const imageUrl = (filename: string, h: number) => {
 
 <template>
   <div v-if="images && images.length > 0 && images[0]">
-    <div class="rounded-md bg-gray-200 dark:bg-gray-800">
+    <div class="rounded-md bg-gray-100 dark:bg-gray-800">
       <img
         :src="imageUrl(images[0].filename, 600)"
-        class="object-fit mx-auto h-[400px] rounded-md"
+        class="h-[400px] object-scale-down mx-auto"
         alt="">
     </div>
   </div>
