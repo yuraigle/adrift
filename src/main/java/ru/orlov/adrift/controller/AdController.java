@@ -29,7 +29,6 @@ public class AdController {
     private final AdRepository adRepository;
     private final UserRepository userRepository;
     private final ImageService imageService;
-    private final TemplateRepository templateRepository;
 
     @GetMapping(value = "/api/ads/{id}", produces = "application/json")
     public AdDetailsDto show(@PathVariable Long id) throws AppException {

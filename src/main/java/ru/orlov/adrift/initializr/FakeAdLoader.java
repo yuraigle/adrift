@@ -1,5 +1,6 @@
 package ru.orlov.adrift.initializr;
 
+import com.github.javafaker.Address;
 import com.github.javafaker.Faker;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -83,6 +84,24 @@ public class FakeAdLoader {
         BigDecimal price = cat.getName().toLowerCase().contains("rent") ?
                 randomHousingRentPrice() : randomHousingSellPrice();
         req.setPrice(price);
+
+        req.setPhone(faker.phoneNumber().cellPhone());
+
+        // USA coords range
+        double minLat = 24.396308;
+        double maxLat = 49.384358;
+        double minLon = -124.848974;
+        double maxLon = -66.93457;
+        double lat = minLat + (maxLat - minLat) * faker.random().nextDouble();
+        double lon = minLon + (maxLon - minLon) * faker.random().nextDouble();
+
+        Address addr1 = faker.address();
+        req.setAddress(new AdRequestDto.AddressDto());
+        req.getAddress().setCity(addr1.city());
+        req.getAddress().setZip(addr1.zipCode());
+        req.getAddress().setAddress(addr1.fullAddress());
+        req.getAddress().setLat(BigDecimal.valueOf(lat));
+        req.getAddress().setLon(BigDecimal.valueOf(lon));
 
         Template template = templateRepository.getTemplateWithQuestions(cat.getTemplate().getId());
         for (Question q : template.getQuestions()) {

@@ -19,6 +19,12 @@ public class AdDetailsDto {
     private String title;
     private String description;
     private BigDecimal price;
+    private String phone; // todo: hide it
+    private String city;
+    private String zip;
+    private String address;
+    private BigDecimal lat;
+    private BigDecimal lon;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime created;

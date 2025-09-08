@@ -30,7 +30,7 @@ public class FakeImageLoader {
 
         Random random = new Random();
         for (Ad ad : ads) {
-            boolean hasImage = random.nextInt(10) > 3;
+            boolean hasImage = random.nextInt(10) > 2;
             if (!hasImage) {
                 continue;
             }

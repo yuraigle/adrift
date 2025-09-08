@@ -46,7 +46,16 @@ public class AdService {
         ad.setTitle(req.getTitle());
         ad.setDescription(req.getDescription());
         ad.setPrice(req.getPrice());
+        ad.setPhone(req.getPhone());
         ad.setCreated(LocalDateTime.now());
+
+        if (req.getAddress() != null) {
+            ad.setCity(req.getAddress().getCity());
+            ad.setZip(req.getAddress().getZip());
+            ad.setAddress(req.getAddress().getAddress());
+            ad.setLat(req.getAddress().getLat());
+            ad.setLon(req.getAddress().getLon());
+        }
 
         fillAdFields(ad, req.getFields());
 

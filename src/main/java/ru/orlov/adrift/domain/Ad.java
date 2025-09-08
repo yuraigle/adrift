@@ -27,6 +27,12 @@ public class Ad {
     private String title;
     private String description;
     private BigDecimal price;
+    private String phone;
+    private String city;
+    private String zip;
+    private String address;
+    private BigDecimal lat;
+    private BigDecimal lon;
     private LocalDateTime created;
     private LocalDateTime updated;
 

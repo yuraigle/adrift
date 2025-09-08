@@ -81,9 +81,7 @@ const formatPrice = (price: number) => {
         <div class="my-6">
           <h3 class="text-xl font-semibold mb-2">Location</h3>
           <div class="flex justify-between items-center gap-x-2">
-            <div>
-              29 Washington Pl, New York, NY 10003, USA
-            </div>
+            <div>{{ ad.address }}</div>
             <div>
               <button
                 class="link-clr0 cursor-pointer flex items-center gap-x-1"
@@ -98,8 +96,8 @@ const formatPrice = (price: number) => {
             class="transition-[height,opacity] duration-500 ease-in-out z-50 overflow-hidden"
             :class="{ 'h-0': !isMapShown, 'h-full': isMapShown,
                 'opacity-0': !isMapShown, 'opacity-100': isMapShown }">
-            <ClientOnly>
-              <AdDetailsMap :lon="-122.2731" :lat="37.8079" />
+            <ClientOnly v-if="ad.lon && ad.lat">
+              <AdDetailsMap :lon="ad.lon" :lat="ad.lat" />
             </ClientOnly>
           </div>
         </div>
