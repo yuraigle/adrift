@@ -20,7 +20,8 @@ const onSubmit = () => {
   loading.value = true
 
   callApi('/auth/login', 'POST', JSON.stringify(form))
-    .then(() => {
+    .then((data) => {
+      useAuthStore().saveDetails(data as AuthDetails)
       useToastsStore().showMessage('Welcome back!', 'success')
       useRouter().push({ path: '/' })
     })

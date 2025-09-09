@@ -8,19 +8,22 @@ const zoom: number = 12
 const w: number = 760
 const h: number = Math.round(w / 16 * 9)
 const token: string = useAppConfig().MAPBOX_TOKEN
+const isInteractiveMapShown = ref(false)
 
 const mapPic = computed((): string => {
-  const isDark: boolean = document.documentElement.classList.contains('dark')
-  const style = isDark ? 'dark-v11' : 'streets-v12'
   const { lat, lon } = props
   const x2 = window.devicePixelRatio >= 2 ? '@2x' : ''
 
-  return `https://api.mapbox.com/styles/v1/mapbox/${style}/static` +
+  return `https://api.mapbox.com/styles/v1/mapbox/streets-v12/static` +
     `/pin-l+0092b8(${lon},${lat})/${lon},${lat},${zoom},0/${w}x${h}${x2}` +
     `?access_token=${token}`
 })
 
 const onClickMap = () => {
+  if (isInteractiveMapShown.value) {
+    return
+  }
+
   const map: mapboxgl.Map = new mapboxgl.Map({
     accessToken: token,
     container: 'map1',
@@ -28,6 +31,10 @@ const onClickMap = () => {
     center: [props.lon, props.lat],
     zoom: zoom
   });
+
+  map.on('load', () => {
+    isInteractiveMapShown.value = true
+  })
 
   new mapboxgl.Marker({ color: '#0092b8' })
     .setLngLat([props.lon, props.lat])

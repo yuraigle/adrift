@@ -21,12 +21,13 @@ const adImage = computed((): string => a.images[0]?.filename || '')
 
 <template>
   <div class="relative">
-    <NuxtLink :to="adUrl" :title="a.title">
+    <NuxtLink :to="adUrl" :title="a.title" class="block overflow-hidden rounded-md">
       <template v-if="hasImage">
         <img
           :class="`
                   rounded-md bg-gray-200 dark:bg-gray-700
                   aspect-square object-cover w-full
+                  transition scale-100 hover:scale-105
                   `.replaceAll(/\s+/g, ' ')"
           :src="imageUrl(adImage, 300)"
           :alt="a.title">
