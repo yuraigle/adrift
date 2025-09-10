@@ -63,7 +63,7 @@ export default defineNuxtConfig({
     },
     googleFonts: {
         families: {
-            'Manrope': true,
+            'Onest': true,
         },
         download: true,
     }

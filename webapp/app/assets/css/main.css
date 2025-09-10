@@ -5,7 +5,7 @@
 @import "./multiline.css";
 
 @theme {
-    --font-sans: "Manrope", sans-serif;
+    --font-sans: "Onest", sans-serif;
 
     --color-accent-100: var(--color-cyan-100);
     --color-accent-200: var(--color-cyan-200);
