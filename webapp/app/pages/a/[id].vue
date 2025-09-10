@@ -96,7 +96,7 @@ const formatPrice = (price: number) => {
             class="transition-[height,opacity] duration-500 ease-in-out z-50 overflow-hidden"
             :class="{ 'h-0': !isMapShown, 'h-full': isMapShown,
                 'opacity-0': !isMapShown, 'opacity-100': isMapShown }">
-            <ClientOnly v-if="ad.lon && ad.lat">
+            <ClientOnly v-if="ad.lon && ad.lat && isMapShown">
               <AdDetailsMap :lon="ad.lon" :lat="ad.lat" />
             </ClientOnly>
           </div>

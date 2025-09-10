@@ -1,3 +1,13 @@
+<script setup lang="ts">
+const auth = useAuthStore()
+
+onMounted(() => {
+  if (!auth.details.id) {
+    auth.saveDetailsJson(localStorage.getItem('user'))
+  }
+})
+</script>
+
 <template>
   <NuxtLayout>
     <NuxtPage />
