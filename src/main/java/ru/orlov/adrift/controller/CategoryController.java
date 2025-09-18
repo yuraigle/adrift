@@ -6,12 +6,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.orlov.adrift.controller.dto.TemplateDto;
 import ru.orlov.adrift.domain.*;
 import ru.orlov.adrift.domain.ex.AppException;
 import ru.orlov.adrift.service.AdSearchService;
 
+import java.util.Base64;
 import java.util.List;
 
 @RestController
@@ -70,8 +72,13 @@ public class CategoryController {
     @GetMapping(value = "/api/categories/{id}/a", produces = "application/json")
     public Page<AdSummary> listAds(
             @PathVariable Long id,
-            @PageableDefault(size = 12) Pageable pageable
+            @PageableDefault(size = 12) Pageable pageable,
+            @RequestParam(required = false) String filter
     ) throws AppException {
+        if (filter != null && !filter.isBlank()) {
+            String json = new String(Base64.getDecoder().decode(filter));
+            System.out.println(json);
+        }
         return adSearchService.listByCategory(id, pageable);
     }
 

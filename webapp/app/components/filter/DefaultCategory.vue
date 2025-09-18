@@ -1,20 +1,22 @@
 <script setup lang="ts">
-const form = reactive({
+import type { Filter } from "~/types/Filter";
+
+defineEmits(['submit'])
+
+const form = reactive<Filter>({
+  keywords: '',
   price_from: '',
   price_to: '',
-  keywords: '',
 });
 
 const onInputPriceFrom = (e: Event) => {
   form.price_from = (e.target as HTMLInputElement).value
-  form.price_from = form.price_from
-    .replace(/[^\d]+/g, '')
+  form.price_from = form.price_from.replace(/[^\d]+/g, '')
 }
 
 const onInputPriceTo = (e: Event) => {
   form.price_to = (e.target as HTMLInputElement).value
-  form.price_to = form.price_to
-    .replace(/[^\d]+/g, '')
+  form.price_to = form.price_to.replace(/[^\d]+/g, '')
 }
 
 </script>
@@ -51,7 +53,7 @@ const onInputPriceTo = (e: Event) => {
     </div>
 
     <div class="mb-4 pt-2">
-      <UiButtonPrimary cls="py-2.5">
+      <UiButtonPrimary cls="py-2.5" @click="() => $emit('submit', form)">
         <span class="font-light">Apply filters</span>
       </UiButtonPrimary>
     </div>

@@ -32,7 +32,7 @@ const onSubmitSearch = () => {
       <button
         type="submit"
         :class="`
-                text-white absolute px-4 py-2 end-0 bottom-0 border-2
+                text-white absolute px-6 py-2 end-0 bottom-0 border-2
                 font-medium rounded-r-md text-sm cursor-pointer
                 bg-siberia-600 hover:bg-siberia-700
                 border-siberia-600 hover:border-siberia-700
