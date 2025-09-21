@@ -4,9 +4,9 @@ import type { Filter } from "~/types/Filter";
 defineEmits(['submit'])
 
 const form = reactive<Filter>({
-  keywords: '',
   price_from: '',
   price_to: '',
+  keywords: '',
 });
 
 const onInputPriceFrom = (e: Event) => {

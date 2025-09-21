@@ -15,6 +15,7 @@ export default defineNuxtConfig({
     appConfig: {
         APP_VERSION: process.env.npm_package_version,
         API_BASE: 'https://adrift.orlov.bar/api',
+        // API_BASE: 'http://localhost:8080/api',
         S3_BASE: 'https://bucket-5f7c65.s3.cloud.ru/',
         MAPBOX_TOKEN: 'pk.eyJ1IjoieXVyYWlnbGUiLCJhIjoiY2wwZmUzdTNnMHJ5eTNubzZpOXEzNGFrayJ9.vK2h-JCIge6NaEABNtPxvw',
     },

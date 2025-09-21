@@ -29,7 +29,7 @@ const { data: page, pending } = await useAsyncData<AdsPage>(
 
     const cid = cat.value.id;
     const page = pageNum.value;
-    const filterStr =btoa(JSON.stringify(filter));
+    const filterStr =encodeURIComponent(btoa(JSON.stringify(filter)));
 
     return $fetch(useAppConfig().API_BASE + `/categories/${cid}/a?` +
       `page=${page}&size=10&filter=${filterStr}`);
