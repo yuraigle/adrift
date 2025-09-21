@@ -22,7 +22,7 @@ const onInputPriceTo = (e: Event) => {
 </script>
 
 <template>
-  <div>
+  <form @submit.prevent="() => $emit('submit', form)">
     <div class="mb-4">
       <label class="font-semibold" for="price_to">Price</label>
       <div class="flex gap-x-2 mt-2">
@@ -53,9 +53,9 @@ const onInputPriceTo = (e: Event) => {
     </div>
 
     <div class="mb-4 pt-2">
-      <UiButtonPrimary cls="py-2.5" @click="() => $emit('submit', form)">
+      <UiButtonPrimary cls="py-2.5" type="submit">
         <span class="font-light">Apply filters</span>
       </UiButtonPrimary>
     </div>
-  </div>
+  </form>
 </template>

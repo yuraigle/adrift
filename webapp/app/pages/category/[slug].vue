@@ -4,7 +4,11 @@ import type { Filter } from '~/types/Filter'
 const route = useRoute()
 const slug = computed(() => route.params.slug)
 const pageNum = computed(() => route.query.page || 0)
-const filter = reactive<Filter>({} as Filter)
+const filter = reactive<Filter>({
+  price_from: '',
+  price_to: '',
+  keywords: '',
+} as Filter)
 
 const { data: cat } = await useAsyncData<CategorySummary>(
   'category-by-slug-' + slug.value,

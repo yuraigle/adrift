@@ -24,6 +24,21 @@ public interface AdRepository extends JpaRepository<Ad, Long> {
     @Query("SELECT a FROM Ad a LEFT JOIN FETCH a.images WHERE a.category.id = :categoryId ORDER BY a.created DESC")
     Page<AdSummary> findAllByCategoryIdOrderByCreatedDesc(Long categoryId, Pageable pageable);
 
+    @Query("""
+            SELECT a FROM Ad a LEFT JOIN FETCH a.images
+            WHERE a.category.id = :categoryId
+                and a.price >= :minPrice and a.price <= :maxPrice
+                and a.title like %:keywords%
+            ORDER BY a.created DESC
+            """)
+    Page<AdSummary> findIdsByCategoryFiltered(
+            Long categoryId,
+            Long minPrice,
+            Long maxPrice,
+            String keywords,
+            Pageable pageable
+    );
+
     @Query("SELECT a FROM Ad a LEFT JOIN FETCH a.images ORDER BY a.created DESC")
     Page<AdSummary> findAllOrderByCreatedDesc(Pageable pageable);
 
